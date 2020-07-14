@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float walkSpeed; 
     [SerializeField] private float jumpForce;
     [SerializeField] private float jumpTime; //original jump time
+    [SerializeField] private GameObject jumpEffect;
 
     const float checkRadius = 0.3f; //radius for groundCheck and ceilingCheck
     private bool isFacingRight = true; //for flipping the character
@@ -32,6 +33,8 @@ public class PlayerController : MonoBehaviour
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+
+        jumpEffect.SetActive(false);
     }
 
     private void Update()
@@ -54,6 +57,8 @@ public class PlayerController : MonoBehaviour
             isJumping = true;
             jumpTimeCounter = jumpTime;
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x , jumpForce);
+            jumpEffect.SetActive(true);
+            StartCoroutine(JumpEffect());
         }
         else if (Input.GetButton("Jump") && isJumping) // press longer to jump higher
         {
@@ -71,6 +76,14 @@ public class PlayerController : MonoBehaviour
         {
             isJumping = false;
         }
+    }
+
+    IEnumerator JumpEffect()
+    {
+        jumpEffect.transform.position = groundCheck.position;
+        jumpEffect.SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        jumpEffect.SetActive(false);
     }
 
     private void Move()
