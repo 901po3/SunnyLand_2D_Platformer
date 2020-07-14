@@ -13,13 +13,6 @@ public class BGAutoMove : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] Transform[] Children;
 
-    float halfWidth;
-
-    private void Start()
-    {
-        halfWidth = Children[0].GetComponent<SpriteRenderer>().bounds.size.x / 2;
-    }
-
     private void Update()
     {
         SideMove();
@@ -30,12 +23,12 @@ public class BGAutoMove : MonoBehaviour
     {
         for (int i = 0; i < Children.Length; i++)
         {
-            
+            SpriteRenderer sp = Children[i].GetComponent<SpriteRenderer>();
             Children[i].Translate(Vector3.left * speed * Time.deltaTime);
 
-            if(Children[i].position.x + halfWidth <= -10)
+            if (sp.bounds.max.x + sp.size.x/2 < Camera.main.rect.xMin)
             {
-                Children[i].position = new Vector3(Children[(i + 1) % Children.Length].position.x + (halfWidth * 2) - 0.5f, Children[i].position.y, Children[i].position.z);         
+                Children[i].position = new Vector3(Children[(i + 1) % Children.Length].position.x + sp.bounds.size.x - 0.5f, Children[i].position.y, Children[i].position.z);         
             }
         }
     }
