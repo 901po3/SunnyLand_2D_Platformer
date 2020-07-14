@@ -11,9 +11,9 @@ using UnityEngine;
 
 public class CameraSize : MonoBehaviour
 {
-    [SerializeField] float m_size = 15;
+    [SerializeField] float size = 15; //size of orthographic camera
     void Start()
     {
-        Camera.main.orthographicSize = (float)(m_size * Screen.height / Screen.width * 0.5);
+        Camera.main.orthographicSize = (float)(size * Screen.height / Screen.width * 0.5);
     }
 }

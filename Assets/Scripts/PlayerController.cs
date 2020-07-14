@@ -11,74 +11,95 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private Transform m_groundCheck;
-    [SerializeField] private Transform m_ceilingCheck;
-    [SerializeField] private float m_walkSpeed = 6.5f;
-    [SerializeField] private float m_jumpForce = 400f;
-    [Range(0, .3f)] [SerializeField] private float m_movementSmoothing = .05f;
+    [SerializeField] private Transform groundCheck; //check what's on bottom
+    [SerializeField] private Transform ceilingCheck; //check what's on top
+    [SerializeField] private LayerMask whatIsGround; //store the layer colliding with groundCheck
+    [SerializeField] private float walkSpeed; 
+    [SerializeField] private float jumpForce;
+    [SerializeField] private float jumpTime; //original jump time
 
-    private bool m_facingRight = true;
-    private bool m_onGround = true;
-    private bool m_jump = false;
-    private Vector3 m_velocity = Vector3.zero;
-    private Rigidbody2D m_rigidbody2D;
+    const float checkRadius = 0.3f; //radius for groundCheck and ceilingCheck
+    private bool isFacingRight = true; //for flipping the character
+    private bool isGrounded = true;
+    private Rigidbody2D rigidbody2D;
     private Animator anim;
 
-    float horizontalMove = 0f;
+    private float horizontalMove = 0f; //X-axis input
+    private float jumpTimeCounter; //current jump time
+    private bool isJumping = false;
 
     private void Start()
     {
-        m_rigidbody2D = GetComponent<Rigidbody2D>();
+        rigidbody2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        InputHandler();
         AnimationHandler();
+        Jump();
     }
 
     private void FixedUpdate()
     {
         Move();
-        GroundChecker();
     }
 
-    private void InputHandler()
+    private void Jump()
     {
-        horizontalMove = Input.GetAxisRaw("Horizontal");
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
 
-        if(Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            m_jump = true;
+            isJumping = true;
+            jumpTimeCounter = jumpTime;
+            rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x , jumpForce);
         }
-    }
-
-    private void GroundChecker()
-    {
-        bool wasGrounded = m_onGround;
-        m_onGround = false;
+        else if (Input.GetButton("Jump") && isJumping) // press longer to jump higher
+        {
+            if(jumpTimeCounter > 0)
+            {
+                rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpForce);
+                jumpTimeCounter -= Time.deltaTime;
+            } 
+            else
+            {
+                isJumping = false;
+            }
+        }
+        if (Input.GetButtonUp("Jump"))
+        {
+            isJumping = false;
+        }
     }
 
     private void Move()
     {
-        Vector3 targetVelocity = new Vector2(horizontalMove * m_walkSpeed, m_rigidbody2D.velocity.y);
-        m_rigidbody2D.velocity = Vector3.SmoothDamp(m_rigidbody2D.velocity, targetVelocity, ref m_velocity, m_movementSmoothing, 100, Time.fixedDeltaTime);
+        horizontalMove = Input.GetAxisRaw("Horizontal");
 
-        if (m_onGround && m_jump)
+        float speed = walkSpeed * Time.fixedDeltaTime;
+        if (isGrounded)
         {
-            // Add a vertical force to the player.
-            m_onGround = false;
-            m_rigidbody2D.AddForce(new Vector2(0f, m_jumpForce));
-            m_jump = false;
+            rigidbody2D.velocity = new Vector2(horizontalMove * speed, rigidbody2D.velocity.y);
+            Debug.Log(rigidbody2D.velocity);
+        }
+        else if(!isGrounded || rigidbody2D.velocity.y != 0) // add momentum on horizontal movement if player is not on the ground
+        {
+            Vector2 velocity = new Vector2(rigidbody2D.velocity.x, 0);
+            if (Mathf.Abs(rigidbody2D.velocity.x) <= speed || (rigidbody2D.velocity.x >= Mathf.Abs(speed) && horizontalMove < 0) ||
+                (rigidbody2D.velocity.x <= -Mathf.Abs(speed) && horizontalMove > 0))
+            {
+               velocity.x += horizontalMove * 30 * Time.fixedDeltaTime;
+            }
+            rigidbody2D.velocity = new Vector2(velocity.x, rigidbody2D.velocity.y);
+            Debug.Log(rigidbody2D.velocity);
         }
 
-
-        if (horizontalMove > 0f && !m_facingRight)
+        if (horizontalMove > 0f && !isFacingRight)
         {
             Flip();
         }
-        else if (horizontalMove < 0f && m_facingRight)
+        else if (horizontalMove < 0f && isFacingRight)
         {
             Flip();
         }    
@@ -86,11 +107,11 @@ public class PlayerController : MonoBehaviour
 
     private void AnimationHandler()
     {
-        if (horizontalMove != 0 && m_onGround)
+        if (horizontalMove != 0 && isGrounded)
         {
             anim.SetBool("isWalking", true);
         }
-        else if (horizontalMove == 0 && m_onGround)
+        else if (horizontalMove == 0 && isGrounded)
         {
             anim.SetBool("isWalking", false);
         }
@@ -99,7 +120,7 @@ public class PlayerController : MonoBehaviour
 
     private void Flip()
     {
-        m_facingRight = !m_facingRight;
+        isFacingRight = !isFacingRight;
 
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
