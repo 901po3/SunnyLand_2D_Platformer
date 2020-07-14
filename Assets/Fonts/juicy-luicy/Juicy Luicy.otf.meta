@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: dcfd60886cc0da34aa62d316274d2344
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Juicy Luicy
+  fontNames:
+  - Juicy Luicy
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 69d6cdf45802c8348b0ed67f5120c53a, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
