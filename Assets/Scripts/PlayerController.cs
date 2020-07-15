@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private GameObject enemyBelow; // check if player's stepping on any enemy
     private GameObject enemyRight; // check if enemy's on right
     private GameObject enemyLeft; // check if enemy's on left
+    private GameObject attackingPlant; //Plant attacking player
     private Rigidbody2D rigidbody2D;
     private Animator anim;
 
@@ -42,7 +43,11 @@ public class PlayerController : MonoBehaviour
     private bool isInvincible = false; // Make Player invincible
     private bool isFrozen = false;
 
+    private bool checkCollisionOnce = false;
+
     //setter getter
+    public void SetAttackingPlant(GameObject palnt) { attackingPlant = palnt; }
+
     public GameObject GetEnemyBelow() { return enemyBelow; }
 
     //Singleton
@@ -150,7 +155,6 @@ public class PlayerController : MonoBehaviour
 
         if ((!wasGrounded && isGrounded) || isLadnded)
         {
-            Debug.Log("Landed");
             isFalling = false;
             wasGrounded = isGrounded;
             if (fallingSpeed < -23)
@@ -251,39 +255,48 @@ public class PlayerController : MonoBehaviour
         }    
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if(!isInvincible)
+        if(!isInvincible && !checkCollisionOnce)
         {
-            if (collision.gameObject.tag == "Enemy" && enemyBelow == null)
+            if ((collision.gameObject.tag == "Enemy" && enemyBelow == null) || attackingPlant != null)
             {
-                if(isFacingRight)
+                checkCollisionOnce = true;
+                Vector2 dir = Vector2.zero;
+                if (attackingPlant != null)
                 {
-                    if (enemyRight)
+                    dir = (attackingPlant.transform.position - transform.position);
+                }
+
+                if (isFacingRight)
+                {
+                    if (enemyRight || dir.x > 0)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(-150 , 200));
+                        rigidbody2D.AddForce(new Vector2(-200, 200));
                     }
-                    else if (enemyLeft)
+                    else if (enemyLeft || dir.x < 0)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(150, 200));
+                        rigidbody2D.AddForce(new Vector2(200, 200));
                     }
                 }
                 else
                 {
-                    if (enemyRight)
+                    if (enemyRight || dir.x > 0)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(150, 200));
+                        rigidbody2D.AddForce(new Vector2(200, 200));
                     }
-                    else if (enemyLeft)
+                    else if (enemyLeft || dir.x < 0)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(-150, 200));
+                        rigidbody2D.AddForce(new Vector2(-200, 200));
                     }
-                }
+                }             
                 Damaged();
+                Debug.Log(attackingPlant);
+                attackingPlant = null;
             }
         }
         if(collision.gameObject.tag == "Ground")
@@ -352,12 +365,13 @@ public class PlayerController : MonoBehaviour
         isFrozen = false;
         ToIdle();
 
-        yield return new WaitForSeconds(0.3f);     
+        yield return new WaitForSeconds(0.5f);     
         GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 1f);
         Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Enemy"), false);
 
         yield return new WaitForSeconds(0.2f);
         isInvincible = false;
+        checkCollisionOnce = false;
     }
 
     private void Flip()
