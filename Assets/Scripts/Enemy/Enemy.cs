@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] protected Transform[] wayPoints;
     [SerializeField] protected bool isFacingRight;
-    [SerializeField] protected int curWayPoint;
+    [SerializeField] protected int curWayPoint = 0;
     [SerializeField] protected float speed;
 
     protected bool isDead = false;
@@ -30,7 +30,17 @@ public class Enemy : MonoBehaviour
             isDead = true;
         }
     }
-    protected virtual void Move() { }
+    protected virtual void Move() 
+    {
+        //if (Vector2.Distance(wayPoints[curWayPoint] && !isFacingRight)
+        //{
+        //    Flip();
+        //}
+        //else if (horizontalMove < 0f && isFacingRight)
+        //{
+        //    Flip();
+        //}
+    }
 
     protected void Flip()
     {

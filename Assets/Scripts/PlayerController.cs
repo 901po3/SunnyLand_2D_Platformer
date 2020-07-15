@@ -12,7 +12,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Transform groundCheck; //check what's on bottom
-    [SerializeField] private Transform ceilingCheck; //check what's on top
+    [SerializeField] private Transform[] rightChecks; //check what's on right
+    [SerializeField] private Transform[] leftChecks; //check what's on left
     [SerializeField] private LayerMask[] whatIsGround; //store the layer colliding with groundCheck
     [SerializeField] private float walkSpeed; 
     [SerializeField] private float jumpForce;
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false;
     private bool isFalling = false;
     private bool isInvincible = false; // Make Player invincible
+    private bool isFrozen = false;
 
     //setter getter
     public GameObject GetEnemyBelow() { return enemyBelow; }
@@ -102,6 +104,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
+        if (isFrozen) return;
         bool wasGrounded = isGrounded;
         GetGroundCheck();
 
@@ -179,6 +182,7 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
+        if (isFrozen) return;
         horizontalMove = Input.GetAxisRaw("Horizontal");
 
         float speed = walkSpeed * Time.fixedDeltaTime;
@@ -272,10 +276,12 @@ public class PlayerController : MonoBehaviour
     IEnumerator SetInvincible()
     {
         isInvincible = true;
+        isFrozen = true;
         GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 0.5f);
 
         yield return new WaitForSeconds(0.5f);    
         Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Enemy"), true);
+        isFrozen = false;
 
         yield return new WaitForSeconds(1.5f);
         GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 0.7f);

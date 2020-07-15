@@ -35,5 +35,6 @@ public class WalkingEnemy : Enemy
     protected override void Move()
     {
         base.Move();
+        
     }
 }
