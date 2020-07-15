@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded = true;
     private bool isBounced = false;
     private GameObject enemyBelow; // check if player's stepping on any enemy
+    private GameObject enemyRight; // check if enemy's on right
+    private GameObject enemyLeft; // check if enemy's on left
     private Rigidbody2D rigidbody2D;
     private Animator anim;
 
@@ -68,11 +70,35 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         Jump();
+        SideChecker();
     }
 
     private void FixedUpdate()
     {
         Move();
+    }
+
+    private void SideChecker()
+    {
+        for (int i = 0; i < whatIsGround.Length; i++)
+        {
+            for(int j = 0; j < rightChecks.Length; j++)
+            {
+                Collider2D rightCollider2D = Physics2D.OverlapCircle(rightChecks[j].position, checkRadius, whatIsGround[i]);
+                Collider2D leftCollider2D = Physics2D.OverlapCircle(leftChecks[j].position, checkRadius, whatIsGround[i]);
+
+                if(rightCollider2D != null)
+                {
+                    enemyRight = rightCollider2D.gameObject;
+                    enemyLeft = null;
+                }
+                else if(leftCollider2D)
+                {
+                    enemyRight = null;
+                    enemyLeft = leftCollider2D.gameObject;
+                }
+            }
+        }
     }
 
     private void GetGroundCheck()
@@ -229,6 +255,32 @@ public class PlayerController : MonoBehaviour
         {
             if (collision.gameObject.tag == "Enemy" && enemyBelow == null)
             {
+                if(isFacingRight)
+                {
+                    if (enemyRight)
+                    {
+                        rigidbody2D.velocity = Vector2.zero;
+                        rigidbody2D.AddForce(new Vector2(-200, 200));
+                    }
+                    else if (enemyLeft)
+                    {
+                        rigidbody2D.velocity = Vector2.zero;
+                        rigidbody2D.AddForce(new Vector2(200, 200));
+                    }
+                }
+                else
+                {
+                    if (enemyRight)
+                    {
+                        rigidbody2D.velocity = Vector2.zero;
+                        rigidbody2D.AddForce(new Vector2(200, 200));
+                    }
+                    else if (enemyLeft)
+                    {
+                        rigidbody2D.velocity = Vector2.zero;
+                        rigidbody2D.AddForce(new Vector2(-200, 200));
+                    }
+                }
                 Damaged();
             }
         }
@@ -252,6 +304,7 @@ public class PlayerController : MonoBehaviour
         if (life > 0)
         {
             life--;
+            anim.SetTrigger("isHurt");
             StartCoroutine(SetInvincible());
             ChangeLifeHud();
 
@@ -281,9 +334,12 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);    
         Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Enemy"), true);
+        rigidbody2D.velocity = Vector2.zero;
+
+        yield return new WaitForSeconds(0.5f);
         isFrozen = false;
 
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.0f);
         GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 0.7f);
 
         yield return new WaitForSeconds(0.5f);     

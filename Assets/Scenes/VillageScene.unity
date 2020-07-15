@@ -26145,7 +26145,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.0432777, y: 1.9092422, z: -13}
+  m_LocalPosition: {x: -8.58, y: 1.9299998, z: -13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 368215708}
@@ -26818,11 +26818,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundCheck: {fileID: 1165791288}
   rightChecks:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1014420901}
+  - {fileID: 207324849}
   leftChecks:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1161054214}
+  - {fileID: 587236065}
   whatIsGround:
   - serializedVersion: 2
     m_Bits: 256
