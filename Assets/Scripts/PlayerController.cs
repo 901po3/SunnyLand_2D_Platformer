@@ -18,19 +18,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce;
     [SerializeField] private float jumpTime; //original jump time
     [SerializeField] private GameObject landingEffect;
+    [SerializeField] private GameObject[] lifeObj; // Player life UI GameObject....
 
     private const float checkRadius = 0.3f; //radius for groundCheck and ceilingCheck
     private bool isFacingRight = true; //for flipping the character
     private bool isGrounded = true;
-    private bool isEnemyBelow = false; // check if player's stepping on any enemy
+    private GameObject enemyBelow; // check if player's stepping on any enemy
     private Rigidbody2D rigidbody2D;
     private Animator anim;
 
     private float horizontalMove = 0f; //X-axis input
     private float jumpTimeCounter; //current jump time
-    private float life = 3;
+    private int life = 3;
     private bool isJumping = false;
     private bool isFalling = false;
+    private bool isInvincible = false; // Make Player invincible
+
+    //setter getter
+    public GameObject GetEnemyBelow() { return enemyBelow; }
 
     //Singleton
     public static PlayerController instance { get; private set; }
@@ -51,12 +56,12 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
 
         landingEffect.SetActive(false);
+        lifeObj[life].SetActive(true);
     }
 
     private void Update()
     {
         Jump();
-        Damaged();
     }
 
     private void FixedUpdate()
@@ -73,7 +78,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
-                    isEnemyBelow = true;
+                    enemyBelow = collider2D.gameObject;
                     break;
                 }
                 else if (collider2D.gameObject.layer == LayerMask.NameToLayer("Ground"))
@@ -85,7 +90,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 isGrounded = false;
-                isEnemyBelow = false;
+                enemyBelow = null;
             }
         }
     }
@@ -101,7 +106,6 @@ public class PlayerController : MonoBehaviour
             fallingSpeed = rigidbody2D.velocity.y;
             isJumping = false;
             isFalling = true;
-            Debug.Log(rigidbody2D.velocity.y);
         }
 
         if (!wasGrounded && isGrounded)
@@ -200,16 +204,47 @@ public class PlayerController : MonoBehaviour
         }    
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(!isInvincible)
+        {
+            if (collision.gameObject.tag == "Enemy" && enemyBelow == null)
+            {
+                Damaged();
+            }
+        }
+    }
+
     private void Damaged()
     {
-        if(life > 0)
+
+        if (life > 0)
         {
             life--;
-            if(life <= 0)
+            StartCoroutine(SetInvincible());
+            //Change Image of LifeObj
+            for (int i = 0; i < lifeObj.Length; i++)
+            {
+                if (i == life)
+                {
+                    lifeObj[i].SetActive(true);
+                    continue;
+                }
+                lifeObj[i].SetActive(false);
+            }
+
+            if (life <= 0)
             {
                 //GameOver;
             }
         }
+    }
+
+    IEnumerator SetInvincible()
+    {
+        isInvincible = true;       
+        yield return new WaitForSeconds(1.5f);
+        isInvincible = false;
     }
 
     private void Flip()

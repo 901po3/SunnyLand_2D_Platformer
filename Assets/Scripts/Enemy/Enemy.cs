@@ -21,6 +21,11 @@ public class Enemy : MonoBehaviour
     protected virtual void Death() 
     {
         if (isDead) return;
+        if(PlayerController.instance.GetEnemyBelow() == gameObject)
+        {
+            isDead = true;
+            Debug.Log(gameObject + "is Dead");
+        }
     }
     protected virtual void Move() { }
 }
