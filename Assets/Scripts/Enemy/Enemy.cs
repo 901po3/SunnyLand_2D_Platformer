@@ -25,6 +25,8 @@ public class Enemy : MonoBehaviour
         {
             isDead = true;
             Debug.Log(gameObject + "is Dead");
+           
+            gameObject.SetActive(false);
         }
     }
     protected virtual void Move() { }
