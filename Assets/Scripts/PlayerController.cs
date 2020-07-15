@@ -28,7 +28,9 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalMove = 0f; //X-axis input
     private float jumpTimeCounter; //current jump time
+    private float life = 3;
     private bool isJumping = false;
+    private bool isFalling = false;
 
     //Singleton
     public static PlayerController instance { get; private set; }
@@ -53,8 +55,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        AnimationHandler();
         Jump();
+        Damaged();
     }
 
     private void FixedUpdate()
@@ -62,7 +64,7 @@ public class PlayerController : MonoBehaviour
         Move();
     }
 
-    public Collider2D GetGroundCheck()
+    private void GetGroundCheck()
     {
         for(int i = 0; i < whatIsGround.Length; i++)
         {
@@ -79,7 +81,6 @@ public class PlayerController : MonoBehaviour
                     isGrounded = true;
                     break;
                 }
-                return collider2D;
             }
             else
             {
@@ -87,7 +88,6 @@ public class PlayerController : MonoBehaviour
                 isEnemyBelow = false;
             }
         }
-        return null;
     }
 
     private void Jump()
@@ -99,10 +99,14 @@ public class PlayerController : MonoBehaviour
         if(rigidbody2D.velocity.y < 0.0f)
         {
             fallingSpeed = rigidbody2D.velocity.y;
+            isJumping = false;
+            isFalling = true;
+            Debug.Log(rigidbody2D.velocity.y);
         }
 
         if (!wasGrounded && isGrounded)
         {
+            isFalling = false;
             wasGrounded = isGrounded;
             if (fallingSpeed < -25)
             {
@@ -118,12 +122,11 @@ public class PlayerController : MonoBehaviour
             {
                 CinemachineShake.instance.CameraShake(10.0f, 0.2f);
                 StartCoroutine(LandingEffect());
-            }           
+            }                     
         }
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-
             isJumping = true;
             jumpTimeCounter = jumpTime;
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x , jumpForce);
@@ -144,6 +147,8 @@ public class PlayerController : MonoBehaviour
         {
             isJumping = false;
         }
+        anim.SetBool("isJumping", isJumping);
+        anim.SetBool("isFalling", isFalling);
     }
 
     IEnumerator LandingEffect()
@@ -176,6 +181,15 @@ public class PlayerController : MonoBehaviour
             //Debug.Log(rigidbody2D.velocity);
         }
 
+        if (horizontalMove != 0 && isGrounded)
+        {
+            anim.SetBool("isWalking", true);
+        }
+        else if (horizontalMove == 0 && isGrounded)
+        {
+            anim.SetBool("isWalking", false);
+        }
+
         if (horizontalMove > 0f && !isFacingRight)
         {
             Flip();
@@ -186,18 +200,17 @@ public class PlayerController : MonoBehaviour
         }    
     }
 
-    private void AnimationHandler()
+    private void Damaged()
     {
-        if (horizontalMove != 0 && isGrounded)
+        if(life > 0)
         {
-            anim.SetBool("isWalking", true);
-        }
-        else if (horizontalMove == 0 && isGrounded)
-        {
-            anim.SetBool("isWalking", false);
+            life--;
+            if(life <= 0)
+            {
+                //GameOver;
+            }
         }
     }
-
 
     private void Flip()
     {
