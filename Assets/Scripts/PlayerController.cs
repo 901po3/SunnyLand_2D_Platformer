@@ -110,9 +110,14 @@ public class PlayerController : MonoBehaviour
             {
                 if (collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
-                    enemyBelow = collider2D.gameObject;
-                    StartCoroutine(Attack());
-                    break;
+                    Vector2 pos = (collider2D.transform.position - transform.position).normalized;
+                    float dir = Vector2.Angle(transform.position, collider2D.transform.position);
+                    if(dir < 60 && pos.y < 0)
+                    {
+                        enemyBelow = collider2D.gameObject;
+                        StartCoroutine(Attack());
+                        break;
+                    }
                 }
                 else if (collider2D.gameObject.layer == LayerMask.NameToLayer("Ground"))
                 {
@@ -135,7 +140,7 @@ public class PlayerController : MonoBehaviour
         GetGroundCheck();
 
         float fallingSpeed = 0.0f;
-        if(rigidbody2D.velocity.y < 0.0f)
+        if(rigidbody2D.velocity.y < -1.0f)
         {
             fallingSpeed = rigidbody2D.velocity.y;
             isJumping = false;
@@ -155,12 +160,7 @@ public class PlayerController : MonoBehaviour
             {
                 CinemachineShake.instance.CameraShake(30.0f, 0.2f);
                 StartCoroutine(PlayEffect(landingEffect, 0.4f));
-            }
-            //else if (fallingSpeed < -13 && fallingSpeed > -20)
-            //{
-            //    CinemachineShake.instance.CameraShake(10.0f, 0.2f);
-            //    StartCoroutine(LandingEffect());
-            //}                     
+            }                 
         }
 
         if (isBounced)
@@ -260,12 +260,12 @@ public class PlayerController : MonoBehaviour
                     if (enemyRight)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(-200, 200));
+                        rigidbody2D.AddForce(new Vector2(-100, 200));
                     }
                     else if (enemyLeft)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(200, 200));
+                        rigidbody2D.AddForce(new Vector2(100, 200));
                     }
                 }
                 else
@@ -273,12 +273,12 @@ public class PlayerController : MonoBehaviour
                     if (enemyRight)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(200, 200));
+                        rigidbody2D.AddForce(new Vector2(100, 200));
                     }
                     else if (enemyLeft)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(-200, 200));
+                        rigidbody2D.AddForce(new Vector2(-100, 200));
                     }
                 }
                 Damaged();
@@ -319,7 +319,7 @@ public class PlayerController : MonoBehaviour
     {
         isBounced = true;
         rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
-        rigidbody2D.AddForce(Vector2.up * 200);
+        rigidbody2D.AddForce(Vector2.up * 100);
         StartCoroutine(PlayEffect(enemyDeathEffect, 0.3f));
 
         yield return new WaitForSeconds(0.75f);
@@ -332,17 +332,13 @@ public class PlayerController : MonoBehaviour
         isFrozen = true;
         GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 0.5f);
 
-        yield return new WaitForSeconds(0.5f);    
+        yield return new WaitForSeconds(0.4f);    
         Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Enemy"), true);
         rigidbody2D.velocity = Vector2.zero;
-
-        yield return new WaitForSeconds(0.5f);
         isFrozen = false;
+        ToIdle();
 
-        yield return new WaitForSeconds(1.0f);
-        GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 0.7f);
-
-        yield return new WaitForSeconds(0.5f);     
+        yield return new WaitForSeconds(0.2f);     
         isInvincible = false;
         GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 1f);
         Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Enemy"), false);
@@ -368,5 +364,15 @@ public class PlayerController : MonoBehaviour
             }
             lifeObj[i].SetActive(false);
         }
+    }
+
+    private void ToIdle()
+    {
+        isFalling = false;
+        isJumping = false;
+        isWalking = false;
+        anim.SetBool("isFalling", false);
+        anim.SetBool("isJumping", false);
+        anim.SetBool("isWalking", false);
     }
 }
