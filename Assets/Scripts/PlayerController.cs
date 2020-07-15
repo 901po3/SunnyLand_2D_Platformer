@@ -113,11 +113,6 @@ public class PlayerController : MonoBehaviour
             isFalling = true;
         }
 
-        if(isBounced)
-        {
-            wasGrounded = false;
-            isGrounded = true;
-        }
         if ((!wasGrounded && isGrounded))
         {
             isFalling = false;
@@ -139,8 +134,13 @@ public class PlayerController : MonoBehaviour
             //}                     
         }
 
-        if ((Input.GetButtonDown("Jump") && isGrounded))
+        if (isBounced)
         {
+            isGrounded = true;
+        }
+        if ((Input.GetButtonDown("Jump") && isGrounded) || isBounced)
+        {
+            isBounced = false;
             isJumping = true;
             anim.SetBool("isJumping", isJumping);
             jumpTimeCounter = jumpTime;
@@ -263,11 +263,6 @@ public class PlayerController : MonoBehaviour
         isBounced = true;
         rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
         rigidbody2D.AddForce(Vector2.up * 200);
-        Debug.Log(rigidbody2D.velocity);
-        isJumping = true;
-        isFalling = false;
-        anim.SetBool("isJumping", isJumping);
-        anim.SetBool("isFalling", isFalling);
         StartCoroutine(PlayEffect(enemyDeathEffect, 0.3f));
 
         yield return new WaitForSeconds(0.75f);
