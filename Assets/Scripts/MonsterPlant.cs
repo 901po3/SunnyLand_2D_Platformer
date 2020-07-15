@@ -18,7 +18,7 @@ public class MonsterPlant : MonoBehaviour
     [SerializeField] bool isFacingRight;
     [SerializeField] float flipTime;
 
-    private const float checkRadius = 1f;
+    private const float checkRadius = 0.65f;
     private bool isAttacking = false;
 
     private void Start()
