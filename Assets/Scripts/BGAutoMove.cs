@@ -1,6 +1,7 @@
 ﻿/*
  * Class: BGAutoMove
  * Date: 2020.7.14
+ * Last Modified : 2020.7.14
  * Author: Hyukin Kwon 
  * Description: Background infinte loop movement.
 */

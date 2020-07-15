@@ -1,12 +1,11 @@
 ﻿/*
  * Class: CameraSize
  * Date: 2020.7.14
+ * Last Modified : 2020.7.14
  * Author: Hyukin Kwon 
  * Description: Adjusting Camera Size repect to screen size.
 */
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraSize : MonoBehaviour
