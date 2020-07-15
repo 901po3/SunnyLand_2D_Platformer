@@ -10,12 +10,33 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    protected float speed;
+    [SerializeField] protected Transform[] wayPoints;
+    [SerializeField] protected bool isFacingRight;
+    [SerializeField] protected int curWayPoint = 0;
+    [SerializeField] protected float speed;
+
     protected bool isDead = false;
+    protected bool isMoving = false;
+    protected Animator anim = null;
+    protected Rigidbody2D rigidbody2D = null;
+
+    //setter getter
+    public bool GetIsMoving() { return isMoving; }
+    public bool GetVelocityX()
+    {
+        return isMoving; 
+    }
+
+    protected virtual void Start()
+    {
+        anim = GetComponent<Animator>();
+        rigidbody2D = GetComponent<Rigidbody2D>();
+    }
 
     protected virtual void Update()
     {
         Death();
+        Move();
     }
 
     protected virtual void Death() 
@@ -24,10 +45,19 @@ public class Enemy : MonoBehaviour
         if(PlayerController.instance.GetEnemyBelow() == gameObject)
         {
             isDead = true;
-            Debug.Log(gameObject + "is Dead");
-           
-            gameObject.SetActive(false);
         }
     }
-    protected virtual void Move() { }
+    protected virtual void Move() 
+    {
+        anim.SetBool("isMoving", isMoving);
+    }
+
+    protected void Flip()
+    {
+        isFacingRight = !isFacingRight;
+
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+    }
 }
