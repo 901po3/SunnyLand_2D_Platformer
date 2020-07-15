@@ -230,22 +230,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(life < 3)
+        {
+            if (collision.gameObject.tag == "Carrot")
+            {
+                life++;
+                ChangeLifeHud();
+                Destroy(collision.gameObject);
+            }
+        }
+    }
+
     private void Damaged()
     {
         if (life > 0)
         {
             life--;
             StartCoroutine(SetInvincible());
-            //Change Image of LifeObj
-            for (int i = 0; i < lifeObj.Length; i++)
-            {
-                if (i == life)
-                {
-                    lifeObj[i].SetActive(true);
-                    continue;
-                }
-                lifeObj[i].SetActive(false);
-            }
+            ChangeLifeHud();
 
             if (life <= 0)
             {
@@ -294,5 +298,18 @@ public class PlayerController : MonoBehaviour
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
+    }
+
+    private void ChangeLifeHud()
+    {
+        for (int i = 0; i < lifeObj.Length; i++)
+        {
+            if (i == life)
+            {
+                lifeObj[i].SetActive(true);
+                continue;
+            }
+            lifeObj[i].SetActive(false);
+        }
     }
 }
