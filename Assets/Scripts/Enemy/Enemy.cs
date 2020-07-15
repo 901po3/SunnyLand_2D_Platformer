@@ -16,10 +16,20 @@ public class Enemy : MonoBehaviour
     [SerializeField] protected float speed;
 
     protected bool isDead = false;
+    protected bool isMoving = false;
+    protected Animator anim = null;
+    protected Rigidbody2D rigidbody2D = null;
+
+    protected virtual void Start()
+    {
+        anim = GetComponent<Animator>();
+        rigidbody2D = GetComponent<Rigidbody2D>();
+    }
 
     protected virtual void Update()
     {
         Death();
+        Move();
     }
 
     protected virtual void Death() 
@@ -32,14 +42,7 @@ public class Enemy : MonoBehaviour
     }
     protected virtual void Move() 
     {
-        //if (Vector2.Distance(wayPoints[curWayPoint] && !isFacingRight)
-        //{
-        //    Flip();
-        //}
-        //else if (horizontalMove < 0f && isFacingRight)
-        //{
-        //    Flip();
-        //}
+        anim.SetBool("isMoving", isMoving);
     }
 
     protected void Flip()
