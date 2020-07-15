@@ -12,8 +12,28 @@ using UnityEngine;
 
 public class WalkingEnemy : Enemy
 {
+    private void Start()
+    {
+
+    }
+
     protected override void Update()
     {
         base.Update();
+    }
+
+    protected override void Death()
+    {
+        base.Death();
+        if (isDead)
+        {
+            Debug.Log("walking enemy died");
+            gameObject.SetActive(false);
+        }
+    }
+
+    protected override void Move()
+    {
+        base.Move();
     }
 }
