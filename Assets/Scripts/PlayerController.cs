@@ -114,14 +114,15 @@ public class PlayerController : MonoBehaviour
             Collider2D collider2D = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround[i]);
             if(collider2D != null)
             {
-                if (collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+                if (collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy") 
+                    || collider2D.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
                 {
                     Vector2 pos = (collider2D.transform.position - transform.position).normalized;
-                    float dir = Vector2.Angle(transform.position, collider2D.transform.position);
-                    if(dir < 45 && pos.y < 0 && rigidbody2D.velocity.y < 0f)
+                    if(pos.y < 0 && rigidbody2D.velocity.y < 0f)
                     {
-                        enemyBelow = collider2D.gameObject;
-                        StartCoroutine(Attack());
+                        if(collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+                            enemyBelow = collider2D.gameObject;
+                        StartCoroutine(Bounce());
                         break;
                     }
                 }
@@ -342,7 +343,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    IEnumerator Attack()
+    IEnumerator Bounce()
     {
         isBounced = true;
         rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
