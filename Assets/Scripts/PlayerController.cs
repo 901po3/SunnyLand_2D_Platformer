@@ -23,9 +23,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject[] lifeObj; // Player life UI GameObject....
 
     private const float checkRadius = 0.35f; //radius for groundCheck and ceilingCheck
-    private bool isFacingRight = true; //for flipping the character
-    private bool isGrounded = true;
-    private bool isBounced = false;
     private GameObject enemyBelow; // check if player's stepping on any enemy
     private GameObject enemyRight; // check if enemy's on right
     private GameObject enemyLeft; // check if enemy's on left
@@ -35,6 +32,10 @@ public class PlayerController : MonoBehaviour
     private float horizontalMove = 0f; //X-axis input
     private float jumpTimeCounter; //current jump time
     private int life = 3;
+    private bool isFacingRight = true; //for flipping the character
+    private bool isGrounded = true;
+    private bool isLadnded = false;
+    private bool isBounced = false;
     private bool isWalking = false;
     private bool isJumping = false;
     private bool isFalling = false;
@@ -101,7 +102,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void GetGroundCheck()
+    private void GroundCheck()
     {
         for(int i = 0; i < whatIsGround.Length; i++)
         {
@@ -112,7 +113,7 @@ public class PlayerController : MonoBehaviour
                 {
                     Vector2 pos = (collider2D.transform.position - transform.position).normalized;
                     float dir = Vector2.Angle(transform.position, collider2D.transform.position);
-                    if(dir < 60 && pos.y < 0)
+                    if(dir < 45 && pos.y < 0 && rigidbody2D.velocity.y < 0f)
                     {
                         enemyBelow = collider2D.gameObject;
                         StartCoroutine(Attack());
@@ -137,29 +138,30 @@ public class PlayerController : MonoBehaviour
     {
         if (isFrozen) return;
         bool wasGrounded = isGrounded;
-        GetGroundCheck();
+        GroundCheck();
 
         float fallingSpeed = 0.0f;
-        if(rigidbody2D.velocity.y < -1.0f)
+        if(rigidbody2D.velocity.y < 0f)
         {
             fallingSpeed = rigidbody2D.velocity.y;
             isJumping = false;
             isFalling = true;
         }
 
-        if ((!wasGrounded && isGrounded))
+        if ((!wasGrounded && isGrounded) || isLadnded)
         {
+            Debug.Log("Landed");
             isFalling = false;
             wasGrounded = isGrounded;
-            if (fallingSpeed < -25)
+            if (fallingSpeed < -23)
             {
                 CinemachineShake.instance.CameraShake(80.0f, 0.3f);
                 StartCoroutine(PlayEffect(landingEffect, 0.4f));
             }
-            else if (fallingSpeed <= -20)
+            else if (fallingSpeed <= -18)
             {
-                CinemachineShake.instance.CameraShake(30.0f, 0.2f);
-                StartCoroutine(PlayEffect(landingEffect, 0.4f));
+                CinemachineShake.instance.CameraShake(20.0f, 0.2f);
+                StartCoroutine(PlayEffect(landingEffect, 0.3f));
             }                 
         }
 
@@ -260,12 +262,12 @@ public class PlayerController : MonoBehaviour
                     if (enemyRight)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(-100, 200));
+                        rigidbody2D.AddForce(new Vector2(-150 , 200));
                     }
                     else if (enemyLeft)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(100, 200));
+                        rigidbody2D.AddForce(new Vector2(150, 200));
                     }
                 }
                 else
@@ -273,16 +275,28 @@ public class PlayerController : MonoBehaviour
                     if (enemyRight)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(100, 200));
+                        rigidbody2D.AddForce(new Vector2(150, 200));
                     }
                     else if (enemyLeft)
                     {
                         rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(-100, 200));
+                        rigidbody2D.AddForce(new Vector2(-150, 200));
                     }
                 }
                 Damaged();
             }
+        }
+        if(collision.gameObject.tag == "Ground")
+        {
+            isLadnded = true;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            isLadnded = false;
         }
     }
 
@@ -338,10 +352,12 @@ public class PlayerController : MonoBehaviour
         isFrozen = false;
         ToIdle();
 
-        yield return new WaitForSeconds(0.2f);     
-        isInvincible = false;
+        yield return new WaitForSeconds(0.3f);     
         GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 1f);
         Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Enemy"), false);
+
+        yield return new WaitForSeconds(0.2f);
+        isInvincible = false;
     }
 
     private void Flip()

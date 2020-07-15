@@ -20,6 +20,13 @@ public class Enemy : MonoBehaviour
     protected Animator anim = null;
     protected Rigidbody2D rigidbody2D = null;
 
+    //setter getter
+    public bool GetIsMoving() { return isMoving; }
+    public bool GetVelocityX()
+    {
+        return isMoving; 
+    }
+
     protected virtual void Start()
     {
         anim = GetComponent<Animator>();

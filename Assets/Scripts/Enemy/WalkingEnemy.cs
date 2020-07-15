@@ -42,7 +42,7 @@ public class WalkingEnemy : Enemy
 
         float dis = Vector2.Distance(wayPoints[idx].position, transform.position);
         Vector2 targetDir = (wayPoints[idx].position - transform.position).normalized;
-        if (dis > 0.1f) //move to target
+        if (dis > 0.25f) //move to target
         {
             transform.Translate(new Vector2(targetDir.x, 0) * speed * Time.deltaTime);
             isMoving = true;
