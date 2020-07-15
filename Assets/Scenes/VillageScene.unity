@@ -26615,10 +26615,10 @@ GameObject:
   - component: {fileID: 936784935}
   - component: {fileID: 936784934}
   - component: {fileID: 936784936}
-  - component: {fileID: 936784933}
   - component: {fileID: 936784932}
   - component: {fileID: 936784937}
   - component: {fileID: 936784938}
+  - component: {fileID: 936784933}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -26652,8 +26652,8 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.16, y: 0.12}
   m_EdgeRadius: 0
---- !u!58 &936784933
-CircleCollider2D:
+--- !u!70 &936784933
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -26665,9 +26665,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.07}
-  serializedVersion: 2
-  m_Radius: 0.08
+  m_Offset: {x: 0, y: -0.11}
+  m_Size: {x: 0.08, y: 0.1}
+  m_Direction: 0
 --- !u!212 &936784934
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -37452,12 +37452,7 @@ PrefabInstance:
     - target: {fileID: 2761604203306694162, guid: a5ba947ef686d1d469be1584c6d6d43c,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2761604203306694162, guid: a5ba947ef686d1d469be1584c6d6d43c,
-        type: 3}
-      propertyPath: m_Name
-      value: PlayerLandingEffect
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5782413697779468296, guid: a5ba947ef686d1d469be1584c6d6d43c,
         type: 3}
@@ -37519,20 +37514,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8166161242405881733, guid: a5ba947ef686d1d469be1584c6d6d43c,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 8166161242405881733, guid: a5ba947ef686d1d469be1584c6d6d43c,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 8771205428717296655, guid: a5ba947ef686d1d469be1584c6d6d43c,
         type: 3}
-      propertyPath: m_Name
-      value: EnemyDeathEffect
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5ba947ef686d1d469be1584c6d6d43c, type: 3}

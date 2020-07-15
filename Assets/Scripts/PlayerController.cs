@@ -113,7 +113,12 @@ public class PlayerController : MonoBehaviour
             isFalling = true;
         }
 
-        if ((!wasGrounded && isGrounded) || isBounced)
+        if(isBounced)
+        {
+            wasGrounded = false;
+            isGrounded = true;
+        }
+        if ((!wasGrounded && isGrounded))
         {
             isFalling = false;
             wasGrounded = isGrounded;
