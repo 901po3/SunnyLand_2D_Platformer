@@ -74,7 +74,9 @@ public class PlayerController : MonoBehaviour
 
         enemyDeathEffect.SetActive(false);
         landingEffect.SetActive(false);
-        lifeObj[life].SetActive(true);
+
+        life = 3;
+        ChangeLifeHud();
     }
 
     private void Update()

@@ -11,8 +11,8 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    private static int curStage = 1;
-    public static int playerLife;
+    private int curStage = 1;
+    public int playerLife = 3;
 
     //Singleton
     public static SceneLoader instance { get; private set; }
@@ -22,15 +22,6 @@ public class SceneLoader : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-        }
-
-        if (curStage == 1)
-        {
-            PlayerController.instance.SetLife(3);
-        }
-        else if(curStage > 1)
-        {
-            PlayerController.instance.SetLife(playerLife);
         }
     }
 
