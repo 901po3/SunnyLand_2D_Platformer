@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject landingEffect;
     [SerializeField] private GameObject enemyDeathEffect;
     [SerializeField] private GameObject[] lifeObj; // Player life UI GameObject....
+    [SerializeField] private Transform respawnPos;
 
     private const float checkRadius = 0.35f; //radius for groundCheck and ceilingCheck
     private GameObject enemyBelow; // check if player's stepping on any enemy
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false;
     private bool isFalling = false;
     private bool isInvincible = false; // Make Player invincible
+    private bool isRespawning = false;
     private bool isFrozen = false;
 
     private bool checkCollisionOnce = false;
@@ -320,6 +322,14 @@ public class PlayerController : MonoBehaviour
         {
             isLadnded = true;
         }
+        else if (collision.gameObject.tag == "FallingSpot")
+        {
+            if(!isRespawning)
+            {
+                isRespawning = true;
+                StartCoroutine(Respawn());
+            }
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -341,6 +351,19 @@ public class PlayerController : MonoBehaviour
                 Destroy(collision.gameObject);
             }
         }
+    }
+
+    IEnumerator Respawn()
+    {
+        isFrozen = true;
+        Damaged();
+
+        yield return new WaitForSeconds(0.3f);
+        transform.position = respawnPos.position;
+
+        yield return new WaitForSeconds(1.0f);
+        isRespawning = false;
+        isFrozen = false;
     }
 
     //This will be called inside of GetDamaged() function
