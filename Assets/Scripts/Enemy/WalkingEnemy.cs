@@ -10,7 +10,10 @@ using UnityEngine;
 
 public class WalkingEnemy : Enemy
 {
+    [SerializeField] private Transform[] wayPoints;
+    [SerializeField] protected int curWayPoint = 0;
     [SerializeField] private float stopTime = 1f; //stay time at waypoints
+      
     private float curStopTime;
 
     protected override void Start()
@@ -21,16 +24,12 @@ public class WalkingEnemy : Enemy
     protected override void Update()
     {
         base.Update();
+        Move();
     }
 
     protected override void Death()
     {
         base.Death();
-        if (isDead)
-        {
-            Debug.Log("walking enemy died");
-            gameObject.SetActive(false);
-        }
     }
 
     protected override void Move()
@@ -69,5 +68,7 @@ public class WalkingEnemy : Enemy
         {
             Flip();
         }
+
+        anim.SetBool("isMoving", isMoving);
     }
 }

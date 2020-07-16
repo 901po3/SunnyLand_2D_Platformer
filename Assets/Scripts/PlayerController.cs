@@ -1,7 +1,7 @@
 ﻿/*
  * Class: PlayerController
  * Date: 2020.7.14
- * Last Modified : 2020.7.15
+ * Last Modified : 2020.7.16
  * Author: Hyukin Kwon 
  * Description: Player movement controller.
 */
@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject landingEffect;
     [SerializeField] private GameObject enemyDeathEffect;
     [SerializeField] private GameObject[] lifeObj; // Player life UI GameObject....
+    [SerializeField] private Transform respawnPos;
 
     private const float checkRadius = 0.35f; //radius for groundCheck and ceilingCheck
     private GameObject enemyBelow; // check if player's stepping on any enemy
@@ -32,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalMove = 0f; //X-axis input
     private float jumpTimeCounter; //current jump time
-    private int life = 3;
+    [SerializeField] private int life;
     private bool isFacingRight = true; //for flipping the character
     private bool isGrounded = true;
     private bool isLadnded = false;
@@ -41,14 +42,17 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false;
     private bool isFalling = false;
     private bool isInvincible = false; // Make Player invincible
+    private bool isRespawning = false;
     private bool isFrozen = false;
 
     private bool checkCollisionOnce = false;
 
     //setter getter
     public void SetAttackingPlant(GameObject palnt) { attackingPlant = palnt; }
+    public void SetLife(int l) { life = l; }
 
     public GameObject GetEnemyBelow() { return enemyBelow; }
+    public int GetLife() { return life; }
 
     //Singleton
     public static PlayerController instance { get; private set; }
@@ -70,7 +74,9 @@ public class PlayerController : MonoBehaviour
 
         enemyDeathEffect.SetActive(false);
         landingEffect.SetActive(false);
-        lifeObj[life].SetActive(true);
+
+        life = 3;
+        ChangeLifeHud();
     }
 
     private void Update()
@@ -84,6 +90,8 @@ public class PlayerController : MonoBehaviour
         Move();
     }
 
+
+    //Check side for dectecting enemy
     private void SideChecker()
     {
         for (int i = 0; i < whatIsGround.Length; i++)
@@ -107,6 +115,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //check ground for detecting ground, obstacle, and Enemy
     private void GroundCheck()
     {
         for(int i = 0; i < whatIsGround.Length; i++)
@@ -114,7 +123,7 @@ public class PlayerController : MonoBehaviour
             Collider2D collider2D = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround[i]);
             if(collider2D != null)
             {
-                if (collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy") 
+                if ((collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy") && !isInvincible)
                     || collider2D.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
                 {
                     Vector2 pos = (collider2D.transform.position - transform.position).normalized;
@@ -140,6 +149,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    //Handles Jump and falling and landing effect
     private void Jump()
     {
         if (isFrozen) return;
@@ -158,7 +169,13 @@ public class PlayerController : MonoBehaviour
         {
             isFalling = false;
             wasGrounded = isGrounded;
-            if (fallingSpeed < -23)
+
+            if (fallingSpeed < -30)
+            {
+                CinemachineShake.instance.CameraShake(100.0f, 0.3f);
+                StartCoroutine(PlayEffect(landingEffect, 0.4f));
+            }
+            else if (fallingSpeed < -23)
             {
                 CinemachineShake.instance.CameraShake(80.0f, 0.3f);
                 StartCoroutine(PlayEffect(landingEffect, 0.4f));
@@ -203,6 +220,7 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("isJumping", isJumping);
         }
         anim.SetBool("isFalling", isFalling);
+        anim.SetFloat("velocityY", rigidbody2D.velocity.y);
     }
 
     IEnumerator PlayEffect(GameObject effect, float stopTime)
@@ -213,6 +231,7 @@ public class PlayerController : MonoBehaviour
         effect.SetActive(false);
     }
 
+    //Move player applying velocity x, y
     private void Move()
     {
         if (isFrozen) return;
@@ -256,53 +275,80 @@ public class PlayerController : MonoBehaviour
         }    
     }
 
+    //This is called when player get damage
+    public void GetDamaged(Vector2 boucnePower)
+    {
+        Vector2 dir = Vector2.zero;
+        if (attackingPlant != null)
+        {
+            dir = (attackingPlant.transform.position - transform.position);
+        }
+        Debug.Log(dir);
+
+        if (isFacingRight)
+        {
+            if (enemyRight || dir.x > 0)
+            {
+                rigidbody2D.velocity = Vector2.zero;
+                rigidbody2D.AddForce(new Vector2(-boucnePower.x, boucnePower.y));
+            }
+            else if (enemyLeft || dir.x < 0)
+            {
+                rigidbody2D.velocity = Vector2.zero;
+                rigidbody2D.AddForce(new Vector2(boucnePower.x, boucnePower.y));
+            }
+        }
+        else
+        {
+            if (enemyRight || dir.x > 0)
+            {
+                rigidbody2D.velocity = Vector2.zero;
+                rigidbody2D.AddForce(new Vector2(boucnePower.x, boucnePower.y));
+            }
+            else if (enemyLeft || dir.x < 0)
+            {
+                rigidbody2D.velocity = Vector2.zero;
+                rigidbody2D.AddForce(new Vector2(-boucnePower.x, boucnePower.y));
+            }
+        }
+
+        //remove impulse force acted on the enemy
+        if (enemyRight != null)
+            enemyRight.GetComponent<Rigidbody2D>().velocity 
+                = new Vector2(0, enemyRight.GetComponent<Rigidbody2D>().velocity.y);
+        if (enemyLeft != null)
+            enemyLeft.GetComponent<Rigidbody2D>().velocity
+                = new Vector2(0, enemyLeft.GetComponent<Rigidbody2D>().velocity.y);
+
+        Damaged();
+        Debug.Log(attackingPlant);
+        attackingPlant = null;
+    }
+
     private void OnCollisionStay2D(Collision2D collision)
     {
         if(!isInvincible && !checkCollisionOnce)
         {
-            if ((collision.gameObject.tag == "Enemy" && enemyBelow == null) || attackingPlant != null)
+            if ((collision.gameObject.tag == "Enemy" && enemyBelow == null))
             {
-                checkCollisionOnce = true;
-                Vector2 dir = Vector2.zero;
-                if (attackingPlant != null)
-                {
-                    dir = (attackingPlant.transform.position - transform.position);
-                }
-
-                if (isFacingRight)
-                {
-                    if (enemyRight || dir.x > 0)
-                    {
-                        rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(-200, 200));
-                    }
-                    else if (enemyLeft || dir.x < 0)
-                    {
-                        rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(200, 200));
-                    }
-                }
-                else
-                {
-                    if (enemyRight || dir.x > 0)
-                    {
-                        rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(200, 200));
-                    }
-                    else if (enemyLeft || dir.x < 0)
-                    {
-                        rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(-200, 200));
-                    }
-                }             
-                Damaged();
-                Debug.Log(attackingPlant);
-                attackingPlant = null;
+                GetDamaged(new Vector2(100, 500));
             }
         }
-        if(collision.gameObject.tag == "Ground")
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Ground")
         {
             isLadnded = true;
+        }
+        else if (collision.gameObject.tag == "FallingSpot")
+        {
+            if(!isRespawning)
+            {
+                isRespawning = true;
+                StartCoroutine(Respawn());
+            }
         }
     }
 
@@ -327,6 +373,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    IEnumerator Respawn()
+    {
+        isFrozen = true;
+        Damaged();
+
+        yield return new WaitForSeconds(0.3f);
+        transform.position = respawnPos.position;
+
+        yield return new WaitForSeconds(1.0f);
+        isRespawning = false;
+        isFrozen = false;
+    }
+
+    //This will be called inside of GetDamaged() function
     private void Damaged()
     {
         if (life > 0)
@@ -357,6 +417,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator SetInvincible()
     {
         isInvincible = true;
+        checkCollisionOnce = true;
         isFrozen = true;
         GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 0.5f);
 
