@@ -10,11 +10,10 @@ using UnityEngine;
 
 public class JumpingEnemy : Enemy
 {
-    [SerializeField] private int leftJumpTime; //number of jump before turning.
-    [SerializeField] private int rightJumpTime; //number of jump before turning.
+    [SerializeField] private int leftJumpTime = 0; //number of jump before turning.
+    [SerializeField] private int rightJumpTime = 0; //number of jump before turning.
     [SerializeField] private float jumpFrequency; // delay between jumps
     [SerializeField] private float jumpPower; //Y force that will be applied on rigid2D velocity.x
-
 
     [SerializeField] private int curJumpTime = 0;
     private float curJumpFrequency = 0;
@@ -116,5 +115,16 @@ public class JumpingEnemy : Enemy
             Debug.DrawRay(transform.position, Vector2.down * 0.6f, Color.white);
             isGrounded = false;
         }
+
+        if(!isReusable)
+        {
+            layerMask = LayerMask.GetMask("FallingSpot");
+            hit = Physics2D.Raycast(transform.position, Vector2.down, rayDis, layerMask);
+            if (hit.collider != null)
+            {
+                isReusable = true;
+            }
+        }
     }
+
 }

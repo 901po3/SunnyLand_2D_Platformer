@@ -15,11 +15,18 @@ public class Enemy : MonoBehaviour
 
     protected bool isDead = false;
     protected bool isMoving = false;
+    protected bool isReusable = false;
     protected Animator anim = null;
     protected Rigidbody2D rigidbody2D = null;
 
     //setter getter
+    public void SetSpeed(float spd) { speed = spd; }
+    public void SetIsReusable(bool reusable) { isReusable = reusable; }
+
     public bool GetIsMoving() { return isMoving; }
+    public bool GetIsReusable() { return isReusable; }
+
+    public bool GetIsFacingRight() { return isFacingRight; }
 
     protected virtual void Start()
     {
