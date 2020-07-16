@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalMove = 0f; //X-axis input
     private float jumpTimeCounter; //current jump time
-    private int life = 3;
+    [SerializeField] private int life;
     private bool isFacingRight = true; //for flipping the character
     private bool isGrounded = true;
     private bool isLadnded = false;

@@ -11,16 +11,15 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    private int curStage = 1;
-
-    public int playerLife;
+    private static int curStage = 1;
+    public static int playerLife;
 
     //Singleton
     public static SceneLoader instance { get; private set; }
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
         }
@@ -35,10 +34,16 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        Debug.Log(playerLife);
+    }
+
     public void LoadNextScene()
     {
         curStage++;
         playerLife = PlayerController.instance.GetLife();
+        Debug.Log(playerLife);
         SceneManager.LoadScene("Stage" + (curStage));
         DontDestroyOnLoad(this.gameObject);
     }
