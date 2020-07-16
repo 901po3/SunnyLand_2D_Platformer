@@ -16,7 +16,8 @@ public class MonsterPlant : MonoBehaviour
     [SerializeField] private Transform faceCheck;
     [SerializeField] bool isFacingRight;
     [SerializeField] float flipTime;
-    
+
+    private bool canAttack = false;
     private bool isAttacking = false;
     private float attackDelay = 1.5f;
     private float curAttackDelay = 1.5f;
@@ -46,20 +47,31 @@ public class MonsterPlant : MonoBehaviour
             isAttacking = false;
             if (hit.collider != null)
             {
-                Debug.DrawRay(transform.position, dir * hit.distance, Color.yellow);
-                // Debug.Log(gameObject + " is attacking");
+                canAttack = true;
                 isAttacking = true;
-                GetComponent<Animator>().SetTrigger("isAttacking");
-                PlayerController.instance.SetAttackingPlant(gameObject);
-                PlayerController.instance.GetDamaged(new Vector2(80, 80));
-                curAttackDelay = 0.0f;
+                Debug.DrawRay(transform.position, dir * hit.distance, Color.yellow);
+                StartCoroutine(AttackDelay());
             }
             else
             {
+                canAttack = false;
                 Debug.DrawRay(transform.position, dir * 1.5f, Color.white);
                 PlayerController.instance.SetAttackingPlant(null);
             }
         }
+    }
+
+    IEnumerator AttackDelay()
+    {
+        yield return new WaitForSeconds(0.75f);
+        if(canAttack)
+        {
+            canAttack = false;
+            GetComponent<Animator>().SetTrigger("isAttacking");
+            PlayerController.instance.SetAttackingPlant(gameObject);
+            PlayerController.instance.GetDamaged(new Vector2(80, 80));       
+        }
+        curAttackDelay = 0.0f;
     }
 
     protected void Flip()
