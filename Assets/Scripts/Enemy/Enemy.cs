@@ -10,9 +10,8 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] protected bool isFacingRight;
-    [SerializeField] protected int curWayPoint = 0;
     [SerializeField] protected float speed;
+    [SerializeField] protected bool isFacingRight;
 
     protected bool isDead = false;
     protected bool isMoving = false;
@@ -21,10 +20,6 @@ public class Enemy : MonoBehaviour
 
     //setter getter
     public bool GetIsMoving() { return isMoving; }
-    public bool GetVelocityX()
-    {
-        return isMoving; 
-    }
 
     protected virtual void Start()
     {
@@ -35,7 +30,6 @@ public class Enemy : MonoBehaviour
     protected virtual void Update()
     {
         Death();
-        Move();
     }
 
     protected virtual void Death() 
@@ -50,7 +44,7 @@ public class Enemy : MonoBehaviour
     }
     protected virtual void Move() 
     {
-        anim.SetBool("isMoving", isMoving);
+
     }
 
     protected void Flip()

@@ -309,6 +309,15 @@ public class PlayerController : MonoBehaviour
                 rigidbody2D.AddForce(new Vector2(-boucnePower.x, boucnePower.y));
             }
         }
+
+        //remove impulse force acted on the enemy
+        if (enemyRight != null)
+            enemyRight.GetComponent<Rigidbody2D>().velocity 
+                = new Vector2(0, enemyRight.GetComponent<Rigidbody2D>().velocity.y);
+        if (enemyLeft != null)
+            enemyLeft.GetComponent<Rigidbody2D>().velocity
+                = new Vector2(0, enemyLeft.GetComponent<Rigidbody2D>().velocity.y);
+
         Damaged();
         Debug.Log(attackingPlant);
         attackingPlant = null;

@@ -46,21 +46,13 @@ public class MonsterPlant : MonoBehaviour
             isAttacking = false;
             if (hit.collider != null)
             {
-                if (hit.transform.tag == "Player")
-                {
-                    Debug.DrawRay(transform.position, dir * hit.distance, Color.yellow);
-                    // Debug.Log(gameObject + " is attacking");
-                    isAttacking = true;
-                    GetComponent<Animator>().SetTrigger("isAttacking");
-                    PlayerController.instance.SetAttackingPlant(gameObject);
-                    PlayerController.instance.GetDamaged(new Vector2(80, 80));
-                    curAttackDelay = 0.0f;
-                }
-                else
-                {
-                    Debug.DrawRay(transform.position, dir * 1.5f, Color.white);
-                    PlayerController.instance.SetAttackingPlant(null);
-                }
+                Debug.DrawRay(transform.position, dir * hit.distance, Color.yellow);
+                // Debug.Log(gameObject + " is attacking");
+                isAttacking = true;
+                GetComponent<Animator>().SetTrigger("isAttacking");
+                PlayerController.instance.SetAttackingPlant(gameObject);
+                PlayerController.instance.GetDamaged(new Vector2(80, 80));
+                curAttackDelay = 0.0f;
             }
             else
             {
