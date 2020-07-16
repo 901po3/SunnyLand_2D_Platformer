@@ -1,7 +1,7 @@
 ﻿/*
  * Class: PlayerController
  * Date: 2020.7.14
- * Last Modified : 2020.7.15
+ * Last Modified : 2020.7.16
  * Author: Hyukin Kwon 
  * Description: Player movement controller.
 */
@@ -84,6 +84,8 @@ public class PlayerController : MonoBehaviour
         Move();
     }
 
+
+    //Check side for dectecting enemy
     private void SideChecker()
     {
         for (int i = 0; i < whatIsGround.Length; i++)
@@ -107,6 +109,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //check ground for detecting ground, obstacle, and Enemy
     private void GroundCheck()
     {
         for(int i = 0; i < whatIsGround.Length; i++)
@@ -114,7 +117,7 @@ public class PlayerController : MonoBehaviour
             Collider2D collider2D = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround[i]);
             if(collider2D != null)
             {
-                if (collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy") 
+                if ((collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy") && !isInvincible)
                     || collider2D.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
                 {
                     Vector2 pos = (collider2D.transform.position - transform.position).normalized;
@@ -140,6 +143,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    //Handles Jump and falling and landing effect
     private void Jump()
     {
         if (isFrozen) return;
@@ -213,6 +218,7 @@ public class PlayerController : MonoBehaviour
         effect.SetActive(false);
     }
 
+    //Move player applying velocity x, y
     private void Move()
     {
         if (isFrozen) return;
@@ -256,51 +262,61 @@ public class PlayerController : MonoBehaviour
         }    
     }
 
+    //This is called when player get damage
+    public void GetDamaged(Vector2 boucnePower)
+    {
+        Vector2 dir = Vector2.zero;
+        if (attackingPlant != null)
+        {
+            dir = (attackingPlant.transform.position - transform.position);
+        }
+        Debug.Log(dir);
+
+        if (isFacingRight)
+        {
+            if (enemyRight || dir.x > 0)
+            {
+                rigidbody2D.velocity = Vector2.zero;
+                rigidbody2D.AddForce(new Vector2(-boucnePower.x, boucnePower.y));
+            }
+            else if (enemyLeft || dir.x < 0)
+            {
+                rigidbody2D.velocity = Vector2.zero;
+                rigidbody2D.AddForce(new Vector2(boucnePower.x, boucnePower.y));
+            }
+        }
+        else
+        {
+            if (enemyRight || dir.x > 0)
+            {
+                rigidbody2D.velocity = Vector2.zero;
+                rigidbody2D.AddForce(new Vector2(boucnePower.x, boucnePower.y));
+            }
+            else if (enemyLeft || dir.x < 0)
+            {
+                rigidbody2D.velocity = Vector2.zero;
+                rigidbody2D.AddForce(new Vector2(-boucnePower.x, boucnePower.y));
+            }
+        }
+        Damaged();
+        Debug.Log(attackingPlant);
+        attackingPlant = null;
+    }
+
     private void OnCollisionStay2D(Collision2D collision)
     {
         if(!isInvincible && !checkCollisionOnce)
         {
-            if ((collision.gameObject.tag == "Enemy" && enemyBelow == null) || attackingPlant != null)
+            if ((collision.gameObject.tag == "Enemy" && enemyBelow == null))
             {
-                checkCollisionOnce = true;
-                Vector2 dir = Vector2.zero;
-                if (attackingPlant != null)
-                {
-                    dir = (attackingPlant.transform.position - transform.position);
-                }
-
-                if (isFacingRight)
-                {
-                    if (enemyRight || dir.x > 0)
-                    {
-                        rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(-200, 200));
-                    }
-                    else if (enemyLeft || dir.x < 0)
-                    {
-                        rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(200, 200));
-                    }
-                }
-                else
-                {
-                    if (enemyRight || dir.x > 0)
-                    {
-                        rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(200, 200));
-                    }
-                    else if (enemyLeft || dir.x < 0)
-                    {
-                        rigidbody2D.velocity = Vector2.zero;
-                        rigidbody2D.AddForce(new Vector2(-200, 200));
-                    }
-                }             
-                Damaged();
-                Debug.Log(attackingPlant);
-                attackingPlant = null;
+                GetDamaged(new Vector2(100, 500));
             }
         }
-        if(collision.gameObject.tag == "Ground")
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Ground")
         {
             isLadnded = true;
         }
@@ -327,6 +343,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //This will be called inside of GetDamaged() function
     private void Damaged()
     {
         if (life > 0)
@@ -357,6 +374,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator SetInvincible()
     {
         isInvincible = true;
+        checkCollisionOnce = true;
         isFrozen = true;
         GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 0.5f);
 
