@@ -380,10 +380,14 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(0.3f);
         transform.position = respawnPos.position;
+        ToIdle();
+        if (!isFacingRight)
+            Flip();
 
         yield return new WaitForSeconds(1.0f);
         isRespawning = false;
         isFrozen = false;
+
     }
 
     //This will be called inside of GetDamaged() function
