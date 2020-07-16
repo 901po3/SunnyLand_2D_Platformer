@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalMove = 0f; //X-axis input
     private float jumpTimeCounter; //current jump time
-    private int life = 3;
+    private int life;
     private bool isFacingRight = true; //for flipping the character
     private bool isGrounded = true;
     private bool isLadnded = false;
@@ -49,8 +49,10 @@ public class PlayerController : MonoBehaviour
 
     //setter getter
     public void SetAttackingPlant(GameObject palnt) { attackingPlant = palnt; }
+    public void SetLife(int l) { life = l; }
 
     public GameObject GetEnemyBelow() { return enemyBelow; }
+    public int GetLife() { return life; }
 
     //Singleton
     public static PlayerController instance { get; private set; }
