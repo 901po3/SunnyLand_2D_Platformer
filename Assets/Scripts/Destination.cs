@@ -10,12 +10,16 @@ using UnityEngine;
 
 public class Destination : MonoBehaviour
 {
-
+    private bool loadOnce = false;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Player")
         {
-            SceneLoader.instance.LoadNextScene();
+            if(!loadOnce)
+            {
+                loadOnce = true;
+                SceneLoader.instance.LoadNextScene();
+            }
         }
     }
 

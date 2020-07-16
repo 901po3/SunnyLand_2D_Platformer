@@ -18,13 +18,18 @@ public class SceneLoader : MonoBehaviour
     //Singleton
     public static SceneLoader instance { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
-        if(curStage == 1)
+        if(instance == null)
+        {
+            instance = this;
+        }
+
+        if (curStage == 1)
         {
             PlayerController.instance.SetLife(3);
         }
-        else
+        else if(curStage > 1)
         {
             PlayerController.instance.SetLife(playerLife);
         }
@@ -34,7 +39,7 @@ public class SceneLoader : MonoBehaviour
     {
         curStage++;
         playerLife = PlayerController.instance.GetLife();
-        SceneManager.LoadScene("Stage" + (curStage - 1));
+        SceneManager.LoadScene("Stage" + (curStage));
         DontDestroyOnLoad(this.gameObject);
     }
 }

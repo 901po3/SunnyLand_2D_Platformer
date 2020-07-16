@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
     private float horizontalMove = 0f; //X-axis input
     private float jumpTimeCounter; //current jump time
-    private int life;
+    private int life = 3;
     private bool isFacingRight = true; //for flipping the character
     private bool isGrounded = true;
     private bool isLadnded = false;
@@ -167,7 +167,13 @@ public class PlayerController : MonoBehaviour
         {
             isFalling = false;
             wasGrounded = isGrounded;
-            if (fallingSpeed < -23)
+
+            if (fallingSpeed < -30)
+            {
+                CinemachineShake.instance.CameraShake(100.0f, 0.3f);
+                StartCoroutine(PlayEffect(landingEffect, 0.4f));
+            }
+            else if (fallingSpeed < -23)
             {
                 CinemachineShake.instance.CameraShake(80.0f, 0.3f);
                 StartCoroutine(PlayEffect(landingEffect, 0.4f));
@@ -212,6 +218,7 @@ public class PlayerController : MonoBehaviour
             anim.SetBool("isJumping", isJumping);
         }
         anim.SetBool("isFalling", isFalling);
+        anim.SetFloat("velocityY", rigidbody2D.velocity.y);
     }
 
     IEnumerator PlayEffect(GameObject effect, float stopTime)

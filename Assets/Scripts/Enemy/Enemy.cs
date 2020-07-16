@@ -10,7 +10,6 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] protected Transform[] wayPoints;
     [SerializeField] protected bool isFacingRight;
     [SerializeField] protected int curWayPoint = 0;
     [SerializeField] protected float speed;
@@ -45,6 +44,8 @@ public class Enemy : MonoBehaviour
         if(PlayerController.instance.GetEnemyBelow() == gameObject)
         {
             isDead = true;
+            Debug.Log("enemy died");
+            gameObject.SetActive(false);
         }
     }
     protected virtual void Move() 
