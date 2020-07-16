@@ -63,11 +63,11 @@ public class MonsterPlant : MonoBehaviour
 
     IEnumerator AttackDelay()
     {
-        yield return new WaitForSeconds(0.75f);
+        GetComponent<Animator>().SetTrigger("isAttacking");
+        yield return new WaitForSeconds(0.5f);
         if(canAttack)
         {
             canAttack = false;
-            GetComponent<Animator>().SetTrigger("isAttacking");
             PlayerController.instance.SetAttackingPlant(gameObject);
             PlayerController.instance.GetDamaged(new Vector2(80, 80));       
         }
