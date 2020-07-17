@@ -80,22 +80,22 @@ PrefabInstance:
     - target: {fileID: 3480595324860439677, guid: b1c394dd5f0ca27488bcaa67c744e3be,
         type: 3}
       propertyPath: speed
-      value: 5
+      value: 3.8
       objectReference: {fileID: 0}
     - target: {fileID: 3480595324860439677, guid: b1c394dd5f0ca27488bcaa67c744e3be,
         type: 3}
       propertyPath: rightJumpTime
-      value: 100
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3480595324860439677, guid: b1c394dd5f0ca27488bcaa67c744e3be,
         type: 3}
       propertyPath: leftJumpTime
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3480595324860439677, guid: b1c394dd5f0ca27488bcaa67c744e3be,
         type: 3}
       propertyPath: jumpPower
-      value: 1300
+      value: 1800
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b1c394dd5f0ca27488bcaa67c744e3be, type: 3}
