@@ -55,7 +55,7 @@ public class EnemySpawner : MonoBehaviour
         for (int i = 0; i < idx; i++)
         {
             if(enemies[i].GetComponent<Enemy>().GetIsReusable())
-            {
+            {   
                 enemies[i].transform.position = new Vector3(transform.position.x, transform.position.y, -4);
                 enemies[i].GetComponent<Enemy>().SetIsReusable(false);
                 enemies[i].SetActive(false);
