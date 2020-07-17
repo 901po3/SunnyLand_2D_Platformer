@@ -10,9 +10,9 @@ using UnityEngine;
 
 public class WalkingEnemy : Enemy
 {
-    [SerializeField] private Transform[] wayPoints;
+    [SerializeField] protected Transform[] wayPoints;
     [SerializeField] protected int curWayPoint = 0;
-    [SerializeField] private float stopTime = 1f; //stay time at waypoints
+    [SerializeField] protected float stopTime = 1f; //stay time at waypoints
       
     private float curStopTime;
 
