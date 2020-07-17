@@ -6,12 +6,17 @@
  * Description: Managing Scene interactions.
 */
 
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    private int curStage = 1;
+    [SerializeField] private GameObject panel;
+    [SerializeField] private float fadeOutSpeed;
+
+    private float curFadeOutSpeed = 0;
+    private int curStage = 0;
     public int playerLife = 3;
 
     //Singleton
@@ -30,12 +35,27 @@ public class SceneLoader : MonoBehaviour
         Debug.Log(playerLife);
     }
 
+    private void Update()
+    {
+        
+    }
+
     public void LoadNextScene()
     {
+        if(curStage > 0)
+        {
+            playerLife = PlayerController.instance.GetLife();
+            Debug.Log(playerLife);
+        }
         curStage++;
-        playerLife = PlayerController.instance.GetLife();
-        Debug.Log(playerLife);
         SceneManager.LoadScene("Stage" + (curStage));
         DontDestroyOnLoad(this.gameObject);
+    }
+
+    IEnumerator SceneChangeEffect(float targetAlpha)
+    {
+        yield return new WaitForSeconds(fadeOutSpeed);
+
+        yield return new WaitForSeconds(1f);
     }
 }
