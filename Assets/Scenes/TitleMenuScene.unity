@@ -284,7 +284,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uB9C8\uBC95 \uC5F4\uB9E4"
+  m_Text: Rabbit's Wood
 --- !u!222 &97997742
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -660,9 +660,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  Children:
-  - {fileID: 1386076615}
-  - {fileID: 1854392080}
+  children: []
 --- !u!1 &1132155948
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,7 +8,7 @@
 
 using UnityEngine;
 
-public class FlyingEnemy : Enemy
+public class FlyingEnemy : WalkingEnemy
 {
     protected override void Start()
     {
@@ -28,5 +28,15 @@ public class FlyingEnemy : Enemy
     protected override void Move()
     {
         base.Move();
+
+        int idx = curWayPoint % wayPoints.Length;
+
+        float dis = Vector2.Distance(wayPoints[idx].position, transform.position);
+        Vector2 targetDir = (wayPoints[idx].position - transform.position).normalized;
+        if (dis > 0.25f) //move to target
+        {
+            transform.Translate(new Vector2(0, targetDir.y) * speed * Time.deltaTime);
+            isMoving = true;
+        }
     }
 }
