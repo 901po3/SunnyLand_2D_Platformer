@@ -399,12 +399,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TownBGM: {fileID: 8300000, guid: 18fa7f85faaee95408b6f749a5990a23, type: 3}
-  ForestBGM: {fileID: 8300000, guid: b25699b930ca8f24c8bb73149eec0615, type: 3}
+  ForestBGM: {fileID: 8300000, guid: c9db73d1a6ceb2043b319ee28ea3d000, type: 3}
   CreditBGM: {fileID: 8300000, guid: c630ba7ffa7abe44993cb696c3609d58, type: 3}
   TitleBGM: {fileID: 8300000, guid: ea4d2622de682f7428253cca1618e098, type: 3}
   fadeOutPanel: {fileID: 601548018}
   fadeInPanel: {fileID: 2109753227}
   isGameFinished: 0
+  volume: 1
 --- !u!82 &1714944142030977457
 AudioSource:
   m_ObjectHideFlags: 0

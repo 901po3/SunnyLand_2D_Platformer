@@ -109,7 +109,7 @@ public class SceneLoader : MonoBehaviour
 
     private void BGMSetting(string stage)
     {
-        audioSource.pitch = 0.8f;
+        audioSource.pitch = 1.0f;
         audioSource.volume = volume;
         audioSource.playOnAwake = true;
         audioSource.loop = true;
@@ -117,7 +117,7 @@ public class SceneLoader : MonoBehaviour
         {
             curScene = Scene.Village;
         }
-        else if (stage == "Stage1" || stage == "stage2" || stage == "stage3")
+        else if (stage == "Stage1")
         {
             curScene = Scene.Stages;
         }
@@ -130,7 +130,8 @@ public class SceneLoader : MonoBehaviour
             curScene = Scene.Title;
         }
         SelectBGM();
-        audioSource.Play();
+        if(stage != "stage2" && stage != "stage3")
+            audioSource.Play();
     }
 
     private void SelectBGM()
