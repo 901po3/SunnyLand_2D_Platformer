@@ -18,6 +18,7 @@ public class SceneLoader : MonoBehaviour
     private bool isSceneLoading = false;
     [SerializeField] private bool isGameFinished = false;
 
+
     //Singleton
     public static SceneLoader instance { get; private set; }
 
@@ -89,6 +90,5 @@ public class SceneLoader : MonoBehaviour
     {
         StartCoroutine(FadeIn());
     }
-
 
 }

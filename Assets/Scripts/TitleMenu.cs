@@ -12,6 +12,17 @@ using UnityEngine.UI;
 
 public class TitleMenu : MonoBehaviour
 {
+    [SerializeField] private GameObject SceneManagerPrefab;
+
+    private void Start()
+    {
+        if(SceneLoader.instance == null)
+        {
+            Instantiate(SceneManagerPrefab);
+        }
+        SceneLoader.instance.SetIsSceneLoading(false);
+        SceneLoader.instance.SetIsGameFinsihed(false);
+    }
     public void PlayerButtonOnClick()
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
