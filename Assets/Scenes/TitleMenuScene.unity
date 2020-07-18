@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1240,37 +1240,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 601548018, guid: 7de466788d2b22e44b014d73ef416516, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1370854099, guid: 7de466788d2b22e44b014d73ef416516, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2109753227, guid: 7de466788d2b22e44b014d73ef416516, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2109753229, guid: 7de466788d2b22e44b014d73ef416516, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: e6a07ffeab90cce42ad204af551af16d, type: 2}
-    - target: {fileID: 619154210008947925, guid: 7de466788d2b22e44b014d73ef416516,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 666886609344170722, guid: 7de466788d2b22e44b014d73ef416516,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1489746267131923241, guid: 7de466788d2b22e44b014d73ef416516,
-        type: 3}
-      propertyPath: m_UiScaleMode
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1714944142030977462, guid: 7de466788d2b22e44b014d73ef416516,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1330,11 +1299,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SceneManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 1714944142030977463, guid: 7de466788d2b22e44b014d73ef416516,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7de466788d2b22e44b014d73ef416516, type: 3}

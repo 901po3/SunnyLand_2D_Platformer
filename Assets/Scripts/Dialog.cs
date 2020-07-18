@@ -12,9 +12,13 @@ using UnityEngine;
 
 public class Dialog : MonoBehaviour
 {
+    [SerializeField] private GameObject FriendIcon;
+    [SerializeField] private GameObject PlayerIcon;
+
     private bool pressed = false;
     private int dialogNum = 3;
     private int curDialogNum;
+    private bool isFriendTalking = false;
 
     private void Start()
     {
@@ -23,25 +27,67 @@ public class Dialog : MonoBehaviour
 
     private void Update()
     {
-        TouchScreen();
+        bool isGameFinished = PlayerController.instance.GetIsMagicFruit();
+        if(!isGameFinished)
+        {
+            Prolouge();
+        }
+        else
+        {
+            Epilogue();
+        }
+
+        ChangeIcon();
     }
 
 
-    private void TouchScreen()
+    private void Prolouge()
     {
-
         if(Input.GetMouseButtonUp(0))
         {
             Debug.Log("Mouse Clicked :" + curDialogNum);
             if(curDialogNum < dialogNum)
             {
                 curDialogNum++;
-                if(curDialogNum >= dialogNum)
+                isFriendTalking = !isFriendTalking;
+                if (curDialogNum >= dialogNum)
                 {
                     Debug.Log("Game Start");
                     SceneLoader.instance.LoadNextScene("Stage1");
                 }
             }
+        }
+    }
+
+    private void Epilogue()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
+            Debug.Log("Mouse Clicked :" + curDialogNum);
+            if (curDialogNum < dialogNum)
+            {
+                curDialogNum++;
+                isFriendTalking = !isFriendTalking;
+                if (curDialogNum >= dialogNum)
+                {
+                    Debug.Log("Game Start");
+                    SceneLoader.instance.LoadNextScene("TitleMenuScene");
+                }
+            }
+        }
+    }
+
+    private void ChangeIcon()
+    {
+        if(isFriendTalking)
+        {
+            FriendIcon.SetActive(true);
+            PlayerIcon.SetActive(false);
+        }
+        else
+        {
+            FriendIcon.SetActive(false);
+            PlayerIcon.SetActive(true);
         }
     }
 }

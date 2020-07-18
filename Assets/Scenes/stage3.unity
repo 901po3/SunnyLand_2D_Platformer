@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -59183,12 +59183,12 @@ PrefabInstance:
     - target: {fileID: 8707388258648747438, guid: fb7345056b133184f934543618eae709,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -33.369354
+      value: -33.38011
       objectReference: {fileID: 0}
     - target: {fileID: 8707388258648747438, guid: fb7345056b133184f934543618eae709,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.35042453
+      value: 0.3502004
       objectReference: {fileID: 0}
     - target: {fileID: 8707388258648747438, guid: fb7345056b133184f934543618eae709,
         type: 3}
@@ -59634,9 +59634,9 @@ GameObject:
   - component: {fileID: 1716486189}
   - component: {fileID: 1716486193}
   - component: {fileID: 1716486192}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: MagicFruit
-  m_TagString: Untagged
+  m_TagString: MagicFruit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59989,7 +59989,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1760398174}
   - component: {fileID: 1760398175}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Point Light 2D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
