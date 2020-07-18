@@ -21,7 +21,7 @@ public class TitleMenu : MonoBehaviour
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
         Debug.Log("Play button clicked");
-        SceneLoader.instance.LoadNextScene("Stage1");
+        SceneLoader.instance.LoadNextScene("stage0");
     }
 
     public void TutorialButtonOnClick()
