@@ -16,7 +16,7 @@ public class SceneLoader : MonoBehaviour
     [SerializeField] private GameObject fadeInPanel;
 
     private bool isSceneLoading = false;
-    private bool isGameFinished = false;
+    [SerializeField] private bool isGameFinished = false;
 
     //Singleton
     public static SceneLoader instance { get; private set; }
