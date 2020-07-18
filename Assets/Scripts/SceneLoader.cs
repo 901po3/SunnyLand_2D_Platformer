@@ -12,12 +12,23 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
+    public enum Scene
+    {
+        Title, Village, Stages, Credit
+    }
+
+    [SerializeField] private AudioClip TownBGM;
+    [SerializeField] private AudioClip ForestBGM;
+    [SerializeField] private AudioClip CreditBGM;
+    [SerializeField] private AudioClip TitleBGM;
     [SerializeField] private GameObject fadeOutPanel;
     [SerializeField] private GameObject fadeInPanel;
-
-    private bool isSceneLoading = false;
     [SerializeField] private bool isGameFinished = false;
+    [SerializeField] private float volume = 1f;
 
+    private Scene curScene = Scene.Title;
+    private bool isSceneLoading = false;
+    private AudioSource audioSource;
 
     //Singleton
     public static SceneLoader instance { get; private set; }
@@ -25,9 +36,10 @@ public class SceneLoader : MonoBehaviour
     //Setter getter
     public void SetIsSceneLoading(bool sceneLoading) { isSceneLoading = sceneLoading; }
     public void SetIsGameFinsihed(bool gameFinished) { isGameFinished = gameFinished; }
-
+    public void SetCurScene(Scene cS) { curScene = cS; }
     public bool GetIsSceneLoading() { return isSceneLoading; }
     public bool GetIsGameFinsihed() { return isGameFinished; }
+    public Scene GetCurScene() { return curScene; }
 
     private void Awake()
     {
@@ -38,6 +50,8 @@ public class SceneLoader : MonoBehaviour
         isSceneLoading = false;
         fadeOutPanel.SetActive(false);
         fadeInPanel.SetActive(false);
+        audioSource = GetComponent<AudioSource>();
+        BGMSetting("TitleMenuScene");
     }
 
 
@@ -58,6 +72,8 @@ public class SceneLoader : MonoBehaviour
         yield return new WaitForSeconds(0.6f);
         fadeOutPanel.SetActive(false);
         SceneManager.LoadScene(stage);
+        BGMSetting(stage);
+
         DontDestroyOnLoad(gameObject);
 
         StartCoroutine(FadeIn());
@@ -89,6 +105,51 @@ public class SceneLoader : MonoBehaviour
     public void PlayFadeIn()
     {
         StartCoroutine(FadeIn());
+    }
+
+    private void BGMSetting(string stage)
+    {
+        audioSource.pitch = 0.8f;
+        audioSource.volume = volume;
+        audioSource.playOnAwake = true;
+        audioSource.loop = true;
+        if (stage == "stage0")
+        {
+            curScene = Scene.Village;
+        }
+        else if (stage == "Stage1" || stage == "stage2" || stage == "stage3")
+        {
+            curScene = Scene.Stages;
+        }
+        else if (stage == "CreditPage")
+        {
+            curScene = Scene.Credit;
+        }
+        else if (stage == "TitleMenuScene")
+        {
+            curScene = Scene.Title;
+        }
+        SelectBGM();
+        audioSource.Play();
+    }
+
+    private void SelectBGM()
+    {
+        switch (curScene)
+        {
+            case Scene.Title:
+                audioSource.clip = TitleBGM;
+                break;
+            case Scene.Village:
+                audioSource.clip = TownBGM;
+                break;
+            case Scene.Stages:
+                audioSource.clip = ForestBGM;
+                break;
+            case Scene.Credit:
+                audioSource.clip = CreditBGM;
+                break;
+        }
     }
 
 }

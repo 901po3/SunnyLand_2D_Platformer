@@ -398,8 +398,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5394f39489fdc684589daad65fda49fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TownBGM: {fileID: 8300000, guid: 18fa7f85faaee95408b6f749a5990a23, type: 3}
+  ForestBGM: {fileID: 8300000, guid: b25699b930ca8f24c8bb73149eec0615, type: 3}
+  CreditBGM: {fileID: 8300000, guid: c630ba7ffa7abe44993cb696c3609d58, type: 3}
+  TitleBGM: {fileID: 8300000, guid: ea4d2622de682f7428253cca1618e098, type: 3}
   fadeOutPanel: {fileID: 601548018}
   fadeInPanel: {fileID: 2109753227}
+  isGameFinished: 0
 --- !u!82 &1714944142030977457
 AudioSource:
   m_ObjectHideFlags: 0
@@ -410,7 +415,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 8bf9b0ba4e5d40b49a03ac210f2f7cb9, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0
   m_Pitch: 1

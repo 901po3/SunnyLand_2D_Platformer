@@ -70,8 +70,6 @@ public class Dialog : MonoBehaviour
                 if (curDialogNum >= dialogNum)
                 {
                     Debug.Log("Game Start");
-                    SceneLoader.instance.SetIsSceneLoading(false);
-                    SceneLoader.instance.SetIsGameFinsihed(false);
                     SceneLoader.instance.LoadNextScene("CreditPage");
                 }
             }
