@@ -14,15 +14,18 @@ public class Dialog : MonoBehaviour
 {
     [SerializeField] private GameObject FriendIcon;
     [SerializeField] private GameObject PlayerIcon;
+    [SerializeField] private AudioClip tocuhSound;
 
     private bool pressed = false;
     private int dialogNum = 3;
     private int curDialogNum;
     private bool isFriendTalking = false;
+    private AudioSource audioSource;
 
     private void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
+        audioSource.volume = SceneLoader.instance.GetSfxVolume();
     }
 
     private void Update()
@@ -45,7 +48,8 @@ public class Dialog : MonoBehaviour
         if(Input.GetMouseButtonUp(0))
         {
             Debug.Log("Mouse Clicked :" + curDialogNum);
-            if(curDialogNum < dialogNum)
+            audioSource.PlayOneShot(tocuhSound);
+            if (curDialogNum < dialogNum)
             {
                 curDialogNum++;
                 isFriendTalking = !isFriendTalking;
@@ -62,6 +66,7 @@ public class Dialog : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0))
         {
+            audioSource.PlayOneShot(tocuhSound);
             Debug.Log("Mouse Clicked :" + curDialogNum);
             if (curDialogNum < dialogNum)
             {

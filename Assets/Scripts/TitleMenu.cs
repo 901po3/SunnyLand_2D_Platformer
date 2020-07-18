@@ -13,6 +13,9 @@ using UnityEngine.UI;
 public class TitleMenu : MonoBehaviour
 {
     [SerializeField] private GameObject SceneManagerPrefab;
+    [SerializeField] private AudioClip tocuhSound;
+
+    private AudioSource audioSource;
 
     private void Start()
     {
@@ -22,10 +25,13 @@ public class TitleMenu : MonoBehaviour
         }
         SceneLoader.instance.SetIsSceneLoading(false);
         SceneLoader.instance.SetIsGameFinsihed(false);
+        audioSource = GetComponent<AudioSource>();
+        audioSource.volume = SceneLoader.instance.GetSfxVolume();
     }
     public void PlayerButtonOnClick()
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
+        audioSource.PlayOneShot(tocuhSound);
         Debug.Log("Play button clicked");
         SceneLoader.instance.LoadNextScene("stage0");
     }
@@ -33,18 +39,21 @@ public class TitleMenu : MonoBehaviour
     public void TutorialButtonOnClick()
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
+        audioSource.PlayOneShot(tocuhSound);
         Debug.Log("Tutorial button clicked");
     }
 
     public void OptionButtonOnClick()
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
+        audioSource.PlayOneShot(tocuhSound);
         Debug.Log("Option button clicked");
     }
 
     public void ExitButtonOnClick()
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
+        audioSource.PlayOneShot(tocuhSound);
         Debug.Log("Exit button clicked");
         Application.Quit();
     }

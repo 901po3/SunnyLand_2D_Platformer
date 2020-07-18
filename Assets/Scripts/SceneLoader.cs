@@ -4,6 +4,7 @@
  * Last Modified : 2020.7.18
  * Author: Hyukin Kwon 
  * Description: Managing Scene interactions.
+ *              Handles BGM and SFX
 */
 
 using System.Collections;
@@ -24,7 +25,8 @@ public class SceneLoader : MonoBehaviour
     [SerializeField] private GameObject fadeOutPanel;
     [SerializeField] private GameObject fadeInPanel;
     [SerializeField] private bool isGameFinished = false;
-    [SerializeField] private float volume = 1f;
+    [SerializeField] private float bgmVolume = 1f;
+    [SerializeField] private float sfxVolume = 1f;
 
     private Scene curScene = Scene.Title;
     private bool isSceneLoading = false;
@@ -37,9 +39,13 @@ public class SceneLoader : MonoBehaviour
     public void SetIsSceneLoading(bool sceneLoading) { isSceneLoading = sceneLoading; }
     public void SetIsGameFinsihed(bool gameFinished) { isGameFinished = gameFinished; }
     public void SetCurScene(Scene cS) { curScene = cS; }
+    public void SetBgmVolume(float bgmV) { bgmVolume = bgmV; }
+    public void SetSFXVolume(float sfxV) { sfxVolume = sfxV; }
     public bool GetIsSceneLoading() { return isSceneLoading; }
     public bool GetIsGameFinsihed() { return isGameFinished; }
     public Scene GetCurScene() { return curScene; }
+    public float GetBgmVolume() { return bgmVolume; }
+    public float GetSfxVolume() { return sfxVolume; }
 
     private void Awake()
     {
@@ -110,7 +116,7 @@ public class SceneLoader : MonoBehaviour
     private void BGMSetting(string stage)
     {
         audioSource.pitch = 1.0f;
-        audioSource.volume = volume;
+        audioSource.volume = bgmVolume;
         audioSource.playOnAwake = true;
         audioSource.loop = true;
         if (stage == "stage0")
