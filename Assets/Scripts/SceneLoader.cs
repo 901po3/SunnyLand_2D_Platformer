@@ -77,4 +77,15 @@ public class SceneLoader : MonoBehaviour
         fadeInPanel.SetActive(false);
     }
 
+    public void PlayFadeOut()
+    {
+        StartCoroutine(FadeOut());
+    }
+
+    public void PlayFadeIn()
+    {
+        StartCoroutine(FadeIn());
+    }
+
+
 }
