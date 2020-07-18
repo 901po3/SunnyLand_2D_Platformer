@@ -44,7 +44,6 @@ public class PlayerController : MonoBehaviour
     private bool isInvincible = false; // Make Player invincible
     private bool isRespawning = false;
     private bool isFrozen = false;
-
     private bool checkCollisionOnce = false;
 
     //setter getter
@@ -64,7 +63,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        isFrozen = false;
     }
 
     private void OnDestroy()
@@ -94,6 +92,8 @@ public class PlayerController : MonoBehaviour
     {
         Move();
     }
+
+
 
 
     //Check side for dectecting enemy
