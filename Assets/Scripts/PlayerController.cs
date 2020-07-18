@@ -44,15 +44,16 @@ public class PlayerController : MonoBehaviour
     private bool isInvincible = false; // Make Player invincible
     private bool isRespawning = false;
     private bool isFrozen = false;
-
     private bool checkCollisionOnce = false;
 
     //setter getter
     public void SetAttackingPlant(GameObject palnt) { attackingPlant = palnt; }
     public void SetLife(int l) { life = l; }
+    public void SetIsFronze(bool frozen) { isFrozen = frozen; }
 
     public GameObject GetEnemyBelow() { return enemyBelow; }
     public int GetLife() { return life; }
+    public bool GetIsFrozen() { return isFrozen; }
 
     //Singleton
     public static PlayerController instance { get; private set; }
@@ -89,7 +90,6 @@ public class PlayerController : MonoBehaviour
     {
         Move();
     }
-
 
     //Check side for dectecting enemy
     private void SideChecker()
@@ -371,6 +371,12 @@ public class PlayerController : MonoBehaviour
                 Destroy(collision.gameObject);
             }
         }
+        if(collision.transform.tag == "MagicFruit")
+        {
+            isFrozen = true;
+            SceneLoader.instance.SetIsGameFinsihed(true);
+            SceneLoader.instance.LoadNextScene("stage0");
+        }
     }
 
     IEnumerator Respawn()
@@ -403,7 +409,7 @@ public class PlayerController : MonoBehaviour
 
             if (life <= 0)
             {
-                //GameOver;
+                GameOver.instance.TurnOnGameOver();
             }
         }
     }

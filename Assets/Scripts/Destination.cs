@@ -10,6 +10,8 @@ using UnityEngine;
 
 public class Destination : MonoBehaviour
 {
+    [SerializeField] private string nextStageName;
+
     private bool loadOnce = false;
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -18,7 +20,8 @@ public class Destination : MonoBehaviour
             if(!loadOnce)
             {
                 loadOnce = true;
-                SceneLoader.instance.LoadNextScene();
+                PlayerController.instance.SetIsFronze(true);
+                SceneLoader.instance.LoadNextScene(nextStageName);
             }
         }
     }

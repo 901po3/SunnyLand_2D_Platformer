@@ -1,21 +1,32 @@
 ﻿/*
  * Class: SceneLoader
  * Date: 2020.7.16
- * Last Modified : 2020.7.16
+ * Last Modified : 2020.7.18
  * Author: Hyukin Kwon 
  * Description: Managing Scene interactions.
 */
 
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    private int curStage = 1;
-    public int playerLife = 3;
+    [SerializeField] private GameObject fadeOutPanel;
+    [SerializeField] private GameObject fadeInPanel;
+
+    private bool isSceneLoading = false;
+    [SerializeField] private bool isGameFinished = false;
 
     //Singleton
     public static SceneLoader instance { get; private set; }
+
+    //Setter getter
+    public void SetIsSceneLoading(bool sceneLoading) { isSceneLoading = sceneLoading; }
+    public void SetIsGameFinsihed(bool gameFinished) { isGameFinished = gameFinished; }
+
+    public bool GetIsSceneLoading() { return isSceneLoading; }
+    public bool GetIsGameFinsihed() { return isGameFinished; }
 
     private void Awake()
     {
@@ -23,19 +34,61 @@ public class SceneLoader : MonoBehaviour
         {
             instance = this;
         }
+        isSceneLoading = false;
+        fadeOutPanel.SetActive(false);
+        fadeInPanel.SetActive(false);
     }
 
-    private void Start()
+
+    private void OnDestroy()
     {
-        Debug.Log(playerLife);
+        instance = null;
     }
 
-    public void LoadNextScene()
+    public void LoadNextScene(string stage)
     {
-        curStage++;
-        playerLife = PlayerController.instance.GetLife();
-        Debug.Log(playerLife);
-        SceneManager.LoadScene("Stage" + (curStage));
-        DontDestroyOnLoad(this.gameObject);
+        isSceneLoading = true;
+        fadeOutPanel.SetActive(true);
+        StartCoroutine(LoadSceneInDelay(stage));
     }
+
+    IEnumerator LoadSceneInDelay(string stage)
+    {
+        yield return new WaitForSeconds(0.6f);
+        fadeOutPanel.SetActive(false);
+        SceneManager.LoadScene(stage);
+        DontDestroyOnLoad(gameObject);
+
+        StartCoroutine(FadeIn());
+    }
+
+    IEnumerator FadeOut()
+    {
+        fadeOutPanel.SetActive(true);
+        PlayerController.instance.SetIsFronze(true);
+        yield return new WaitForSeconds(0.6f);
+        PlayerController.instance.SetIsFronze(false);
+        fadeOutPanel.SetActive(false);
+    }
+
+    IEnumerator FadeIn()
+    {
+        fadeInPanel.SetActive(true);
+        PlayerController.instance.SetIsFronze(true);
+        yield return new WaitForSeconds(0.6f);
+        PlayerController.instance.SetIsFronze(false);
+        fadeInPanel.SetActive(false);
+    }
+
+    public void PlayFadeOut()
+    {
+        StartCoroutine(FadeOut());
+    }
+
+    public void PlayFadeIn()
+    {
+        StartCoroutine(FadeIn());
+    }
+
+
 }
