@@ -27,8 +27,7 @@ public class Dialog : MonoBehaviour
 
     private void Update()
     {
-        bool isGameFinished = PlayerController.instance.GetIsMagicFruit();
-        if(!isGameFinished)
+        if(!SceneLoader.instance.GetIsGameFinsihed())
         {
             Prolouge();
         }

@@ -16,14 +16,17 @@ public class SceneLoader : MonoBehaviour
     [SerializeField] private GameObject fadeInPanel;
 
     private bool isSceneLoading = false;
+    private bool isGameFinished = false;
 
     //Singleton
     public static SceneLoader instance { get; private set; }
 
     //Setter getter
     public void SetIsSceneLoading(bool sceneLoading) { isSceneLoading = sceneLoading; }
+    public void SetIsGameFinsihed(bool gameFinished) { isGameFinished = gameFinished; }
 
     public bool GetIsSceneLoading() { return isSceneLoading; }
+    public bool GetIsGameFinsihed() { return isGameFinished; }
 
     private void Awake()
     {
