@@ -27,7 +27,8 @@ public class Dialog : MonoBehaviour
 
     private void Update()
     {
-        if(!SceneLoader.instance.GetIsGameFinsihed())
+        if(!SceneLoader.instance.GetIsGameFinsihed()
+            )
         {
             Prolouge();
         }

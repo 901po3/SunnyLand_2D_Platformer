@@ -12,11 +12,6 @@ using UnityEngine.UI;
 
 public class TitleMenu : MonoBehaviour
 {
-    //[SerializeField] private Button playButton;
-    //[SerializeField] private Button tutorialButton;
-    //[SerializeField] private Button optionButton;
-    //[SerializeField] private Button exitButton;
-
     public void PlayerButtonOnClick()
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
