@@ -3887,6 +3887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f14a1f8612949434e96793a37d4e7253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SettingMenu: {fileID: 954425126}
   SceneManagerPrefab: {fileID: 1714944142030977463, guid: 7de466788d2b22e44b014d73ef416516,
     type: 3}
   tocuhSound: {fileID: 8300000, guid: 6e8772b49f34d402a90016ed445d8a2f, type: 3}

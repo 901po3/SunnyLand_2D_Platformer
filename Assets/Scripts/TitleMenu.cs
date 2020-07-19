@@ -1,7 +1,7 @@
 ﻿/*
  * Class: TitleMenu
  * Date: 2020.7.17
- * Last Modified : 2020.7.18
+ * Last Modified : 2020.7.19
  * Author: Hyukin Kwon 
  * Description:  TitleMenu Class (Play, Tutorial, Option, Exit)button
 */
@@ -12,6 +12,7 @@ using UnityEngine.UI;
 
 public class TitleMenu : MonoBehaviour
 {
+    [SerializeField] private GameObject SettingMenu;
     [SerializeField] private GameObject SceneManagerPrefab;
     [SerializeField] private AudioClip tocuhSound;
 
@@ -25,6 +26,7 @@ public class TitleMenu : MonoBehaviour
         }
         SceneLoader.instance.SetIsSceneLoading(false);
         SceneLoader.instance.SetIsGameFinsihed(false);
+        SettingMenu.SetActive(false);
         audioSource = GetComponent<AudioSource>();
         audioSource.volume = SceneLoader.instance.GetSfxVolume();
     }
@@ -48,6 +50,7 @@ public class TitleMenu : MonoBehaviour
         if (SceneLoader.instance.GetIsSceneLoading()) return;
         audioSource.PlayOneShot(tocuhSound);
         Debug.Log("Option button clicked");
+        StartCoroutine(OpenSettingMenu());
     }
 
     public void ExitButtonOnClick()
@@ -56,5 +59,12 @@ public class TitleMenu : MonoBehaviour
         audioSource.PlayOneShot(tocuhSound);
         Debug.Log("Exit button clicked");
         Application.Quit();
+    }
+
+    IEnumerator OpenSettingMenu()
+    {
+        yield return new WaitForSeconds(0.25f);
+        SettingMenu.SetActive(true);
+        gameObject.SetActive(false);
     }
 }
