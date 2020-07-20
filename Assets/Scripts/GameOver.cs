@@ -21,6 +21,7 @@ public class GameOver : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        Panel.SetActive(false);
     }
     private void OnDestroy()
     {
@@ -41,12 +42,12 @@ public class GameOver : MonoBehaviour
     public void ExitButtonPressed()
     {
         Time.timeScale = 1;
+        Panel.SetActive(false);
         SceneLoader.instance.LoadNextScene("TitleMenuScene");
     }
 
     IEnumerator TurnOn()
     {
-        Panel.SetActive(false);
         SceneLoader.instance.PlayFadeOut();
 
         yield return new WaitForSeconds(0.6f);

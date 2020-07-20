@@ -8,6 +8,7 @@ public class CreditScene : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0))
         {
+            AudioManager.instance.PlayTouchSFX();
             SceneLoader.instance.LoadNextScene("TitleMenuScene");
         }
     }

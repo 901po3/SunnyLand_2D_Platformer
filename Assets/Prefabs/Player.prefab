@@ -197,6 +197,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  respawnPos: {fileID: 0}
+  life: 0
 --- !u!70 &9116468791723421335
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

@@ -20,32 +20,30 @@ public class Dialog : MonoBehaviour
     private int curDialogNum;
     private bool isFriendTalking = false;
 
-    private void Start()
-    {
-        
-    }
-
     private void Update()
     {
-        if(!SceneLoader.instance.GetIsGameFinsihed())
+        if(!SceneLoader.instance.GetIsSettingMenuOn())
         {
-            Prolouge();
+            if (!SceneLoader.instance.GetIsGameFinsihed())
+            {
+                Prolouge();
+            }
+            else
+            {
+                Epilogue();
+            }
         }
-        else
-        {
-            Epilogue();
-        }
-
         ChangeIcon();
     }
 
 
     private void Prolouge()
     {
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
             Debug.Log("Mouse Clicked :" + curDialogNum);
-            if(curDialogNum < dialogNum)
+            AudioManager.instance.PlayTouchSFX();
+            if (curDialogNum < dialogNum)
             {
                 curDialogNum++;
                 isFriendTalking = !isFriendTalking;
@@ -62,6 +60,7 @@ public class Dialog : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0))
         {
+            AudioManager.instance.PlayTouchSFX();
             Debug.Log("Mouse Clicked :" + curDialogNum);
             if (curDialogNum < dialogNum)
             {
