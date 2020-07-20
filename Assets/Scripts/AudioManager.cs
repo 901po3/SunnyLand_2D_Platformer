@@ -31,8 +31,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private float bgmVolume = 1f;
     [SerializeField] private float sfxVolume = 1f;
 
-    private float originalBgmVolume;
-    private float originalSfxVolume;
+    private float originalBgmVolume = 1;
+    private float originalSfxVolume = 1;
     private AudioSource bgmAudioSource;
     private AudioSource sfxAudioSource;
 

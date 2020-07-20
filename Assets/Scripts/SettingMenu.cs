@@ -13,7 +13,6 @@ using UnityEngine.UI;
 public class SettingMenu : MonoBehaviour
 {
     [SerializeField] private GameObject SettingMenuBgObj;
-    [SerializeField] private AudioClip tocuhSound;
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
 

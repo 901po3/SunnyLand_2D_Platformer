@@ -159,6 +159,7 @@ GameObject:
   - component: {fileID: 703362409522916067}
   - component: {fileID: 703362409522916125}
   - component: {fileID: 703362409522916124}
+  - component: {fileID: 846868151}
   m_Layer: 15
   m_Name: Text
   m_TagString: SettingButton
@@ -206,13 +207,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.6666667, g: 0.39215687, b: 0.19607843, a: 0.9019608}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 20d352e597fbb8044a88f39e43b70ebd, type: 3}
+    m_Font: {fileID: 12800000, guid: b6a5b6549b9dfca43882c614b76c7960, type: 3}
     m_FontSize: 164
     m_FontStyle: 1
     m_BestFit: 0
@@ -225,6 +226,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uC124\uC815"
+--- !u!114 &846868151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703362409522916066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: -5, y: 5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &703362409668569906
 GameObject:
   m_ObjectHideFlags: 0
@@ -1148,6 +1164,7 @@ GameObject:
   - component: {fileID: 703362410333979010}
   - component: {fileID: 703362410333979068}
   - component: {fileID: 703362410333979011}
+  - component: {fileID: 846868155}
   m_Layer: 15
   m_Name: BGM_Text
   m_TagString: SettingButton
@@ -1195,13 +1212,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.6666667, g: 0.39215687, b: 0.19607843, a: 0.9019608}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 4b028cf23e8c8464293085ebe12706c1, type: 3}
+    m_Font: {fileID: 12800000, guid: b6a5b6549b9dfca43882c614b76c7960, type: 3}
     m_FontSize: 100
     m_FontStyle: 1
     m_BestFit: 0
@@ -1214,6 +1231,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: BGM
+--- !u!114 &846868155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703362410333979009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: -5, y: 5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &703362410406896991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1409,6 +1441,7 @@ GameObject:
   - component: {fileID: 703362410714456477}
   - component: {fileID: 703362410714456479}
   - component: {fileID: 703362410714456478}
+  - component: {fileID: 846868150}
   m_Layer: 15
   m_Name: Text
   m_TagString: SettingButton
@@ -1456,14 +1489,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.6666667, g: 0.39215687, b: 0.19607843, a: 0.9019608}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 20d352e597fbb8044a88f39e43b70ebd, type: 3}
-    m_FontSize: 150
+    m_Font: {fileID: 12800000, guid: b6a5b6549b9dfca43882c614b76c7960, type: 3}
+    m_FontSize: 130
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
@@ -1475,6 +1508,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uC801\uC6A9"
+--- !u!114 &846868150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703362410714456476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: -5, y: 5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &703362410761447900
 GameObject:
   m_ObjectHideFlags: 0
@@ -2072,6 +2120,7 @@ GameObject:
   - component: {fileID: 703362411304355456}
   - component: {fileID: 703362411304355458}
   - component: {fileID: 703362411304355457}
+  - component: {fileID: 846868149}
   m_Layer: 15
   m_Name: Text
   m_TagString: SettingButton
@@ -2119,14 +2168,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.6666667, g: 0.39215687, b: 0.19607843, a: 0.9019608}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 20d352e597fbb8044a88f39e43b70ebd, type: 3}
-    m_FontSize: 150
+    m_Font: {fileID: 12800000, guid: b6a5b6549b9dfca43882c614b76c7960, type: 3}
+    m_FontSize: 130
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
@@ -2138,6 +2187,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\uCDE8\uC18C"
+--- !u!114 &846868149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703362411304355463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: -5, y: 5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &703362411400743369
 GameObject:
   m_ObjectHideFlags: 0
@@ -2503,6 +2567,7 @@ GameObject:
   - component: {fileID: 703362411526238680}
   - component: {fileID: 703362411526238682}
   - component: {fileID: 703362411526238681}
+  - component: {fileID: 846868154}
   m_Layer: 15
   m_Name: SFX_Text
   m_TagString: SettingButton
@@ -2550,13 +2615,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.6666667, g: 0.39215687, b: 0.19607843, a: 0.9019608}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 4b028cf23e8c8464293085ebe12706c1, type: 3}
+    m_Font: {fileID: 12800000, guid: b6a5b6549b9dfca43882c614b76c7960, type: 3}
     m_FontSize: 100
     m_FontStyle: 1
     m_BestFit: 0
@@ -2569,6 +2634,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: SFX
+--- !u!114 &846868154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703362411526238687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: -5, y: 5}
+  m_UseGraphicAlpha: 1
 --- !u!1 &703362411527935639
 GameObject:
   m_ObjectHideFlags: 0
