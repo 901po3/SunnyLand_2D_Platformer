@@ -13,54 +13,55 @@ using UnityEngine.UI;
 public class TitleMenu : MonoBehaviour
 {
     [SerializeField] private GameObject SettingMenu;
+    [SerializeField] private GameObject AudioManagerPrefab;
     [SerializeField] private GameObject SceneManagerPrefab;
-    [SerializeField] private AudioClip tocuhSound;
-
-    private AudioSource audioSource;
 
     private void Start()
     {
-        if(SceneLoader.instance == null)
+        if (AudioManager.instance == null)
+        {
+            Instantiate(AudioManagerPrefab);
+        }
+        if (SceneLoader.instance == null)
         {
             Instantiate(SceneManagerPrefab);
         }
         SceneLoader.instance.SetIsSceneLoading(false);
         SceneLoader.instance.SetIsGameFinsihed(false);
         SettingMenu.SetActive(false);
-        audioSource = GetComponent<AudioSource>();
-        audioSource.volume = SceneLoader.instance.GetSfxVolume();
     }
     public void PlayerButtonOnClick()
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
-        audioSource.PlayOneShot(tocuhSound);
         Debug.Log("Play button clicked");
+        AudioManager.instance.PlayTouchSFX();
         SceneLoader.instance.LoadNextScene("stage0");
     }
 
     public void TutorialButtonOnClick()
     {
-        audioSource.PlayOneShot(tocuhSound);
+        AudioManager.instance.PlayTouchSFX();
         Debug.Log("Tutorial button clicked");
     }
 
     public void OptionButtonOnClick()
     {
-        audioSource.PlayOneShot(tocuhSound);
+        AudioManager.instance.PlayTouchSFX();
         Debug.Log("Option button clicked");
         StartCoroutine(OpenSettingMenu());
     }
 
     public void ExitButtonOnClick()
     {
-        audioSource.PlayOneShot(tocuhSound);
+        AudioManager.instance.PlayTouchSFX();
         Debug.Log("Exit button clicked");
         Application.Quit();
     }
 
     IEnumerator OpenSettingMenu()
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.2f);
+        AudioManager.instance.UpdateOriginalVolume();
         SettingMenu.SetActive(true);
     }
 }

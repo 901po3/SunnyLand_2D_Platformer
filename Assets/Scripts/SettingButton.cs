@@ -12,20 +12,15 @@ using UnityEngine;
 public class SettingButton : MonoBehaviour
 {
     [SerializeField] private GameObject SettingMenuObj;
-    [SerializeField] private AudioClip tocuhSound;
-
-    private AudioSource audioSource;
 
     private void Awake()
     {
         SettingMenuObj.SetActive(false);
-        audioSource = GetComponent<AudioSource>();
-        audioSource.volume = SceneLoader.instance.GetSfxVolume();
     }
 
     public void OpenSettingMenu()
     {
-        audioSource.PlayOneShot(tocuhSound);
+        AudioManager.instance.PlayTouchSFX();
         SceneLoader.instance.SetIsSettingMenuOn(true);
         StartCoroutine(OpenSettingMenuInDelay());
     }
@@ -33,6 +28,7 @@ public class SettingButton : MonoBehaviour
     IEnumerator OpenSettingMenuInDelay()
     {
         yield return new WaitForSeconds(0.1f);
+        AudioManager.instance.UpdateOriginalVolume();
         SettingMenuObj.SetActive(true);
 
         yield return new WaitForSeconds(0.1f);

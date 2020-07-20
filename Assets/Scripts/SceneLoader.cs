@@ -1,10 +1,10 @@
 ﻿/*
  * Class: SceneLoader
  * Date: 2020.7.16
- * Last Modified : 2020.7.18
+ * Last Modified : 2020.7.20
  * Author: Hyukin Kwon 
  * Description: Managing Scene interactions.
- *              Handles BGM and SFX
+ *              This will be created on TitleMenu
 */
 
 using System.Collections;
@@ -18,20 +18,13 @@ public class SceneLoader : MonoBehaviour
         Title, Village, Stages, Credit
     }
 
-    [SerializeField] private AudioClip TownBGM;
-    [SerializeField] private AudioClip ForestBGM;
-    [SerializeField] private AudioClip CreditBGM;
-    [SerializeField] private AudioClip TitleBGM;
     [SerializeField] private GameObject fadeOutPanel;
     [SerializeField] private GameObject fadeInPanel;
     [SerializeField] private bool isGameFinished = false;
-    [SerializeField] private float bgmVolume = 1f;
-    [SerializeField] private float sfxVolume = 1f;
 
     private Scene curScene = Scene.Title;
     private bool isSceneLoading = false;
     private bool isSetttingMenuOn = false;
-    private AudioSource audioSource;
 
     //Singleton
     public static SceneLoader instance { get; private set; }
@@ -40,14 +33,10 @@ public class SceneLoader : MonoBehaviour
     public void SetIsSceneLoading(bool sceneLoading) { isSceneLoading = sceneLoading; }
     public void SetIsGameFinsihed(bool gameFinished) { isGameFinished = gameFinished; }
     public void SetCurScene(Scene cS) { curScene = cS; }
-    public void SetBgmVolume(float bgmV) { bgmVolume = bgmV; }
-    public void SetSFXVolume(float sfxV) { sfxVolume = sfxV; }
     public void SetIsSettingMenuOn(bool sm) { isSetttingMenuOn = sm; }
     public bool GetIsSceneLoading() { return isSceneLoading; }
     public bool GetIsGameFinsihed() { return isGameFinished; }
     public Scene GetCurScene() { return curScene; }
-    public float GetBgmVolume() { return bgmVolume; }
-    public float GetSfxVolume() { return sfxVolume; }
     public bool GetIsSettingMenuOn() {  return isSetttingMenuOn; }
 
     private void Awake()
@@ -59,8 +48,11 @@ public class SceneLoader : MonoBehaviour
         isSceneLoading = false;
         fadeOutPanel.SetActive(false);
         fadeInPanel.SetActive(false);
-        audioSource = GetComponent<AudioSource>();
-        BGMSetting("TitleMenuScene");
+
+        if(curScene == Scene.Title)
+        {
+            AudioManager.instance.BGMSetting("TitleMenuScene");
+        }
     }
 
 
@@ -81,10 +73,14 @@ public class SceneLoader : MonoBehaviour
         yield return new WaitForSeconds(0.6f);
         fadeOutPanel.SetActive(false);
         SceneManager.LoadScene(stage);
-        BGMSetting(stage);
+        if(AudioManager.instance)
+            AudioManager.instance.BGMSetting(stage);
 
         DontDestroyOnLoad(gameObject);
-
+        if(AudioManager.instance)
+        {
+            DontDestroyOnLoad(AudioManager.instance.gameObject);
+        }
         StartCoroutine(FadeIn());
     }
 
@@ -119,66 +115,4 @@ public class SceneLoader : MonoBehaviour
     {
         StartCoroutine(FadeIn());
     }
-
-    private void BGMSetting(string stage)
-    {
-        audioSource.pitch = 1.0f;
-        audioSource.volume = bgmVolume;
-        audioSource.playOnAwake = true;
-        audioSource.loop = true;
-        if (stage == "stage0")
-        {
-            curScene = Scene.Village;
-        }
-        else if (stage == "Stage1")
-        {
-            curScene = Scene.Stages;
-        }
-        else if (stage == "CreditPage")
-        {
-            curScene = Scene.Credit;
-        }
-        else if (stage == "TitleMenuScene")
-        {
-            curScene = Scene.Title;
-        }
-        SelectBGM();
-        if(stage != "stage2" && stage != "stage3")
-            audioSource.Play();
-    }
-
-    private void SelectBGM()
-    {
-        switch (curScene)
-        {
-            case Scene.Title:
-                audioSource.clip = TitleBGM;
-                break;
-            case Scene.Village:
-                audioSource.clip = TownBGM;
-                break;
-            case Scene.Stages:
-                audioSource.clip = ForestBGM;
-                break;
-            case Scene.Credit:
-                audioSource.clip = CreditBGM;
-                break;
-        }
-    }
-
-    public void UpdateBGM(float newVolume)
-    {
-        bgmVolume = newVolume;
-        audioSource.volume = bgmVolume;
-    }
-
-    public void UpdateSFX(float newVolume)
-    {
-        sfxVolume = newVolume;
-        if(PlayerController.instance)
-        {
-            PlayerController.instance.GetComponent<AudioSource>().volume = sfxVolume;
-        }
-    }
-
 }

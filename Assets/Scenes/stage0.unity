@@ -2957,7 +2957,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FriendIcon: {fileID: 1099199028}
   PlayerIcon: {fileID: 1019762601}
-  tocuhSound: {fileID: 8300000, guid: 6e8772b49f34d402a90016ed445d8a2f, type: 3}
 --- !u!82 &1575979603
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5465,6 +5464,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1345269552950510927, guid: 4360a54eca770644ebb9a8ef0d68588f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3842158048325445122, guid: 4360a54eca770644ebb9a8ef0d68588f,
         type: 3}

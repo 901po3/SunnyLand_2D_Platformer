@@ -22,11 +22,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject enemyDeathEffect;
     [SerializeField] private GameObject[] lifeObj; // Player life UI GameObject....
     [SerializeField] private Transform respawnPos;
-    [SerializeField] private AudioClip jumpSFX;
-    [SerializeField] private AudioClip attackSFX;
-    [SerializeField] private AudioClip itemSFX;
-    [SerializeField] private AudioClip landingSFX;
-    [SerializeField] private AudioClip damagedSFX;
 
     private const float checkRadius = 0.35f; //radius for groundCheck and ceilingCheck
     private GameObject enemyBelow; // check if player's stepping on any enemy
@@ -81,7 +76,7 @@ public class PlayerController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         if (SceneLoader.instance)
         {
-            audioSource.volume = SceneLoader.instance.GetSfxVolume();
+            audioSource.volume = AudioManager.instance.GetSfxVolume();
         }
 
         enemyDeathEffect.SetActive(false);
@@ -143,7 +138,7 @@ public class PlayerController : MonoBehaviour
                         if(collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                         {
                             enemyBelow = collider2D.gameObject;
-                            audioSource.PlayOneShot(attackSFX);
+                            AudioManager.instance.PlayAttackSFX();
                         }
                         StartCoroutine(Bounce());
                         break;
@@ -188,19 +183,19 @@ public class PlayerController : MonoBehaviour
             {
                 CinemachineShake.instance.CameraShake(100.0f, 0.3f);
                 StartCoroutine(PlayEffect(landingEffect, 0.4f));
-                audioSource.PlayOneShot(landingSFX);
+                AudioManager.instance.PlayLandingSFX();
             }
             else if (fallingSpeed < -23)
             {
                 CinemachineShake.instance.CameraShake(80.0f, 0.3f);
                 StartCoroutine(PlayEffect(landingEffect, 0.4f));
-                audioSource.PlayOneShot(landingSFX);
+                AudioManager.instance.PlayLandingSFX();
             }
             else if (fallingSpeed <= -18)
             {
                 CinemachineShake.instance.CameraShake(20.0f, 0.2f);
                 StartCoroutine(PlayEffect(landingEffect, 0.3f));
-                audioSource.PlayOneShot(landingSFX);
+                AudioManager.instance.PlayLandingSFX();
             }                 
         }
 
@@ -210,7 +205,7 @@ public class PlayerController : MonoBehaviour
         }
         if ((Input.GetButtonDown("Jump") && isGrounded) || isBounced)
         {
-            audioSource.PlayOneShot(jumpSFX);
+            AudioManager.instance.PlayJumpSFX();
             isBounced = false;
             isJumping = true;
             anim.SetBool("isJumping", isJumping);
@@ -387,13 +382,13 @@ public class PlayerController : MonoBehaviour
                 life++;
                 ChangeLifeHud();
                 Destroy(collision.gameObject);
-                audioSource.PlayOneShot(itemSFX);
+                AudioManager.instance.PlayItemSFX();
             }
         }
         if(collision.transform.tag == "MagicFruit")
         {
             isFrozen = true;
-            audioSource.PlayOneShot(itemSFX);
+            AudioManager.instance.PlayItemSFX();
             SceneLoader.instance.SetIsGameFinsihed(true);
             SceneLoader.instance.LoadNextScene("stage0");
         }
@@ -426,7 +421,7 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger("isHurt");
             StartCoroutine(SetInvincible());
             ChangeLifeHud();
-            audioSource.PlayOneShot(damagedSFX);
+            AudioManager.instance.PlayDamagedSFX();
 
             if (life <= 0)
             {
