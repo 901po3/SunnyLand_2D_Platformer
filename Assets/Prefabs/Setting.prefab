@@ -486,6 +486,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SettingMenuBgObj: {fileID: 8167371262368134070}
   tocuhSound: {fileID: 8300000, guid: 6e8772b49f34d402a90016ed445d8a2f, type: 3}
+  bgmSlider: {fileID: 703362411400743371}
+  sfxSlider: {fileID: 703362411406182420}
 --- !u!82 &1691559574144838235
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2213,7 +2215,18 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 789662351043870655}
+        m_MethodName: BGMSlider
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &703362411406182426
 GameObject:
   m_ObjectHideFlags: 0
@@ -2302,7 +2315,18 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 789662351043870655}
+        m_MethodName: SFXSlider
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &703362411486858444
 GameObject:
   m_ObjectHideFlags: 0

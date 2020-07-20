@@ -166,4 +166,19 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
+    public void UpdateBGM(float newVolume)
+    {
+        bgmVolume = newVolume;
+        audioSource.volume = bgmVolume;
+    }
+
+    public void UpdateSFX(float newVolume)
+    {
+        sfxVolume = newVolume;
+        if(PlayerController.instance)
+        {
+            PlayerController.instance.GetComponent<AudioSource>().volume = sfxVolume;
+        }
+    }
+
 }

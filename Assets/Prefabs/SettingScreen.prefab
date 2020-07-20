@@ -1178,6 +1178,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SettingMenuBgObj: {fileID: 1975254933263539054}
   tocuhSound: {fileID: 8300000, guid: 6e8772b49f34d402a90016ed445d8a2f, type: 3}
+  bgmSlider: {fileID: 1975254932584836829}
+  sfxSlider: {fileID: 1975254932664856322}
 --- !u!82 &954425128
 AudioSource:
   m_ObjectHideFlags: 0
