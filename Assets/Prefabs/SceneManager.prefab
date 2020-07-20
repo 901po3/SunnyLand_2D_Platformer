@@ -312,7 +312,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_TargetDisplay: 0
 --- !u!114 &1489746267131923241
 MonoBehaviour:
@@ -405,7 +405,8 @@ MonoBehaviour:
   fadeOutPanel: {fileID: 601548018}
   fadeInPanel: {fileID: 2109753227}
   isGameFinished: 0
-  volume: 1
+  bgmVolume: 1
+  sfxVolume: 1
 --- !u!82 &1714944142030977457
 AudioSource:
   m_ObjectHideFlags: 0

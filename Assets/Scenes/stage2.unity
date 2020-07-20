@@ -162,7 +162,7 @@ Transform:
   - {fileID: 405692179}
   - {fileID: 530789252}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &111641614 stripped
 Transform:
@@ -1488,7 +1488,7 @@ Transform:
   - {fileID: 1020519319}
   - {fileID: 111641614}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1282855696
 PrefabInstance:
@@ -1572,6 +1572,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2699988135754198925, guid: 9a43e57a3544a5748b407264474bbd21,
+        type: 3}
+      propertyPath: curSceneName
+      value: stage2
+      objectReference: {fileID: 0}
     - target: {fileID: 4516376081469030230, guid: 9a43e57a3544a5748b407264474bbd21,
         type: 3}
       propertyPath: curSceneName

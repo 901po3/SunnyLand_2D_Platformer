@@ -7879,7 +7879,7 @@ Transform:
   - {fileID: 1834682341}
   - {fileID: 515272590}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &463892331
 GameObject:
@@ -8400,7 +8400,7 @@ Transform:
   - {fileID: 110903971}
   - {fileID: 1241144032}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &601586984
 GameObject:
@@ -55507,7 +55507,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &779804475
 MonoBehaviour:
@@ -57408,6 +57408,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0e7f994762ad8443a1e04fd875c24f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SettingMenuBgObj: {fileID: 0}
+  tocuhSound: {fileID: 0}
 --- !u!1 &1231500010
 GameObject:
   m_ObjectHideFlags: 0
@@ -59377,6 +59379,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2699988135754198925, guid: 9a43e57a3544a5748b407264474bbd21,
+        type: 3}
+      propertyPath: curSceneName
+      value: stage3
+      objectReference: {fileID: 0}
     - target: {fileID: 4516376081469030230, guid: 9a43e57a3544a5748b407264474bbd21,
         type: 3}
       propertyPath: curSceneName
@@ -60050,7 +60057,7 @@ Transform:
   m_Children:
   - {fileID: 1760398174}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1716486192
 Animator:
@@ -89660,7 +89667,7 @@ Transform:
   - {fileID: 849572683}
   - {fileID: 1212087268}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1274459485581012907
 GameObject:
