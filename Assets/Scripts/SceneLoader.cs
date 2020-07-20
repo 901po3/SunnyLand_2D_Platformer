@@ -30,6 +30,7 @@ public class SceneLoader : MonoBehaviour
 
     private Scene curScene = Scene.Title;
     private bool isSceneLoading = false;
+    private bool isSetttingMenuOn = false;
     private AudioSource audioSource;
 
     //Singleton
@@ -41,11 +42,13 @@ public class SceneLoader : MonoBehaviour
     public void SetCurScene(Scene cS) { curScene = cS; }
     public void SetBgmVolume(float bgmV) { bgmVolume = bgmV; }
     public void SetSFXVolume(float sfxV) { sfxVolume = sfxV; }
+    public void SetIsSettingMenuOn(bool sm) { isSetttingMenuOn = sm; }
     public bool GetIsSceneLoading() { return isSceneLoading; }
     public bool GetIsGameFinsihed() { return isGameFinished; }
     public Scene GetCurScene() { return curScene; }
     public float GetBgmVolume() { return bgmVolume; }
     public float GetSfxVolume() { return sfxVolume; }
+    public bool GetIsSettingMenuOn() {  return isSetttingMenuOn; }
 
     private void Awake()
     {

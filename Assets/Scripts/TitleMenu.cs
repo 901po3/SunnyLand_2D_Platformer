@@ -40,14 +40,12 @@ public class TitleMenu : MonoBehaviour
 
     public void TutorialButtonOnClick()
     {
-        if (SceneLoader.instance.GetIsSceneLoading()) return;
         audioSource.PlayOneShot(tocuhSound);
         Debug.Log("Tutorial button clicked");
     }
 
     public void OptionButtonOnClick()
     {
-        if (SceneLoader.instance.GetIsSceneLoading()) return;
         audioSource.PlayOneShot(tocuhSound);
         Debug.Log("Option button clicked");
         StartCoroutine(OpenSettingMenu());
@@ -55,7 +53,6 @@ public class TitleMenu : MonoBehaviour
 
     public void ExitButtonOnClick()
     {
-        if (SceneLoader.instance.GetIsSceneLoading()) return;
         audioSource.PlayOneShot(tocuhSound);
         Debug.Log("Exit button clicked");
         Application.Quit();
@@ -65,6 +62,5 @@ public class TitleMenu : MonoBehaviour
     {
         yield return new WaitForSeconds(0.25f);
         SettingMenu.SetActive(true);
-        gameObject.SetActive(false);
     }
 }

@@ -30,22 +30,24 @@ public class Dialog : MonoBehaviour
 
     private void Update()
     {
-        if(!SceneLoader.instance.GetIsGameFinsihed())
+        if(!SceneLoader.instance.GetIsSettingMenuOn())
         {
-            Prolouge();
+            if (!SceneLoader.instance.GetIsGameFinsihed())
+            {
+                Prolouge();
+            }
+            else
+            {
+                Epilogue();
+            }
         }
-        else
-        {
-            Epilogue();
-        }
-
         ChangeIcon();
     }
 
 
     private void Prolouge()
     {
-        if(Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0))
         {
             Debug.Log("Mouse Clicked :" + curDialogNum);
             audioSource.PlayOneShot(tocuhSound);
