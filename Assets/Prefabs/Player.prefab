@@ -202,7 +202,8 @@ MonoBehaviour:
   jumpSFX: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
   attackSFX: {fileID: 8300000, guid: d8d04c6f80a1140db85ede568dab1f51, type: 3}
   itemSFX: {fileID: 8300000, guid: 52320e590bf774734a288886eba557ba, type: 3}
-  LadningSFX: {fileID: 8300000, guid: 7e26c9daf4c32483b9c2790e662d3f1b, type: 3}
+  landingSFX: {fileID: 8300000, guid: 7e26c9daf4c32483b9c2790e662d3f1b, type: 3}
+  damagedSFX: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
   life: 0
 --- !u!70 &9116468791723421335
 CapsuleCollider2D:

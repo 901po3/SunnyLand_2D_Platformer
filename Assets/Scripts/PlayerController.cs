@@ -25,7 +25,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioClip jumpSFX;
     [SerializeField] private AudioClip attackSFX;
     [SerializeField] private AudioClip itemSFX;
-    [SerializeField] private AudioClip LadningSFX;
+    [SerializeField] private AudioClip landingSFX;
+    [SerializeField] private AudioClip damagedSFX;
 
     private const float checkRadius = 0.35f; //radius for groundCheck and ceilingCheck
     private GameObject enemyBelow; // check if player's stepping on any enemy
@@ -187,19 +188,19 @@ public class PlayerController : MonoBehaviour
             {
                 CinemachineShake.instance.CameraShake(100.0f, 0.3f);
                 StartCoroutine(PlayEffect(landingEffect, 0.4f));
-                audioSource.PlayOneShot(LadningSFX);
+                audioSource.PlayOneShot(landingSFX);
             }
             else if (fallingSpeed < -23)
             {
                 CinemachineShake.instance.CameraShake(80.0f, 0.3f);
                 StartCoroutine(PlayEffect(landingEffect, 0.4f));
-                audioSource.PlayOneShot(LadningSFX);
+                audioSource.PlayOneShot(landingSFX);
             }
             else if (fallingSpeed <= -18)
             {
                 CinemachineShake.instance.CameraShake(20.0f, 0.2f);
                 StartCoroutine(PlayEffect(landingEffect, 0.3f));
-                audioSource.PlayOneShot(LadningSFX);
+                audioSource.PlayOneShot(landingSFX);
             }                 
         }
 
@@ -425,6 +426,7 @@ public class PlayerController : MonoBehaviour
             anim.SetTrigger("isHurt");
             StartCoroutine(SetInvincible());
             ChangeLifeHud();
+            audioSource.PlayOneShot(damagedSFX);
 
             if (life <= 0)
             {
