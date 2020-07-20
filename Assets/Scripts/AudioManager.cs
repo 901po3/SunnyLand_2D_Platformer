@@ -56,7 +56,7 @@ public class AudioManager : MonoBehaviour
             instance = this;
         }
         bgmAudioSource = bgmObj.GetComponent<AudioSource>();
-        sfxAudioSource = bgmObj.GetComponent<AudioSource>();
+        sfxAudioSource = sfxObj.GetComponent<AudioSource>();
     }
 
     private void OnDestroy()
