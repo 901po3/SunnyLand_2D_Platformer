@@ -52,6 +52,24 @@ public class Dialog : MonoBehaviour
         }
         ChangeIcon();
     }
+    private void LoadNextText()
+    {
+        if (dialog.Count <= 0)
+        {
+            Debug.Log("Game Start");
+            if (!SceneLoader.instance.GetIsGameFinsihed())
+                SceneLoader.instance.LoadNextScene("Stage1");
+            else
+                SceneLoader.instance.LoadNextScene("CreditPage");
+            return;
+        }
+        Debug.Log("Mouse Clicked :" + curDialogNum);
+        AudioManager.instance.PlayTouchSFX();
+
+        DialogStruct dialogStruct = dialog.Dequeue();
+        isFriendTalking = dialogStruct.isFriendTalking;
+        dialogText.text = dialogStruct.dialogText;
+    }
 
     private void ChangeIcon()
     {
@@ -92,24 +110,5 @@ public class Dialog : MonoBehaviour
             dialog.Enqueue(new DialogStruct(false, "열매 구해왔어"));
             dialog.Enqueue(new DialogStruct(true, "고마워"));
         }
-    }
-
-    private void LoadNextText()
-    {
-        if (dialog.Count <= 0)
-        {
-            Debug.Log("Game Start");
-            if (!SceneLoader.instance.GetIsGameFinsihed())
-                SceneLoader.instance.LoadNextScene("Stage1");
-            else
-                SceneLoader.instance.LoadNextScene("CreditPage");
-            return;
-        }
-        Debug.Log("Mouse Clicked :" + curDialogNum);
-        AudioManager.instance.PlayTouchSFX();
-
-        DialogStruct dialogStruct = dialog.Dequeue();
-        isFriendTalking = dialogStruct.isFriendTalking;
-        dialogText.text = dialogStruct.dialogText;
     }
 }
