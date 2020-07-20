@@ -415,7 +415,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 315e14e6ffbddf14991849233a3256b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tocuhSound: {fileID: 8300000, guid: 6e8772b49f34d402a90016ed445d8a2f, type: 3}
 --- !u!82 &687157919
 AudioSource:
   m_ObjectHideFlags: 0
@@ -568,7 +567,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 4b028cf23e8c8464293085ebe12706c1, type: 3}
+    m_Font: {fileID: 12800000, guid: 20d352e597fbb8044a88f39e43b70ebd, type: 3}
     m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
@@ -623,7 +622,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 127}
   m_SizeDelta: {x: 1980, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1255149046
@@ -645,7 +644,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 4b028cf23e8c8464293085ebe12706c1, type: 3}
+    m_Font: {fileID: 12800000, guid: 20d352e597fbb8044a88f39e43b70ebd, type: 3}
     m_FontSize: 38
     m_FontStyle: 0
     m_BestFit: 0
@@ -803,7 +802,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 4b028cf23e8c8464293085ebe12706c1, type: 3}
+    m_Font: {fileID: 12800000, guid: 20d352e597fbb8044a88f39e43b70ebd, type: 3}
     m_FontSize: 64
     m_FontStyle: 0
     m_BestFit: 0

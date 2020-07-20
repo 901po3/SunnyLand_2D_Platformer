@@ -19,8 +19,11 @@ public class SettingMenu : MonoBehaviour
 
     private void Awake()
     {
-        bgmSlider.value = AudioManager.instance.GetOriginalBgmVolume();
-        sfxSlider.value = AudioManager.instance.GetOriginalSfxVolume();
+        if(AudioManager.instance)
+        {
+            bgmSlider.value = AudioManager.instance.GetOriginalBgmVolume();
+            sfxSlider.value = AudioManager.instance.GetOriginalSfxVolume();
+        }
     }
 
     public void ApplyButtonPressed()

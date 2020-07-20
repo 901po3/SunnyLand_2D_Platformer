@@ -30,7 +30,6 @@ public class PlayerController : MonoBehaviour
     private GameObject attackingPlant; //Plant attacking player
     private Rigidbody2D rigidbody2D;
     private Animator anim;
-    private AudioSource audioSource;
 
     private float horizontalMove = 0f; //X-axis input
     private float jumpTimeCounter; //current jump time
@@ -73,11 +72,6 @@ public class PlayerController : MonoBehaviour
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        audioSource = GetComponent<AudioSource>();
-        if (SceneLoader.instance)
-        {
-            audioSource.volume = AudioManager.instance.GetSfxVolume();
-        }
 
         enemyDeathEffect.SetActive(false);
         landingEffect.SetActive(false);
