@@ -19,7 +19,8 @@ public class SettingMenu : MonoBehaviour
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        audioSource.volume = SceneLoader.instance.GetSfxVolume();
+        if(SceneLoader.instance)
+            audioSource.volume = SceneLoader.instance.GetSfxVolume();
     }
 
     public void CancelButtonPressed()

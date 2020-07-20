@@ -91,18 +91,22 @@ public class SceneLoader : MonoBehaviour
     IEnumerator FadeOut()
     {
         fadeOutPanel.SetActive(true);
-        PlayerController.instance.SetIsFronze(true);
+        if(PlayerController.instance)
+            PlayerController.instance.SetIsFronze(true);
         yield return new WaitForSeconds(0.6f);
-        PlayerController.instance.SetIsFronze(false);
+        if (PlayerController.instance)
+            PlayerController.instance.SetIsFronze(false);
         fadeOutPanel.SetActive(false);
     }
 
     IEnumerator FadeIn()
     {
         fadeInPanel.SetActive(true);
-        PlayerController.instance.SetIsFronze(true);
+        if (PlayerController.instance)
+            PlayerController.instance.SetIsFronze(true);
         yield return new WaitForSeconds(0.6f);
-        PlayerController.instance.SetIsFronze(false);
+        if (PlayerController.instance)
+            PlayerController.instance.SetIsFronze(false);
         fadeInPanel.SetActive(false);
     }
 
