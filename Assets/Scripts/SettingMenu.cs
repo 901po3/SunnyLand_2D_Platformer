@@ -13,7 +13,7 @@ using UnityEngine.UI;
 public class SettingMenu : MonoBehaviour
 {
     [SerializeField] private GameObject SettingMenuBgObj;
-    [SerializeField] private AudioClip tocuhSound;
+    [SerializeField] private GameObject homeMenuBgObj;
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
 
@@ -62,6 +62,7 @@ public class SettingMenu : MonoBehaviour
         Debug.Log("Back to Normal state");
     }
 
+
     public void BGMSlider()
     {
         if(SceneLoader.instance)
@@ -78,5 +79,39 @@ public class SettingMenu : MonoBehaviour
             AudioManager.instance.UpdateSFX(sfxSlider.value);
             Debug.Log("value changed");
         }
+    }
+
+
+    //home menu buttons
+    public void YesButtonPressed()
+    {
+        Debug.Log("Yes Button Pressed");
+        homeMenuBgObj.SetActive(false);
+        Time.timeScale = 1.0f;
+        AudioManager.instance.PlayTouchSFX();
+        StartCoroutine(YesButtonPressedInDelay());
+    }
+
+    IEnumerator YesButtonPressedInDelay()
+    {
+        yield return new WaitForSeconds(0.2f);
+        SceneLoader.instance.SetIsSettingMenuOn(false);
+        SceneLoader.instance.LoadNextScene("TitleMenuScene");
+    }
+
+    public void NoButtonPressed()
+    {
+        Debug.Log("Yes Button Pressed");
+        homeMenuBgObj.SetActive(false);
+        Time.timeScale = 1.0f;
+        AudioManager.instance.PlayTouchSFX();
+        StartCoroutine(NoButtonPressedInDelay());
+    }
+
+    IEnumerator NoButtonPressedInDelay()
+    {
+        yield return new WaitForSeconds(0.2f);
+        SceneLoader.instance.SetIsSettingMenuOn(false);
+        Debug.Log("Back to Normal state");
     }
 }
