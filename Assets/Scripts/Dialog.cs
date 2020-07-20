@@ -28,8 +28,10 @@ public class Dialog : MonoBehaviour
         }
     }
 
-    private bool pressed = false;
-    private int dialogNum = 3;
+    private int idx = 0;
+    private string str;
+    private bool isLoadingStr = false;
+    private float curWordDelay = 0.0f; //delay between words
     private int curDialogNum;
     private bool isFriendTalking = false;
 
@@ -39,6 +41,7 @@ public class Dialog : MonoBehaviour
     {
         SetDialog();
         LoadNextText();
+        dialogText.text = "";
     }
 
     private void Update()
@@ -51,9 +54,23 @@ public class Dialog : MonoBehaviour
             }
         }
         ChangeIcon();
+
+        LoadCurrentStr();
     }
     private void LoadNextText()
     {
+        if (isLoadingStr)
+        {
+            if(str != "")
+            {
+                dialogText.text = str;
+                idx = 0;
+                curWordDelay = 0f;
+                isLoadingStr = false;
+            }
+            return;
+        }
+
         if (dialog.Count <= 0)
         {
             Debug.Log("Game Start");
@@ -68,7 +85,42 @@ public class Dialog : MonoBehaviour
 
         DialogStruct dialogStruct = dialog.Dequeue();
         isFriendTalking = dialogStruct.isFriendTalking;
-        dialogText.text = dialogStruct.dialogText;
+        dialogText.text = "";
+        str = dialogStruct.dialogText;
+        isLoadingStr = true;
+    }
+
+    private void LoadCurrentStr()
+    {
+        if(isLoadingStr)
+        {
+            if(idx >= str.Length)
+            {
+                idx = 0;
+                isLoadingStr = false;
+                //StartCoroutine(AutoLoadNextStr());
+            }
+            else
+            {
+                if(curWordDelay < 0.1f)
+                {
+                    curWordDelay += Time.deltaTime;
+                    if(curWordDelay >= 0.1f)
+                    {
+                        AudioManager.instance.PlayDialogSFX();
+                        dialogText.text += str[idx];
+                        curWordDelay = 0f;
+                        idx++;
+                    }
+                }
+            }
+        }
+    }
+
+    IEnumerator AutoLoadNextStr()
+    {
+        yield return new WaitForSeconds(1.5f);
+        LoadNextText();
     }
 
     private void ChangeIcon()
