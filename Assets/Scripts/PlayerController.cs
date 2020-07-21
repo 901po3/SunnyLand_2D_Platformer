@@ -59,6 +59,8 @@ public class PlayerController : MonoBehaviour
     public bool GetIsFrozen() { return isFrozen; }
     public bool GetIsLeftButtonPressed() { return isLeftButtonPressed; }
     public bool GetIsRightButtonPressed() { return isRightButtonPressed; }
+    public bool GetIsJumpButtonPressed() { return isJumpButtonPressed; }
+    public bool GetWasJumpButtonPressed() { return wasJumpButtonPressed; }
 
     //Singleton
     public static PlayerController instance { get; private set; }
