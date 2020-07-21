@@ -8,7 +8,6 @@
 
 using System.Collections;
 using UnityEngine;
-using Joystick = CoolJoystick.Joystick;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,7 +22,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject enemyDeathEffect;
     [SerializeField] private GameObject[] lifeObj; // Player life UI GameObject....
     [SerializeField] private Transform respawnPos;
-    [SerializeField] private Joystick joystick;
 
     private const float checkRadius = 0.35f; //radius for groundCheck and ceilingCheck
     private GameObject enemyBelow; // check if player's stepping on any enemy
@@ -98,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
     private void JumpButtonPressed()
     {
-        int layerMask = LayerMask.GetMask("JumpButton");
+        int layerMask = LayerMask.GetMask("JumpButton", "LeftButton", "RightButton");
         RaycastHit2D hit;
         for (int i = 0; i < Input.touchCount; i++)
         {
@@ -107,6 +105,7 @@ public class PlayerController : MonoBehaviour
             Vector2 dir = Camera.main.ScreenToWorldPoint(pos);
             hit = Physics2D.Raycast(pos, dir, Mathf.Infinity, layerMask);
             Debug.Log(hit);
+
             if(isJumpButtonPressed)
             {
                 if (touch.phase == TouchPhase.Moved)
@@ -120,7 +119,7 @@ public class PlayerController : MonoBehaviour
                 if (touch.phase == TouchPhase.Ended)
                 {
                     //Debug.Log("Touch Ended");
-                    if (hit && wasJumpButtonPressed)
+                    if (hit.transform.gameObject.layer == LayerMask.NameToLayer("JumpButton") && wasJumpButtonPressed)
                     {
                         isJumpButtonPressed = false;
                     }
@@ -293,7 +292,7 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         if (isFrozen) return;
-        horizontalMove = joystick ? joystick.Horizontal : Input.GetAxisRaw("Horizontal");
+        horizontalMove = Input.GetAxisRaw("Horizontal");
 
         float speed = walkSpeed * Time.fixedDeltaTime;
         if (isGrounded)
