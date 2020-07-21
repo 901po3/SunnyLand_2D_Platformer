@@ -14,6 +14,7 @@ public class GameOver : MonoBehaviour
 {
     [SerializeField] private string curSceneName;
     [SerializeField] private GameObject Panel;
+    [SerializeField] GameObject InputMenu;
 
     //Singleton
     public static GameOver instance { get; private set; }
@@ -36,6 +37,7 @@ public class GameOver : MonoBehaviour
     public void RetryButtonPressed()
     {
         Time.timeScale = 1;
+        SceneLoader.instance.SetIsGameOverMenuOn(false);
         SceneLoader.instance.LoadNextScene(curSceneName);
     }
 
@@ -43,6 +45,7 @@ public class GameOver : MonoBehaviour
     {
         Time.timeScale = 1;
         Panel.SetActive(false);
+        SceneLoader.instance.SetIsGameOverMenuOn(false);
         SceneLoader.instance.LoadNextScene("TitleMenuScene");
     }
 
@@ -52,6 +55,7 @@ public class GameOver : MonoBehaviour
 
         yield return new WaitForSeconds(0.6f);
         Panel.SetActive(true);
+        SceneLoader.instance.SetIsGameOverMenuOn(true);
         Time.timeScale = 0;
     }
 }

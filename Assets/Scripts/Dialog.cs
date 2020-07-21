@@ -40,7 +40,7 @@ public class Dialog : MonoBehaviour
     private void Start()
     {
         SetDialog();
-        LoadNextText();
+        LoadNextText(false);
         dialogText.text = "";
     }
 
@@ -50,14 +50,14 @@ public class Dialog : MonoBehaviour
         {
             if (!SceneLoader.instance.GetIsSettingMenuOn())
             {
-                LoadNextText();
+                LoadNextText(true);
             }
         }
         ChangeIcon();
 
         LoadCurrentStr();
     }
-    private void LoadNextText()
+    private void LoadNextText(bool playSound)
     {
         if (isLoadingStr)
         {
@@ -81,7 +81,8 @@ public class Dialog : MonoBehaviour
             return;
         }
         Debug.Log("Mouse Clicked :" + curDialogNum);
-        AudioManager.instance.PlayTouchSFX();
+        if(playSound)
+            AudioManager.instance.PlayTouchSFX();
 
         DialogStruct dialogStruct = dialog.Dequeue();
         isFriendTalking = dialogStruct.isFriendTalking;
@@ -120,7 +121,7 @@ public class Dialog : MonoBehaviour
     IEnumerator AutoLoadNextStr()
     {
         yield return new WaitForSeconds(1.5f);
-        LoadNextText();
+        LoadNextText(false);
     }
 
     private void ChangeIcon()

@@ -13,11 +13,12 @@ public class SettingButton : MonoBehaviour
 {
     [SerializeField] private GameObject SettingMenuObj;
     [SerializeField] private GameObject homeMenuObj;
-
+        
     private void Awake()
     {
         SettingMenuObj.SetActive(false);
         homeMenuObj.SetActive(false);
+        SceneLoader.instance.SetIsGameOverMenuOn(false);
     }
 
     public void OpenSettingMenu()

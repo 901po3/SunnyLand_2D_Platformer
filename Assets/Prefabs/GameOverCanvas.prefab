@@ -445,8 +445,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 751f20f81a4ebea4e8c24c340a0e34f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curSceneName: Stage1
+  curSceneName: stage3
   Panel: {fileID: 6337636341044806415}
+  InputMenu: {fileID: 0}
 --- !u!1 &6337636342102264409
 GameObject:
   m_ObjectHideFlags: 0

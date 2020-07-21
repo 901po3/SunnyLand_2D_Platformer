@@ -11,6 +11,7 @@ TagManager:
   - FallingSpot
   - MagicFruit
   - SettingButton
+  - JumpButton
   layers:
   - Default
   - TransparentFX
@@ -28,9 +29,9 @@ TagManager:
   - FallingSpot
   - MagicFruit
   - SettingButton
-  - 
-  - 
-  - 
+  - JumpButton
+  - LeftButton
+  - RightButton
   - 
   - 
   - 

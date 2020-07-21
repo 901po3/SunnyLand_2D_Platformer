@@ -1,13 +1,14 @@
 ﻿/*
  * Class: PlayerController
  * Date: 2020.7.14
- * Last Modified : 2020.7.20
+ * Last Modified : 2020.7.21
  * Author: Hyukin Kwon 
  * Description: Player movement controller.
 */
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -45,7 +46,10 @@ public class PlayerController : MonoBehaviour
     private bool isRespawning = false;
     private bool isFrozen = false;
     private bool checkCollisionOnce = false;
-
+    private bool wasJumpButtonPressed = false;
+    private bool isJumpButtonPressed = false;
+    private bool isLeftButtonPressed = false;
+    private bool isRightButtonPressed = false;
     //setter getter
     public void SetAttackingPlant(GameObject palnt) { attackingPlant = palnt; }
     public void SetLife(int l) { life = l; }
@@ -70,6 +74,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        horizontalMove = 0f;
         rigidbody2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
@@ -82,6 +87,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        PlayerInput();
         Jump();
         SideChecker();
     }
@@ -89,6 +95,85 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+    }
+
+    private void PlayerInput()
+    {
+        if (Input.touchCount == 0 || SceneLoader.instance.GetIsSettingMenuOn() || SceneLoader.instance.GetIsGameOverMenuOn())
+        {
+            isLeftButtonPressed = false;
+            isRightButtonPressed = false;
+            horizontalMove = 0;
+            return;
+        }
+
+        int layerMask = LayerMask.GetMask("JumpButton", "LeftButton", "RightButton");
+        RaycastHit2D hit;
+        for (int i = 0; i < Input.touchCount; i++)
+        {
+            Touch touch = Input.GetTouch(i);
+            Vector2 pos = touch.position;
+            Vector2 dir = Camera.main.ScreenToWorldPoint(pos);
+            hit = Physics2D.Raycast(pos, dir, Mathf.Infinity, layerMask);
+            Debug.Log(hit);
+
+            if (hit)
+            {
+                int layer = hit.transform.gameObject.layer;
+
+                if (layer == LayerMask.NameToLayer("JumpButton"))
+                {
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        isJumpButtonPressed = true;
+                    }
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        isJumpButtonPressed = false;
+                    }
+                }
+                if (layer == LayerMask.NameToLayer("LeftButton"))
+                {
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        isLeftButtonPressed = true;
+                        if (isRightButtonPressed)
+                        {
+                            isRightButtonPressed = false;
+                        }
+                    }
+                    if (touch.phase == TouchPhase.Moved)
+                    {
+                        isRightButtonPressed = false;
+                        isLeftButtonPressed = true;
+                    }
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        isLeftButtonPressed = false;
+                    }
+                }
+                if (layer == LayerMask.NameToLayer("RightButton"))
+                {
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        isRightButtonPressed = true;
+                        if (isLeftButtonPressed)
+                        {
+                            isLeftButtonPressed = false;
+                        }
+                    }
+                    if (touch.phase == TouchPhase.Moved)
+                    {
+                        isRightButtonPressed = true;
+                        isLeftButtonPressed = false;
+                    }
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        isRightButtonPressed = false;
+                    }
+                }
+            }
+        }
     }
 
     //Check side for dectecting enemy
@@ -133,8 +218,12 @@ public class PlayerController : MonoBehaviour
                         {
                             enemyBelow = collider2D.gameObject;
                             AudioManager.instance.PlayAttackSFX();
+                            StartCoroutine(Bounce(200));
                         }
-                        StartCoroutine(Bounce());
+                        else if(collider2D.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+                        {
+                            StartCoroutine(Bounce(200));
+                        }
                         break;
                     }
                 }
@@ -196,17 +285,19 @@ public class PlayerController : MonoBehaviour
         if (isBounced)
         {
             isGrounded = true;
+            wasJumpButtonPressed = false;
         }
-        if ((Input.GetButtonDown("Jump") && isGrounded) || isBounced)
+        if ((Input.GetButtonDown("Jump") && isGrounded) || (isJumpButtonPressed && isGrounded && !wasJumpButtonPressed) || isBounced)
         {
             AudioManager.instance.PlayJumpSFX();
+            wasJumpButtonPressed = true;
             isBounced = false;
             isJumping = true;
             anim.SetBool("isJumping", isJumping);
             jumpTimeCounter = jumpTime;
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x , jumpForce);
         }
-        else if (Input.GetButton("Jump") && isJumping) // press longer to jump higher
+        if ((Input.GetButton("Jump") || wasJumpButtonPressed) && isJumping) // press longer to jump higher
         {
             if(jumpTimeCounter > 0)
             {
@@ -218,8 +309,9 @@ public class PlayerController : MonoBehaviour
                 isJumping = false;
             }
         }
-        if (Input.GetButtonUp("Jump"))
+        if (Input.GetButtonUp("Jump") || (!isJumpButtonPressed && wasJumpButtonPressed))
         {
+            wasJumpButtonPressed = false;
             isJumping = false;
         }      
         if(rigidbody2D.velocity.y < 2f && !isJumping)
@@ -242,7 +334,24 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         if (isFrozen) return;
-        horizontalMove = Input.GetAxisRaw("Horizontal");
+
+        //horizontalMove = Input.GetAxisRaw("Horizontal");
+
+        if(isRightButtonPressed && horizontalMove < 1f)
+        {
+            horizontalMove += Time.deltaTime * 10f;
+            isLeftButtonPressed = false;
+        }
+        if(isLeftButtonPressed && horizontalMove > -1)
+        {
+            horizontalMove -= Time.deltaTime * 10f;
+            isRightButtonPressed = false;
+        }
+        if(!isRightButtonPressed && !isLeftButtonPressed)
+        {
+            horizontalMove = 0;
+        }
+        horizontalMove = Mathf.Clamp(horizontalMove, -1, 1);
 
         float speed = walkSpeed * Time.fixedDeltaTime;
         if (isGrounded)
@@ -401,6 +510,7 @@ public class PlayerController : MonoBehaviour
             Flip();
 
         yield return new WaitForSeconds(1.0f);
+        horizontalMove = 0f;
         isRespawning = false;
         isFrozen = false;
 
@@ -424,11 +534,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    IEnumerator Bounce()
+    IEnumerator Bounce(float vPower)
     {
         isBounced = true;
         rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
-        rigidbody2D.AddForce(Vector2.up * 100);
+        rigidbody2D.AddForce(Vector2.up * vPower);
         StartCoroutine(PlayEffect(enemyDeathEffect, 0.3f));
 
         yield return new WaitForSeconds(0.75f);

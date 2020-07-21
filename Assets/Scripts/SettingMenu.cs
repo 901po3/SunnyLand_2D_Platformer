@@ -16,6 +16,7 @@ public class SettingMenu : MonoBehaviour
     [SerializeField] private GameObject homeMenuBgObj;
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
+    [SerializeField] GameObject InputMenu;
 
     private void Awake()
     {
