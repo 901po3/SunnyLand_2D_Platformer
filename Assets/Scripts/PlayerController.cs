@@ -99,11 +99,12 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerInput()
     {
-        if (Input.touchCount == 0)
+        if (Input.touchCount == 0 || SceneLoader.instance.GetIsSettingMenuOn() || SceneLoader.instance.GetIsGameOverMenuOn())
         {
             isLeftButtonPressed = false;
             isRightButtonPressed = false;
             horizontalMove = 0;
+            return;
         }
 
         int layerMask = LayerMask.GetMask("JumpButton", "LeftButton", "RightButton");
