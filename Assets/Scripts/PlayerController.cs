@@ -8,6 +8,7 @@
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -98,7 +99,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerInput()
     {
-        if(Input.touchCount == 0)
+        if (Input.touchCount == 0)
         {
             isLeftButtonPressed = false;
             isRightButtonPressed = false;
@@ -115,7 +116,7 @@ public class PlayerController : MonoBehaviour
             hit = Physics2D.Raycast(pos, dir, Mathf.Infinity, layerMask);
             Debug.Log(hit);
 
-            if(hit)
+            if (hit)
             {
                 int layer = hit.transform.gameObject.layer;
 
@@ -130,12 +131,12 @@ public class PlayerController : MonoBehaviour
                         isJumpButtonPressed = false;
                     }
                 }
-                if(layer == LayerMask.NameToLayer("LeftButton"))
+                if (layer == LayerMask.NameToLayer("LeftButton"))
                 {
                     if (touch.phase == TouchPhase.Began)
                     {
                         isLeftButtonPressed = true;
-                        if(isRightButtonPressed)
+                        if (isRightButtonPressed)
                         {
                             isRightButtonPressed = false;
                         }
@@ -150,7 +151,7 @@ public class PlayerController : MonoBehaviour
                         isLeftButtonPressed = false;
                     }
                 }
-                if(layer == LayerMask.NameToLayer("RightButton"))
+                if (layer == LayerMask.NameToLayer("RightButton"))
                 {
                     if (touch.phase == TouchPhase.Began)
                     {
