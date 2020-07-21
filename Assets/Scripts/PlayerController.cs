@@ -54,10 +54,11 @@ public class PlayerController : MonoBehaviour
     public void SetAttackingPlant(GameObject palnt) { attackingPlant = palnt; }
     public void SetLife(int l) { life = l; }
     public void SetIsFronze(bool frozen) { isFrozen = frozen; }
-
     public GameObject GetEnemyBelow() { return enemyBelow; }
     public int GetLife() { return life; }
     public bool GetIsFrozen() { return isFrozen; }
+    public bool GetIsLeftButtonPressed() { return isLeftButtonPressed; }
+    public bool GetIsRightButtonPressed() { return isRightButtonPressed; }
 
     //Singleton
     public static PlayerController instance { get; private set; }
