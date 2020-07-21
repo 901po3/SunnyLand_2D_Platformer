@@ -25,6 +25,7 @@ public class SceneLoader : MonoBehaviour
     private Scene curScene = Scene.Title;
     private bool isSceneLoading = false;
     private bool isSetttingMenuOn = false;
+    private bool isGameOverMenuOn = false;
 
     //Singleton
     public static SceneLoader instance { get; private set; }
@@ -32,12 +33,14 @@ public class SceneLoader : MonoBehaviour
     //Setter getter
     public void SetIsSceneLoading(bool sceneLoading) { isSceneLoading = sceneLoading; }
     public void SetIsGameFinsihed(bool gameFinished) { isGameFinished = gameFinished; }
+    public void SetIsGameOverMenuOn(bool gom) { isGameOverMenuOn = gom; }
     public void SetCurScene(Scene cS) { curScene = cS; }
     public void SetIsSettingMenuOn(bool sm) { isSetttingMenuOn = sm; }
     public bool GetIsSceneLoading() { return isSceneLoading; }
     public bool GetIsGameFinsihed() { return isGameFinished; }
     public Scene GetCurScene() { return curScene; }
     public bool GetIsSettingMenuOn() {  return isSetttingMenuOn; }
+    public bool GetIsGameOverMenuOn() { return isGameOverMenuOn; }
 
     private void Awake()
     {

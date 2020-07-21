@@ -47,7 +47,8 @@ public class PlayerController : MonoBehaviour
     private bool checkCollisionOnce = false;
     private bool wasJumpButtonPressed = false;
     private bool isJumpButtonPressed = false;
-
+    private bool isLeftButtonPressed = false;
+    private bool isRightButtonPressed = false;
     //setter getter
     public void SetAttackingPlant(GameObject palnt) { attackingPlant = palnt; }
     public void SetLife(int l) { life = l; }
@@ -72,6 +73,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        horizontalMove = 0f;
         rigidbody2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
@@ -84,7 +86,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        JumpButtonPressed();
+        PlayerInput();
         Jump();
         SideChecker();
     }
@@ -94,8 +96,15 @@ public class PlayerController : MonoBehaviour
         Move();
     }
 
-    private void JumpButtonPressed()
+    private void PlayerInput()
     {
+        if(Input.touchCount == 0)
+        {
+            isLeftButtonPressed = false;
+            isRightButtonPressed = false;
+            horizontalMove = 0;
+        }
+
         int layerMask = LayerMask.GetMask("JumpButton", "LeftButton", "RightButton");
         RaycastHit2D hit;
         for (int i = 0; i < Input.touchCount; i++)
@@ -106,33 +115,59 @@ public class PlayerController : MonoBehaviour
             hit = Physics2D.Raycast(pos, dir, Mathf.Infinity, layerMask);
             Debug.Log(hit);
 
-            if(isJumpButtonPressed)
+            if(hit)
             {
-                if (touch.phase == TouchPhase.Moved)
+                int layer = hit.transform.gameObject.layer;
+
+                if (layer == LayerMask.NameToLayer("JumpButton"))
                 {
-                    //Debug.Log("Touch Moved");
-                    if (!hit && wasJumpButtonPressed)
-                    {
-                        isJumpButtonPressed = false;
-                    }
-                }
-                if (touch.phase == TouchPhase.Ended)
-                {
-                    //Debug.Log("Touch Ended");
-                    if (hit.transform.gameObject.layer == LayerMask.NameToLayer("JumpButton") && wasJumpButtonPressed)
-                    {
-                        isJumpButtonPressed = false;
-                    }
-                }
-            }
-            else
-            {
-                if (touch.phase == TouchPhase.Began)
-                {
-                    //Debug.Log("Touch Began");
-                    if (hit)
+                    if (touch.phase == TouchPhase.Began)
                     {
                         isJumpButtonPressed = true;
+                    }
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        isJumpButtonPressed = false;
+                    }
+                }
+                if(layer == LayerMask.NameToLayer("LeftButton"))
+                {
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        isLeftButtonPressed = true;
+                        if(isRightButtonPressed)
+                        {
+                            isRightButtonPressed = false;
+                        }
+                    }
+                    if (touch.phase == TouchPhase.Moved)
+                    {
+                        isRightButtonPressed = false;
+                        isLeftButtonPressed = true;
+                    }
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        isLeftButtonPressed = false;
+                    }
+                }
+                if(layer == LayerMask.NameToLayer("RightButton"))
+                {
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        isRightButtonPressed = true;
+                        if (isLeftButtonPressed)
+                        {
+                            isLeftButtonPressed = false;
+                        }
+                    }
+                    if (touch.phase == TouchPhase.Moved)
+                    {
+                        isRightButtonPressed = true;
+                        isLeftButtonPressed = false;
+                    }
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        isRightButtonPressed = false;
                     }
                 }
             }
@@ -181,8 +216,12 @@ public class PlayerController : MonoBehaviour
                         {
                             enemyBelow = collider2D.gameObject;
                             AudioManager.instance.PlayAttackSFX();
+                            StartCoroutine(Bounce(200));
                         }
-                        StartCoroutine(Bounce());
+                        else if(collider2D.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+                        {
+                            StartCoroutine(Bounce(200));
+                        }
                         break;
                     }
                 }
@@ -244,6 +283,7 @@ public class PlayerController : MonoBehaviour
         if (isBounced)
         {
             isGrounded = true;
+            wasJumpButtonPressed = false;
         }
         if ((Input.GetButtonDown("Jump") && isGrounded) || (isJumpButtonPressed && isGrounded && !wasJumpButtonPressed) || isBounced)
         {
@@ -255,7 +295,7 @@ public class PlayerController : MonoBehaviour
             jumpTimeCounter = jumpTime;
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x , jumpForce);
         }
-        else if ((Input.GetButton("Jump") || isJumpButtonPressed) && isJumping) // press longer to jump higher
+        if ((Input.GetButton("Jump") || wasJumpButtonPressed) && isJumping) // press longer to jump higher
         {
             if(jumpTimeCounter > 0)
             {
@@ -292,7 +332,24 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         if (isFrozen) return;
-        horizontalMove = Input.GetAxisRaw("Horizontal");
+
+        //horizontalMove = Input.GetAxisRaw("Horizontal");
+
+        if(isRightButtonPressed && horizontalMove < 1f)
+        {
+            horizontalMove += Time.deltaTime * 10f;
+            isLeftButtonPressed = false;
+        }
+        if(isLeftButtonPressed && horizontalMove > -1)
+        {
+            horizontalMove -= Time.deltaTime * 10f;
+            isRightButtonPressed = false;
+        }
+        if(!isRightButtonPressed && !isLeftButtonPressed)
+        {
+            horizontalMove = 0;
+        }
+        horizontalMove = Mathf.Clamp(horizontalMove, -1, 1);
 
         float speed = walkSpeed * Time.fixedDeltaTime;
         if (isGrounded)
@@ -451,6 +508,7 @@ public class PlayerController : MonoBehaviour
             Flip();
 
         yield return new WaitForSeconds(1.0f);
+        horizontalMove = 0f;
         isRespawning = false;
         isFrozen = false;
 
@@ -474,11 +532,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    IEnumerator Bounce()
+    IEnumerator Bounce(float vPower)
     {
         isBounced = true;
         rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
-        rigidbody2D.AddForce(Vector2.up * 100);
+        rigidbody2D.AddForce(Vector2.up * vPower);
         StartCoroutine(PlayEffect(enemyDeathEffect, 0.3f));
 
         yield return new WaitForSeconds(0.75f);
