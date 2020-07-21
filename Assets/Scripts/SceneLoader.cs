@@ -15,7 +15,7 @@ public class SceneLoader : MonoBehaviour
 {
     public enum Scene
     {
-        Title, Village, Stages, Credit
+        Title, Village, Stages, Credit, Tutorial
     }
 
     [SerializeField] private GameObject fadeOutPanel;

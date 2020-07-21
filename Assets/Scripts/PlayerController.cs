@@ -529,7 +529,15 @@ public class PlayerController : MonoBehaviour
 
             if (life <= 0)
             {
-                GameOver.instance.TurnOnGameOver();
+                if (SceneLoader.instance.GetCurScene() != SceneLoader.Scene.Tutorial)
+                {
+                    GameOver.instance.TurnOnGameOver();
+                }
+                else
+                {
+                    life = 3;
+                    ChangeLifeHud();
+                }
             }
         }
     }
