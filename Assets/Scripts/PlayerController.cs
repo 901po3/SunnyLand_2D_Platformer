@@ -1,13 +1,14 @@
 ﻿/*
  * Class: PlayerController
  * Date: 2020.7.14
- * Last Modified : 2020.7.20
+ * Last Modified : 2020.7.21
  * Author: Hyukin Kwon 
  * Description: Player movement controller.
 */
 
 using System.Collections;
 using UnityEngine;
+using Joystick = CoolJoystick.Joystick;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject enemyDeathEffect;
     [SerializeField] private GameObject[] lifeObj; // Player life UI GameObject....
     [SerializeField] private Transform respawnPos;
+    [SerializeField] private Joystick joystick;
 
     private const float checkRadius = 0.35f; //radius for groundCheck and ceilingCheck
     private GameObject enemyBelow; // check if player's stepping on any enemy
@@ -45,6 +47,8 @@ public class PlayerController : MonoBehaviour
     private bool isRespawning = false;
     private bool isFrozen = false;
     private bool checkCollisionOnce = false;
+    private bool wasJumpButtonPressed = false;
+    private bool isJumpButtonPressed = false;
 
     //setter getter
     public void SetAttackingPlant(GameObject palnt) { attackingPlant = palnt; }
@@ -82,6 +86,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        JumpButtonPressed();
         Jump();
         SideChecker();
     }
@@ -89,6 +94,50 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+    }
+
+    private void JumpButtonPressed()
+    {
+        int layerMask = LayerMask.GetMask("JumpButton");
+        RaycastHit2D hit;
+        for (int i = 0; i < Input.touchCount; i++)
+        {
+            Touch touch = Input.GetTouch(i);
+            Vector2 pos = touch.position;
+            Vector2 dir = Camera.main.ScreenToWorldPoint(pos);
+            hit = Physics2D.Raycast(pos, dir, Mathf.Infinity, layerMask);
+            Debug.Log(hit);
+            if(isJumpButtonPressed)
+            {
+                if (touch.phase == TouchPhase.Moved)
+                {
+                    //Debug.Log("Touch Moved");
+                    if (!hit && wasJumpButtonPressed)
+                    {
+                        isJumpButtonPressed = false;
+                    }
+                }
+                if (touch.phase == TouchPhase.Ended)
+                {
+                    //Debug.Log("Touch Ended");
+                    if (hit && wasJumpButtonPressed)
+                    {
+                        isJumpButtonPressed = false;
+                    }
+                }
+            }
+            else
+            {
+                if (touch.phase == TouchPhase.Began)
+                {
+                    //Debug.Log("Touch Began");
+                    if (hit)
+                    {
+                        isJumpButtonPressed = true;
+                    }
+                }
+            }
+        }
     }
 
     //Check side for dectecting enemy
@@ -197,16 +246,17 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
         }
-        if ((Input.GetButtonDown("Jump") && isGrounded) || isBounced)
+        if ((Input.GetButtonDown("Jump") && isGrounded) || (isJumpButtonPressed && isGrounded && !wasJumpButtonPressed) || isBounced)
         {
             AudioManager.instance.PlayJumpSFX();
+            wasJumpButtonPressed = true;
             isBounced = false;
             isJumping = true;
             anim.SetBool("isJumping", isJumping);
             jumpTimeCounter = jumpTime;
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x , jumpForce);
         }
-        else if (Input.GetButton("Jump") && isJumping) // press longer to jump higher
+        else if ((Input.GetButton("Jump") || isJumpButtonPressed) && isJumping) // press longer to jump higher
         {
             if(jumpTimeCounter > 0)
             {
@@ -218,8 +268,9 @@ public class PlayerController : MonoBehaviour
                 isJumping = false;
             }
         }
-        if (Input.GetButtonUp("Jump"))
+        if (Input.GetButtonUp("Jump") || (!isJumpButtonPressed && wasJumpButtonPressed))
         {
+            wasJumpButtonPressed = false;
             isJumping = false;
         }      
         if(rigidbody2D.velocity.y < 2f && !isJumping)
@@ -242,7 +293,7 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         if (isFrozen) return;
-        horizontalMove = Input.GetAxisRaw("Horizontal");
+        horizontalMove = joystick ? joystick.Horizontal : Input.GetAxisRaw("Horizontal");
 
         float speed = walkSpeed * Time.fixedDeltaTime;
         if (isGrounded)
