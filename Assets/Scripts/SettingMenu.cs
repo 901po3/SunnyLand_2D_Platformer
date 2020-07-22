@@ -1,7 +1,7 @@
 ﻿/*
  * Class: SettingMenu
  * Date: 2020.7.20
- * Last Modified : 2020.7.20
+ * Last Modified : 2020.7.22
  * Author: Hyukin Kwon 
  * Description: Setting Menu
 */
@@ -20,7 +20,12 @@ public class SettingMenu : MonoBehaviour
 
     private void Awake()
     {
-        if(AudioManager.instance)
+        UpdateSoundSliders();
+    }
+
+    public void UpdateSoundSliders()
+    {
+        if (AudioManager.instance)
         {
             bgmSlider.value = AudioManager.instance.GetOriginalBgmVolume();
             sfxSlider.value = AudioManager.instance.GetOriginalSfxVolume();

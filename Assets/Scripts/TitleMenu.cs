@@ -29,11 +29,11 @@ public class TitleMenu : MonoBehaviour
         SceneLoader.instance.SetIsGameFinsihed(false);
         SettingMenu.SetActive(false);
     }
+
     public void PlayerButtonOnClick()
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
         Debug.Log("Play button clicked");
-        AudioManager.instance.LoadVolumeFromData();
         AudioManager.instance.PlayTouchSFX();
         SceneLoader.instance.LoadNextScene("stage0");
     }
@@ -42,14 +42,12 @@ public class TitleMenu : MonoBehaviour
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
         Debug.Log("Tutorial button clicked");
-        AudioManager.instance.LoadVolumeFromData();
         AudioManager.instance.PlayTouchSFX();
         SceneLoader.instance.LoadNextScene("TutorialScene");
     }
 
     public void OptionButtonOnClick()
     {
-        AudioManager.instance.LoadVolumeFromData();
         AudioManager.instance.PlayTouchSFX();
         Debug.Log("Option button clicked");
         StartCoroutine(OpenSettingMenu());
@@ -57,7 +55,6 @@ public class TitleMenu : MonoBehaviour
 
     public void ExitButtonOnClick()
     {
-        AudioManager.instance.LoadVolumeFromData();
         AudioManager.instance.PlayTouchSFX();
         Debug.Log("Exit button clicked");
         Application.Quit();
@@ -68,5 +65,6 @@ public class TitleMenu : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         AudioManager.instance.UpdateOriginalVolume();
         SettingMenu.SetActive(true);
+        SettingMenu.transform.parent.GetComponent<SettingMenu>().UpdateSoundSliders();
     }
 }

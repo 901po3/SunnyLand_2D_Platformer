@@ -57,6 +57,9 @@ public class AudioManager : MonoBehaviour
         }
         bgmAudioSource = bgmObj.GetComponent<AudioSource>();
         sfxAudioSource = sfxObj.GetComponent<AudioSource>();
+        LoadVolumeFromData();
+        UpdateBGM(bgmVolume);
+        UpdateSFX(sfxVolume);
     }
 
     private void OnDestroy()
@@ -90,8 +93,6 @@ public class AudioManager : MonoBehaviour
 
     public void BGMSetting(string stage)
     {
-        if (!SceneLoader.instance) return;
-        
         bgmAudioSource.pitch = 1.0f;
         bgmAudioSource.volume = bgmVolume;
         bgmAudioSource.playOnAwake = true;
@@ -124,8 +125,6 @@ public class AudioManager : MonoBehaviour
 
     private void SelectBGM()
     {
-        if (!SceneLoader.instance) return;
-
         switch (SceneLoader.instance.GetCurScene())
         {
             case SceneLoader.Scene.Title:
