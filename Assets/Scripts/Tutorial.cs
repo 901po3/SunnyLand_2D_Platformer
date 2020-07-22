@@ -14,10 +14,12 @@ public class Tutorial : MonoBehaviour
     [SerializeField] private GameObject[] uncompletedTutorialObjs;
     [SerializeField] private GameObject[] completedTutorialObjs;
     [SerializeField] private Transform[] positions;
+    [SerializeField] private GameObject JumpButton;
 
     private int curTutorialNum = 0;
-    private int jumpCnt = 0;
+    private int cnt = 0;
     private float timeMesurement = 0.0f;
+    private bool callFunctionOnce = false;
     private bool isCurTotorialCompleted = false;
     private bool isLoadingNextTutorial = false;
 
@@ -35,29 +37,25 @@ public class Tutorial : MonoBehaviour
 
     private void PlayTutorial()
     {
-        switch(curTutorialNum)
-        {
-            case 0:
-                PlayFirstTutorial();
-                break;
-            case 1:
-                PlayeSecondTutorial();
-                break;
-        }
-    }
-
-    private void PlayFirstTutorial()
-    {
         if (!isCurTotorialCompleted)
         {
-            if (PlayerController.instance.GetIsRightButtonPressed() || PlayerController.instance.GetIsLeftButtonPressed())
+            switch (curTutorialNum)
             {
-                timeMesurement += Time.deltaTime;
-                if (timeMesurement > 2.5f)
-                {
-                    LoadNextTutorialObj();
-                    timeMesurement = 0.0f;
-                }
+                case 0:
+                    PlayFirstTutorial();
+                    break;
+                case 1:
+                    PlayeSecondTutorial();
+                    break;
+                case 2:
+                    PlayThirdTutorial();
+                    break;
+                case 3:
+                    PlayFourthTutorial();
+                    break;
+                case 4:
+                    PlayFifthTutorial();
+                    break;
             }
         }
         else
@@ -65,30 +63,69 @@ public class Tutorial : MonoBehaviour
             if (!isLoadingNextTutorial)
             {
                 StartCoroutine(MoveToNextTutorial());
+            }
+        }
+    }
+
+    private void PlayFirstTutorial()
+    {
+        JumpButton.SetActive(false);
+        if (PlayerController.instance.GetIsRightButtonPressed() || PlayerController.instance.GetIsLeftButtonPressed())
+        {
+            timeMesurement += Time.deltaTime;
+            if (timeMesurement > 2.5f)
+            {
+                LoadNextTutorialObj();
+                timeMesurement = 0.0f;
             }
         }
     }
 
     private void PlayeSecondTutorial()
     {
-        if (!isCurTotorialCompleted)
-        {          
-            if (!PlayerController.instance.GetWasJumpButtonPressed() && PlayerController.instance.GetIsJumpButtonPressed())
+        JumpButton.SetActive(true);
+        if (PlayerController.instance.GetIsJumpButtonPressed())
+        {
+            if (!callFunctionOnce)
             {
-                jumpCnt++;
-                if (jumpCnt >= 3)
-                {
-                    LoadNextTutorialObj();
-                    jumpCnt = 0;
-                }
+                callFunctionOnce = true;
+                StartCoroutine(MoveToNextTutorialInDelay(3));
             }
+        }
+    }
+
+    private void PlayThirdTutorial()
+    {
+        if (PlayerController.instance.GetEnemyBelow() != null)
+        {
+            cnt++;
+            if (cnt >= 3)
+            {
+                LoadNextTutorialObj();
+                cnt = 0;
+            }
+        }
+    }
+
+    private void PlayFourthTutorial()
+    {
+        JumpButton.SetActive(true);
+        if (!callFunctionOnce)
+        {
+            callFunctionOnce = true;
+            StartCoroutine(MoveToNextTutorialInDelay(7f));
+        }
+    }
+
+    private void PlayFifthTutorial()
+    {
+        if (!isCurTotorialCompleted)
+        {
+
         }
         else
         {
-            if (!isLoadingNextTutorial)
-            {
-                StartCoroutine(MoveToNextTutorial());
-            }
+
         }
     }
 
@@ -111,13 +148,15 @@ public class Tutorial : MonoBehaviour
         }
         else
         {
-            isCurTotorialCompleted = false;
             curTutorialNum++;
-            MoveToPosition();
             if (curTutorialNum >= uncompletedTutorialObjs.Length)
             {
                 //All tutorials are finished
+                Debug.Log("Tutorial Completed");
+                return;
             }
+            isCurTotorialCompleted = false;
+            MoveToPosition();
         }
 
         SetTutorialObjsToCurrentState();
@@ -159,4 +198,13 @@ public class Tutorial : MonoBehaviour
     {
         PlayerController.instance.transform.position = positions[curTutorialNum].position; 
     }
+
+    IEnumerator MoveToNextTutorialInDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        callFunctionOnce = false;
+        cnt = 0;
+        LoadNextTutorialObj();
+    }
+
 }
