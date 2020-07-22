@@ -156,7 +156,7 @@ public class Dialog : MonoBehaviour
             dialog.Enqueue(new DialogStruct(true, "마법의 열매를 구할 수 있니?"));
             dialog.Enqueue(new DialogStruct(false, "!!!"));
             dialog.Enqueue(new DialogStruct(false, "당연하지."));
-            dialog.Enqueue(new DialogStruct(false, "그 열매라면 너도 다시 건강해 질거야."));
+            dialog.Enqueue(new DialogStruct(false, "그 열매라면 다시 건강해 질거야."));
             dialog.Enqueue(new DialogStruct(true, "정말 고마워... 콜록 콜록"));
             dialog.Enqueue(new DialogStruct(false, "나만 믿어."));
             dialog.Enqueue(new DialogStruct(true, "응 고마워 하얀토끼야..."));

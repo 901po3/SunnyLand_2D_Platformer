@@ -40,8 +40,10 @@ public class TitleMenu : MonoBehaviour
 
     public void TutorialButtonOnClick()
     {
-        AudioManager.instance.PlayTouchSFX();
+        if (SceneLoader.instance.GetIsSceneLoading()) return;
         Debug.Log("Tutorial button clicked");
+        AudioManager.instance.PlayTouchSFX();
+        SceneLoader.instance.LoadNextScene("TutorialScene");
     }
 
     public void OptionButtonOnClick()
