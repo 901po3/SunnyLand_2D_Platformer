@@ -18,8 +18,9 @@ public class SettingButton : MonoBehaviour
     {
         SettingMenuObj.SetActive(false);
         homeMenuObj.SetActive(false);
-        SceneLoader.instance.SetIsGameOverMenuOn(false);
-    }
+        if(SceneLoader.instance)
+            SceneLoader.instance.SetIsGameOverMenuOn(false);
+    }  
 
     public void OpenSettingMenu()
     {

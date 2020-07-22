@@ -1,14 +1,13 @@
 ﻿/*
  * Class: TitleMenu
  * Date: 2020.7.17
- * Last Modified : 2020.7.19
+ * Last Modified : 2020.7.22
  * Author: Hyukin Kwon 
  * Description:  TitleMenu Class (Play, Tutorial, Option, Exit)button
 */
 
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TitleMenu : MonoBehaviour
 {
@@ -16,7 +15,7 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] private GameObject AudioManagerPrefab;
     [SerializeField] private GameObject SceneManagerPrefab;
 
-    private void Start()
+    private void Awake()
     {
         if (AudioManager.instance == null)
         {
@@ -34,6 +33,7 @@ public class TitleMenu : MonoBehaviour
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
         Debug.Log("Play button clicked");
+        AudioManager.instance.LoadVolumeFromData();
         AudioManager.instance.PlayTouchSFX();
         SceneLoader.instance.LoadNextScene("stage0");
     }
@@ -42,12 +42,14 @@ public class TitleMenu : MonoBehaviour
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
         Debug.Log("Tutorial button clicked");
+        AudioManager.instance.LoadVolumeFromData();
         AudioManager.instance.PlayTouchSFX();
         SceneLoader.instance.LoadNextScene("TutorialScene");
     }
 
     public void OptionButtonOnClick()
     {
+        AudioManager.instance.LoadVolumeFromData();
         AudioManager.instance.PlayTouchSFX();
         Debug.Log("Option button clicked");
         StartCoroutine(OpenSettingMenu());
@@ -55,6 +57,7 @@ public class TitleMenu : MonoBehaviour
 
     public void ExitButtonOnClick()
     {
+        AudioManager.instance.LoadVolumeFromData();
         AudioManager.instance.PlayTouchSFX();
         Debug.Log("Exit button clicked");
         Application.Quit();

@@ -12,8 +12,15 @@ using UnityEngine.SceneManagement;
 
 public class SplashScreen : MonoBehaviour
 {
+    [SerializeField] private GameObject AudioManagerPrefab;
+
     private void Start()
     {
+        if (AudioManager.instance == null)
+        {
+            Instantiate(AudioManagerPrefab);
+        }
+
         StartCoroutine(MoveToTitleScreen());
     }
 
@@ -21,5 +28,6 @@ public class SplashScreen : MonoBehaviour
     {
         yield return new WaitForSeconds(5f);
         SceneManager.LoadScene("TitleMenuScene");
+        DontDestroyOnLoad(AudioManagerPrefab);
     }
 }
