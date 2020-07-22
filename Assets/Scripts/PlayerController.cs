@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
     public void SetAttackingPlant(GameObject palnt) { attackingPlant = palnt; }
     public void SetLife(int l) { life = l; }
     public void SetIsFronze(bool frozen) { isFrozen = frozen; }
+    public void SetEnemyBelow(GameObject obj) { enemyBelow = obj; }
     public GameObject GetEnemyBelow() { return enemyBelow; }
     public int GetLife() { return life; }
     public bool GetIsFrozen() { return isFrozen; }
@@ -524,7 +525,8 @@ public class PlayerController : MonoBehaviour
     {
         if (life > 0)
         {
-            life--;
+            if (SceneLoader.instance.GetCurScene() != SceneLoader.Scene.Tutorial)
+                life--;
             anim.SetTrigger("isHurt");
             StartCoroutine(SetInvincible());
             ChangeLifeHud();
@@ -532,15 +534,7 @@ public class PlayerController : MonoBehaviour
 
             if (life <= 0)
             {
-                if (SceneLoader.instance.GetCurScene() != SceneLoader.Scene.Tutorial)
-                {
-                    GameOver.instance.TurnOnGameOver();
-                }
-                else
-                {
-                    life = 3;
-                    ChangeLifeHud();
-                }
+                GameOver.instance.TurnOnGameOver();
             }
         }
     }

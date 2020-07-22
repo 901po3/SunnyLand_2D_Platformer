@@ -28,6 +28,7 @@ public class Tutorial : MonoBehaviour
     {
         MoveToPosition();
         SetTutorialObjsToCurrentState();
+        SceneLoader.instance.SetIsTutorialSceneFinished(false);
     }
 
     private void Update()
@@ -37,46 +38,46 @@ public class Tutorial : MonoBehaviour
 
     private void PlayTutorial()
     {
-        if (!isCurTotorialCompleted)
+        switch (curTutorialNum)
         {
-            switch (curTutorialNum)
-            {
-                case 0:
-                    PlayFirstTutorial();
-                    break;
-                case 1:
-                    PlayeSecondTutorial();
-                    break;
-                case 2:
-                    PlayThirdTutorial();
-                    break;
-                case 3:
-                    PlayFourthTutorial();
-                    break;
-                case 4:
-                    PlayFifthTutorial();
-                    break;
-            }
-        }
-        else
-        {
-            if (!isLoadingNextTutorial)
-            {
-                StartCoroutine(MoveToNextTutorial());
-            }
+            case 0:
+                PlayFirstTutorial();
+                break;
+            case 1:
+                PlayeSecondTutorial();
+                break;
+            case 2:
+                PlayThirdTutorial();
+                break;
+            case 3:
+                PlayFourthTutorial();
+                break;
+            case 4:
+                PlayFifthTutorial();
+                break;
         }
     }
 
     private void PlayFirstTutorial()
     {
         JumpButton.SetActive(false);
-        if (PlayerController.instance.GetIsRightButtonPressed() || PlayerController.instance.GetIsLeftButtonPressed())
+        if (!isCurTotorialCompleted)
         {
-            timeMesurement += Time.deltaTime;
-            if (timeMesurement > 2.5f)
+            if (PlayerController.instance.GetIsRightButtonPressed() || PlayerController.instance.GetIsLeftButtonPressed())
             {
-                LoadNextTutorialObj();
-                timeMesurement = 0.0f;
+                timeMesurement += Time.deltaTime;
+                if (timeMesurement > 2.5f)
+                {
+                    LoadNextTutorialObj();
+                    timeMesurement = 0.0f;
+                }
+            }
+        }
+        else
+        {
+            if (!isLoadingNextTutorial)
+            {
+                StartCoroutine(MoveToNextTutorial(3));
             }
         }
     }
@@ -84,25 +85,45 @@ public class Tutorial : MonoBehaviour
     private void PlayeSecondTutorial()
     {
         JumpButton.SetActive(true);
-        if (PlayerController.instance.GetIsJumpButtonPressed())
+        if (!isCurTotorialCompleted)
         {
-            if (!callFunctionOnce)
+            if (PlayerController.instance.GetIsJumpButtonPressed())
             {
-                callFunctionOnce = true;
-                StartCoroutine(MoveToNextTutorialInDelay(3));
+                if (!callFunctionOnce)
+                {
+                    callFunctionOnce = true;
+                    StartCoroutine(MoveToNextTutorialInDelay(3));
+                }
+            }
+        }
+        else
+        {
+            if (!isLoadingNextTutorial)
+            {
+                StartCoroutine(MoveToNextTutorial(3));
             }
         }
     }
 
     private void PlayThirdTutorial()
     {
-        if (PlayerController.instance.GetEnemyBelow() != null)
+        if (!isCurTotorialCompleted)
         {
-            cnt++;
-            if (cnt >= 3)
+            if (PlayerController.instance.GetEnemyBelow() != null)
             {
-                LoadNextTutorialObj();
-                cnt = 0;
+                cnt++;
+                if (cnt >= 3)
+                {
+                    LoadNextTutorialObj();
+                    cnt = 0;
+                }
+            }
+        }
+        else
+        {
+            if (!isLoadingNextTutorial)
+            {
+                StartCoroutine(MoveToNextTutorial(3));
             }
         }
     }
@@ -110,10 +131,20 @@ public class Tutorial : MonoBehaviour
     private void PlayFourthTutorial()
     {
         JumpButton.SetActive(true);
-        if (!callFunctionOnce)
+        if (!isCurTotorialCompleted)
         {
-            callFunctionOnce = true;
-            StartCoroutine(MoveToNextTutorialInDelay(7f));
+            if (!callFunctionOnce)
+            {
+                callFunctionOnce = true;
+                LoadNextTutorialObj();
+            }
+        }
+        else
+        {
+            if (!isLoadingNextTutorial)
+            {
+                StartCoroutine(MoveToNextTutorial(12f));
+            }
         }
     }
 
@@ -121,19 +152,26 @@ public class Tutorial : MonoBehaviour
     {
         if (!isCurTotorialCompleted)
         {
-
+            PlayerController.instance.SetEnemyBelow(null);
+            if(SceneLoader.instance.GetIsTutorialSceneFinished())
+            {
+                LoadNextTutorialObj();
+            }
         }
         else
         {
-
+            if (!isLoadingNextTutorial)
+            {
+                StartCoroutine(MoveToNextTutorial(4.5f));
+            }
         }
     }
 
     //This function takes player to the next tutorial;
-    IEnumerator MoveToNextTutorial()
+    IEnumerator MoveToNextTutorial(float time)
     {
         isLoadingNextTutorial = true;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(time);
         isLoadingNextTutorial = false;
         LoadNextTutorialObj();
     }
@@ -151,11 +189,13 @@ public class Tutorial : MonoBehaviour
             curTutorialNum++;
             if (curTutorialNum >= uncompletedTutorialObjs.Length)
             {
-                //All tutorials are finished
-                Debug.Log("Tutorial Completed");
+                SceneLoader.instance.LoadNextScene("TitleMenuScene");
                 return;
             }
             isCurTotorialCompleted = false;
+            callFunctionOnce = false;
+            cnt = 0;
+            timeMesurement = 0;
             MoveToPosition();
         }
 
@@ -202,8 +242,6 @@ public class Tutorial : MonoBehaviour
     IEnumerator MoveToNextTutorialInDelay(float time)
     {
         yield return new WaitForSeconds(time);
-        callFunctionOnce = false;
-        cnt = 0;
         LoadNextTutorialObj();
     }
 

@@ -86,6 +86,10 @@ public class AudioManager : MonoBehaviour
         {
             SceneLoader.instance.SetCurScene(SceneLoader.Scene.Title);
         }
+        else if (stage == "TutorialScene")
+        {
+            SceneLoader.instance.SetCurScene(SceneLoader.Scene.Tutorial);
+        }
         SelectBGM();
         if (stage != "stage2" && stage != "stage3")
             bgmAudioSource.Play();
@@ -106,6 +110,9 @@ public class AudioManager : MonoBehaviour
                 break;
             case SceneLoader.Scene.Credit:
                 bgmAudioSource.clip = CreditBGM;
+                break;
+            case SceneLoader.Scene.Tutorial:
+                bgmAudioSource.clip = ForestBGM;
                 break;
         }
     }
