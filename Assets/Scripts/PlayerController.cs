@@ -1,14 +1,13 @@
 ﻿/*
  * Class: PlayerController
  * Date: 2020.7.14
- * Last Modified : 2020.7.21
+ * Last Modified : 2020.7.23
  * Author: Hyukin Kwon 
  * Description: Player movement controller.
 */
 
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -107,7 +106,6 @@ public class PlayerController : MonoBehaviour
         {
             isLeftButtonPressed = false;
             isRightButtonPressed = false;
-            horizontalMove = 0;
             return;
         }
 
@@ -118,7 +116,7 @@ public class PlayerController : MonoBehaviour
             Touch touch = Input.GetTouch(i);
             Vector2 pos = touch.position;
             Vector2 dir = Camera.main.ScreenToWorldPoint(pos);
-            hit = Physics2D.Raycast(pos, dir, Mathf.Infinity, layerMask);
+            hit = Physics2D.Raycast(pos,Vector2.zero, 1f, layerMask);
             Debug.Log(hit);
 
             if (hit)
@@ -127,7 +125,7 @@ public class PlayerController : MonoBehaviour
 
                 if (layer == LayerMask.NameToLayer("JumpButton"))
                 {
-                    if (touch.phase == TouchPhase.Began)
+                    if (touch.phase == TouchPhase.Began && isGrounded)
                     {
                         isJumpButtonPressed = true;
                     }
@@ -136,7 +134,7 @@ public class PlayerController : MonoBehaviour
                         isJumpButtonPressed = false;
                     }
                 }
-                if (layer == LayerMask.NameToLayer("LeftButton"))
+                else if (layer == LayerMask.NameToLayer("LeftButton"))
                 {
                     if (touch.phase == TouchPhase.Began)
                     {
@@ -156,7 +154,7 @@ public class PlayerController : MonoBehaviour
                         isLeftButtonPressed = false;
                     }
                 }
-                if (layer == LayerMask.NameToLayer("RightButton"))
+                else if (layer == LayerMask.NameToLayer("RightButton"))
                 {
                     if (touch.phase == TouchPhase.Began)
                     {
@@ -341,12 +339,12 @@ public class PlayerController : MonoBehaviour
 
         //horizontalMove = Input.GetAxisRaw("Horizontal");
 
-        if(isRightButtonPressed && horizontalMove < 1f)
+        if(isRightButtonPressed)
         {
             horizontalMove += Time.deltaTime * 10f;
             isLeftButtonPressed = false;
         }
-        if(isLeftButtonPressed && horizontalMove > -1)
+        if(isLeftButtonPressed)
         {
             horizontalMove -= Time.deltaTime * 10f;
             isRightButtonPressed = false;

@@ -1,7 +1,7 @@
 ﻿/*
  * Class: Dialog
  * Date: 2020.7.18
- * Last Modified : 2020.7.20
+ * Last Modified : 2020.7.23
  * Author: Hyukin Kwon 
  * Description: Handles dialog system
 */
@@ -34,6 +34,7 @@ public class Dialog : MonoBehaviour
     private float curWordDelay = 0.0f; //delay between words
     private int curDialogNum;
     private bool isFriendTalking = false;
+    private bool isSkipButtonPressed = false;
 
     private Queue<DialogStruct> dialog = new Queue<DialogStruct>();
 
@@ -46,6 +47,8 @@ public class Dialog : MonoBehaviour
 
     private void Update()
     {
+        if (isSkipButtonPressed) return;
+
         if (Input.GetMouseButtonUp(0))
         {
             if (!SceneLoader.instance.GetIsSettingMenuOn())
@@ -73,11 +76,7 @@ public class Dialog : MonoBehaviour
 
         if (dialog.Count <= 0)
         {
-            Debug.Log("Game Start");
-            if (!SceneLoader.instance.GetIsGameFinsihed())
-                SceneLoader.instance.LoadNextScene("Stage1");
-            else
-                SceneLoader.instance.LoadNextScene("CreditPage");
+            GoToNextScene();
             return;
         }
         Debug.Log("Mouse Clicked :" + curDialogNum);
@@ -99,7 +98,6 @@ public class Dialog : MonoBehaviour
             {
                 idx = 0;
                 isLoadingStr = false;
-                //StartCoroutine(AutoLoadNextStr());
             }
             else
             {
@@ -171,5 +169,22 @@ public class Dialog : MonoBehaviour
             dialog.Enqueue(new DialogStruct(true, "어서 가자."));
             dialog.Enqueue(new DialogStruct(false, "그래."));
         }
+    }
+
+
+    //함수가 불리면 대화를 생략하고 바로 다음 씬으로 이동
+    public void SkipButton()
+    {
+        isSkipButtonPressed = true;
+        GoToNextScene();
+    }
+
+    //게임 진행도에 따라 다음 씬을 로드
+    private void GoToNextScene()
+    {
+        if (!SceneLoader.instance.GetIsGameFinsihed())
+            SceneLoader.instance.LoadNextScene("Stage1");
+        else
+            SceneLoader.instance.LoadNextScene("CreditPage");
     }
 }
