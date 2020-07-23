@@ -1,14 +1,13 @@
 ﻿/*
  * Class: TitleMenu
  * Date: 2020.7.17
- * Last Modified : 2020.7.19
+ * Last Modified : 2020.7.22
  * Author: Hyukin Kwon 
  * Description:  TitleMenu Class (Play, Tutorial, Option, Exit)button
 */
 
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TitleMenu : MonoBehaviour
 {
@@ -16,7 +15,7 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] private GameObject AudioManagerPrefab;
     [SerializeField] private GameObject SceneManagerPrefab;
 
-    private void Start()
+    private void Awake()
     {
         if (AudioManager.instance == null)
         {
@@ -30,6 +29,7 @@ public class TitleMenu : MonoBehaviour
         SceneLoader.instance.SetIsGameFinsihed(false);
         SettingMenu.SetActive(false);
     }
+
     public void PlayerButtonOnClick()
     {
         if (SceneLoader.instance.GetIsSceneLoading()) return;
@@ -65,5 +65,6 @@ public class TitleMenu : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         AudioManager.instance.UpdateOriginalVolume();
         SettingMenu.SetActive(true);
+        SettingMenu.transform.parent.GetComponent<SettingMenu>().UpdateSoundSliders();
     }
 }

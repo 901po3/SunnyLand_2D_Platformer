@@ -1,7 +1,7 @@
 ﻿/*
  * Class: AudioManager
  * Date: 2020.7.20
- * Last Modified : 2020.7.20
+ * Last Modified : 2020.7.22
  * Author: Hyukin Kwon 
  * Description: Handles BGM and SFX
  *             This will be created on TitleMenu
@@ -28,11 +28,11 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip tocuhSFX;
     [SerializeField] private AudioClip dialogSFX;
 
-    [SerializeField] private float bgmVolume = 1f;
-    [SerializeField] private float sfxVolume = 1f;
+    [SerializeField] private float bgmVolume;
+    [SerializeField] private float sfxVolume;
 
-    private float originalBgmVolume = 1;
-    private float originalSfxVolume = 1;
+    private float originalBgmVolume;
+    private float originalSfxVolume;
     private AudioSource bgmAudioSource;
     private AudioSource sfxAudioSource;
 
@@ -57,11 +57,38 @@ public class AudioManager : MonoBehaviour
         }
         bgmAudioSource = bgmObj.GetComponent<AudioSource>();
         sfxAudioSource = sfxObj.GetComponent<AudioSource>();
+        LoadVolumeFromData();
+        UpdateBGM(bgmVolume);
+        UpdateSFX(sfxVolume);
     }
 
     private void OnDestroy()
     {
         instance = null;
+    }
+
+    //Load bgm, sfx volumes from custom binary file
+    public void LoadVolumeFromData()
+    {
+        AudioData audioData = SaveSystem.LoadVolumeData();
+        if(audioData == null)
+        {
+            bgmVolume = 1f;
+            sfxVolume = 1f;
+        }
+        else
+        {
+            bgmVolume = audioData.bgmVolume;
+            sfxVolume = audioData.sfxVolume;
+        }
+        originalBgmVolume = bgmVolume;
+        originalSfxVolume = sfxVolume;
+    }
+
+    //Save bgm, sfx volumes to custom binary file
+    public void SaveVolumeToData()
+    {
+        SaveSystem.SaveVolumeData(this);
     }
 
     public void BGMSetting(string stage)
@@ -70,6 +97,7 @@ public class AudioManager : MonoBehaviour
         bgmAudioSource.volume = bgmVolume;
         bgmAudioSource.playOnAwake = true;
         bgmAudioSource.loop = true;
+
         if (stage == "stage0")
         {
             SceneLoader.instance.SetCurScene(SceneLoader.Scene.Village);

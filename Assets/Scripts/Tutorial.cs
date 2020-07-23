@@ -152,7 +152,6 @@ public class Tutorial : MonoBehaviour
     {
         if (!isCurTotorialCompleted)
         {
-            PlayerController.instance.SetEnemyBelow(null);
             if(SceneLoader.instance.GetIsTutorialSceneFinished())
             {
                 LoadNextTutorialObj();
