@@ -255,7 +255,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Bunny\n    Funny\n        Games"
+  m_Text: "Funny\n    Bunny\n        Games"
 --- !u!222 &359733687
 CanvasRenderer:
   m_ObjectHideFlags: 0
