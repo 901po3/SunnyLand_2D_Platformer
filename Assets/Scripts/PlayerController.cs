@@ -3,7 +3,7 @@
  * Date: 2020.7.14
  * Last Modified : 2020.7.23
  * Author: Hyukin Kwon 
- * Description: Player movement controller.
+ * Description: 플레이어의 이동과 에니메이션 상태를 다룸
 */
 
 using System.Collections;
@@ -49,11 +49,17 @@ public class PlayerController : MonoBehaviour
     private bool isJumpButtonPressed = false;
     private bool isLeftButtonPressed = false;
     private bool isRightButtonPressed = false;
+
     //setter getter
-    public void SetAttackingPlant(GameObject palnt) { attackingPlant = palnt; }
-    public void SetLife(int l) { life = l; }
-    public void SetIsFronze(bool frozen) { isFrozen = frozen; }
-    public void SetEnemyBelow(GameObject obj) { enemyBelow = obj; }
+    public void SetAttackingPlant(GameObject _attackingPlant) { attackingPlant = _attackingPlant; }
+    public void SetLife(int _life) { life = _life; }
+    public void SetIsFronze(bool _isfrozen) { isFrozen = _isfrozen; }
+    public void SetEnemyBelow(GameObject _enemyBelow) { enemyBelow = _enemyBelow; }
+    public void SetIsRightButtonPressed(bool _isRightButtonPressed) { isRightButtonPressed = _isRightButtonPressed; }
+    public void SetIsLeftButtonPressed(bool _isLeftButtonPressed) { isLeftButtonPressed = _isLeftButtonPressed; }
+    public void SetIsJumpButtonPressed(bool _isJumpButtonPressed) { isJumpButtonPressed = _isJumpButtonPressed; }
+    public void SetIsHorizontalMove(float _horizontalMove) { horizontalMove = _horizontalMove; }
+
     public GameObject GetEnemyBelow() { return enemyBelow; }
     public int GetLife() { return life; }
     public bool GetIsFrozen() { return isFrozen; }
@@ -61,6 +67,8 @@ public class PlayerController : MonoBehaviour
     public bool GetIsRightButtonPressed() { return isRightButtonPressed; }
     public bool GetIsJumpButtonPressed() { return isJumpButtonPressed; }
     public bool GetWasJumpButtonPressed() { return wasJumpButtonPressed; }
+    public float GetHorizontalMove() { return horizontalMove; }
+    public bool GetIsGrounded() { return isGrounded; }
 
     //Singleton
     public static PlayerController instance { get; private set; }
@@ -90,7 +98,10 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        PlayerInput();
+        if(!SceneLoader.instance.GetIsSettingMenuOn() && !SceneLoader.instance.GetIsGameOverMenuOn())
+        {
+            InputMode.PlayerInputHandler(this);
+        }
         Jump();
         SideChecker();
     }
@@ -98,84 +109,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
-    }
-
-    private void PlayerInput()
-    {
-        if (Input.touchCount == 0 || SceneLoader.instance.GetIsSettingMenuOn() || SceneLoader.instance.GetIsGameOverMenuOn())
-        {
-            isLeftButtonPressed = false;
-            isRightButtonPressed = false;
-            return;
-        }
-
-        int layerMask = LayerMask.GetMask("JumpButton", "LeftButton", "RightButton");
-        RaycastHit2D hit;
-        for (int i = 0; i < Input.touchCount; i++)
-        {
-            Touch touch = Input.GetTouch(i);
-            Vector2 pos = touch.position;
-            Vector2 dir = Camera.main.ScreenToWorldPoint(pos);
-            hit = Physics2D.Raycast(pos,Vector2.zero, 1f, layerMask);
-            Debug.Log(hit);
-
-            if (hit)
-            {
-                int layer = hit.transform.gameObject.layer;
-
-                if (layer == LayerMask.NameToLayer("JumpButton"))
-                {
-                    if (touch.phase == TouchPhase.Began && isGrounded)
-                    {
-                        isJumpButtonPressed = true;
-                    }
-                    if (touch.phase == TouchPhase.Ended)
-                    {
-                        isJumpButtonPressed = false;
-                    }
-                }
-                else if (layer == LayerMask.NameToLayer("LeftButton"))
-                {
-                    if (touch.phase == TouchPhase.Began)
-                    {
-                        isLeftButtonPressed = true;
-                        if (isRightButtonPressed)
-                        {
-                            isRightButtonPressed = false;
-                        }
-                    }
-                    if (touch.phase == TouchPhase.Moved)
-                    {
-                        isRightButtonPressed = false;
-                        isLeftButtonPressed = true;
-                    }
-                    if (touch.phase == TouchPhase.Ended)
-                    {
-                        isLeftButtonPressed = false;
-                    }
-                }
-                else if (layer == LayerMask.NameToLayer("RightButton"))
-                {
-                    if (touch.phase == TouchPhase.Began)
-                    {
-                        isRightButtonPressed = true;
-                        if (isLeftButtonPressed)
-                        {
-                            isLeftButtonPressed = false;
-                        }
-                    }
-                    if (touch.phase == TouchPhase.Moved)
-                    {
-                        isRightButtonPressed = true;
-                        isLeftButtonPressed = false;
-                    }
-                    if (touch.phase == TouchPhase.Ended)
-                    {
-                        isRightButtonPressed = false;
-                    }
-                }
-            }
-        }
     }
 
     //Check side for dectecting enemy
@@ -289,7 +222,7 @@ public class PlayerController : MonoBehaviour
             isGrounded = true;
             wasJumpButtonPressed = false;
         }
-        if ((Input.GetButtonDown("Jump") && isGrounded) || (isJumpButtonPressed && isGrounded && !wasJumpButtonPressed) || isBounced)
+        if ((isJumpButtonPressed && isGrounded && !wasJumpButtonPressed) || isBounced)
         {
             AudioManager.instance.PlayJumpSFX();
             wasJumpButtonPressed = true;
@@ -299,7 +232,7 @@ public class PlayerController : MonoBehaviour
             jumpTimeCounter = jumpTime;
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x , jumpForce);
         }
-        if ((Input.GetButton("Jump") || wasJumpButtonPressed) && isJumping) // press longer to jump higher
+        if (wasJumpButtonPressed && isJumping) // press longer to jump higher
         {
             if(jumpTimeCounter > 0)
             {
@@ -311,7 +244,7 @@ public class PlayerController : MonoBehaviour
                 isJumping = false;
             }
         }
-        if (Input.GetButtonUp("Jump") || (!isJumpButtonPressed && wasJumpButtonPressed))
+        if (!isJumpButtonPressed && wasJumpButtonPressed)
         {
             wasJumpButtonPressed = false;
             isJumping = false;
@@ -324,36 +257,10 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("velocityY", rigidbody2D.velocity.y);
     }
 
-    IEnumerator PlayEffect(GameObject effect, float stopTime)
-    {
-        effect.transform.position = groundCheck.position;
-        effect.SetActive(true);
-        yield return new WaitForSeconds(stopTime);
-        effect.SetActive(false);
-    }
-
     //Move player applying velocity x, y
     private void Move()
     {
         if (isFrozen) return;
-
-        horizontalMove = Input.GetAxisRaw("Horizontal");
-
-        if(isRightButtonPressed)
-        {
-            horizontalMove += Time.deltaTime * 10f;
-            isLeftButtonPressed = false;
-        }
-        if(isLeftButtonPressed)
-        {
-            horizontalMove -= Time.deltaTime * 10f;
-            isRightButtonPressed = false;
-        }
-        if(!isRightButtonPressed && !isLeftButtonPressed)
-        {
-            horizontalMove = 0;
-        }
-        horizontalMove = Mathf.Clamp(horizontalMove, -1, 1);
 
         float speed = walkSpeed * Time.fixedDeltaTime;
         if (isGrounded)
@@ -601,4 +508,13 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isJumping", false);
         anim.SetBool("isWalking", false);
     }
+
+    IEnumerator PlayEffect(GameObject effect, float stopTime)
+    {
+        effect.transform.position = groundCheck.position;
+        effect.SetActive(true);
+        yield return new WaitForSeconds(stopTime);
+        effect.SetActive(false);
+    }
+
 }
