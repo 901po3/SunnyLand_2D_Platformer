@@ -4,8 +4,8 @@
  * Last Modified : 2020.7.24
  * Author: Hyukin Kwon 
  * Description: 인풋 모드(모바일용,PC용)를 다루는 클래스
- *              1. 현재 게임에는 필요 없지만 멀티나 코업 게임으로 발전할시 인풋과 플레이어를 나눔으로써 쉽게 여러 플레이어를 받을수 있다.
-                2. 더 많은 인풋 시스템을 추가하게되면 모든 코드를 플레이어에 추가 할 수 없어서 현재 클래스를 만듬
+ *              1. 더 쾌적한 유지보수를 위해 추가함.
+                2. 더 많은 인풋 시스템을 추가하게 될수록 효과적인 클래스.
  */
 
 using UnityEngine;
@@ -17,7 +17,7 @@ public static class InputMode
         Mobile, PC
     }
 
-    //상용 플랫폼에 기반해 인풋 변수 자동으로 설정
+    //사용되는 플랫폼에 기반해 인풋 변수를 자동으로 설정
 #if (UNITY_ANDROID || UNITY_IOS)
     private static InputEnum currentInput = InputEnum.Mobile;
 #elif (UNITY_STANDALONE)

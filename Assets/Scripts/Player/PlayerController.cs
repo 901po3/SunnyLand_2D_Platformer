@@ -3,7 +3,7 @@
  * Date: 2020.7.14
  * Last Modified : 2020.7.23
  * Author: Hyukin Kwon 
- * Description: 플레이어의 이동과 에니메이션 상태를 다룸
+ * Description: 플레이어 이동, 에니메이션, 상태변화를 다룸
 */
 
 using System.Collections;
@@ -11,60 +11,63 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private Transform groundCheck; //check what's on bottom
-    [SerializeField] private Transform[] rightChecks; //check what's on right
-    [SerializeField] private Transform[] leftChecks; //check what's on left
-    [SerializeField] private LayerMask[] whatIsGround; //store the layer colliding with groundCheck
+    [SerializeField] private Transform groundCheck; //아래 체크 ->땅 감지용
+    [SerializeField] private Transform[] rightChecks; //오른쪽에 체크 ->적 감지용
+    [SerializeField] private Transform[] leftChecks; //왼쪽 체크 ->적 감지용
+    [SerializeField] private LayerMask[] whatIsGround; //아래에 닿을수 있는 모든 레이어를 담는다. (땅, 적, 장애물, 추락지점)
     [SerializeField] private float walkSpeed; 
     [SerializeField] private float jumpForce;
-    [SerializeField] private float jumpTime; //original jump time
+    [SerializeField] private float jumpTime; //점프 강도를 측정하는데 쓰이는 시간 변수
     [SerializeField] private GameObject landingEffect;
     [SerializeField] private GameObject enemyDeathEffect;
-    [SerializeField] private GameObject[] lifeObj; // Player life UI GameObject....
+    [SerializeField] private GameObject[] lifeObj; //생명력 UI
     [SerializeField] private Transform respawnPos;
+    [SerializeField] private int life;
 
-    private const float checkRadius = 0.35f; //radius for groundCheck and ceilingCheck
-    private GameObject enemyBelow; // check if player's stepping on any enemy
-    private GameObject enemyRight; // check if enemy's on right
-    private GameObject enemyLeft; // check if enemy's on left
-    private GameObject attackingPlant; //Plant attacking player
+    private const float checkRadius = 0.35f; //땅 체크 범위
+    private GameObject enemyBelow; // 적이 아래에 있으면 담는다.
+    private GameObject enemyRight; // 적이 오른쪽에 있으면 담는다. ->오른쪽과 왼쪽으로 구분지어 Impulse force의 방향을 정한다.
+    private GameObject enemyLeft; // 적이 왼쪽에 있으면 담는다.
+    private GameObject attackingPlant; //플레이어를 공격하는 괴식물을 담는다.
     private Rigidbody2D rigidbody2D;
     private Animator anim;
 
-    private float horizontalMove = 0f; //X-axis input
-    private float jumpTimeCounter; //current jump time
-    [SerializeField] private int life;
-    private bool isFacingRight = true; //for flipping the character
-    private bool isGrounded = true;
-    private bool isLadnded = false;
-    private bool isBounced = false;
+    private float horizontalMove = 0f; //X-axis 방향값
+    private float jumpTimeCounter; //점프 강도를 측정하는데 쓰이는 시간 변수
+    private bool isFacingRight = true;
     private bool isWalking = false;
+    private bool checkCollisionOnce = false; //최적화용
+    //점프 관련 불리언 변수들
+    private bool isGrounded = true;
+    private bool isBounced = false;
     private bool isJumping = false;
     private bool isFalling = false;
-    private bool isInvincible = false; // Make Player invincible
+    //플레이어 상태 변화 관련 불리언 변수들
+    private bool isInvincible = false; // 플레이어를 무적으로 만든다.
+    private bool isFrozen = false; //플레이어를 못움직이게 한다.
     private bool isRespawning = false;
-    private bool isFrozen = false;
-    private bool checkCollisionOnce = false;
+    //Input상태 관련 불리언 변수들... InputMode에서 불리언을 맴버 변수로 갖게되면 후에 코업플레이 기능이 추가되면 사용 불가능해짐.
     private bool wasJumpButtonPressed = false;
     private bool isJumpButtonPressed = false;
     private bool isLeftButtonPressed = false;
     private bool isRightButtonPressed = false;
 
-    //setter getter
+    //Setter
+    public void SetEnemyBelow(GameObject _enemyBelow) { enemyBelow = _enemyBelow; }
     public void SetAttackingPlant(GameObject _attackingPlant) { attackingPlant = _attackingPlant; }
     public void SetLife(int _life) { life = _life; }
     public void SetIsFronze(bool _isfrozen) { isFrozen = _isfrozen; }
-    public void SetEnemyBelow(GameObject _enemyBelow) { enemyBelow = _enemyBelow; }
     public void SetIsRightButtonPressed(bool _isRightButtonPressed) { isRightButtonPressed = _isRightButtonPressed; }
     public void SetIsLeftButtonPressed(bool _isLeftButtonPressed) { isLeftButtonPressed = _isLeftButtonPressed; }
     public void SetIsJumpButtonPressed(bool _isJumpButtonPressed) { isJumpButtonPressed = _isJumpButtonPressed; }
     public void SetIsHorizontalMove(float _horizontalMove) { horizontalMove = _horizontalMove; }
 
+    //Getter
     public GameObject GetEnemyBelow() { return enemyBelow; }
     public int GetLife() { return life; }
     public bool GetIsFrozen() { return isFrozen; }
-    public bool GetIsLeftButtonPressed() { return isLeftButtonPressed; }
     public bool GetIsRightButtonPressed() { return isRightButtonPressed; }
+    public bool GetIsLeftButtonPressed() { return isLeftButtonPressed; }
     public bool GetIsJumpButtonPressed() { return isJumpButtonPressed; }
     public bool GetWasJumpButtonPressed() { return wasJumpButtonPressed; }
     public float GetHorizontalMove() { return horizontalMove; }
@@ -92,31 +95,35 @@ public class PlayerController : MonoBehaviour
         enemyDeathEffect.SetActive(false);
         landingEffect.SetActive(false);
 
+        //생명력 UI 현재 라이프에 따라 설정
         life = 3;
         ChangeLifeHud();
     }
 
     private void Update()
     {
+        //팝업 메뉴가 활성화 되있지 않으면 인풋을 받는다.
         if(!SceneLoader.instance.GetIsSettingMenuOn() && !SceneLoader.instance.GetIsGameOverMenuOn())
         {
             InputMode.PlayerInputHandler(this);
         }
-        Jump();
         SideChecker();
     }
 
     private void FixedUpdate()
     {
+        //Rigidbody를 사용하는 함수들은 FixedUpdate()에서 사용한다.
+        Jump();
         Move();
     }
 
-    //Check side for dectecting enemy
+    //옆에 무엇이 있는지 체크한다 (땅, 적, 장애물, 추락지점)
     private void SideChecker()
     {
+        //(땅, 적, 장애물, 추락지점)의 레이어 정보는 whatIsGround가 갖고있다.
         for (int i = 0; i < whatIsGround.Length; i++)
         {
-            for(int j = 0; j < rightChecks.Length; j++)
+            for(int j = 0; j < rightChecks.Length; j++) //rightChecks[] 와 leftChecks[]의 길이는 같다.
             {
                 Collider2D rightCollider2D = Physics2D.OverlapCircle(rightChecks[j].position, checkRadius, whatIsGround[i]);
                 Collider2D leftCollider2D = Physics2D.OverlapCircle(leftChecks[j].position, checkRadius, whatIsGround[i]);
@@ -192,7 +199,7 @@ public class PlayerController : MonoBehaviour
             isFalling = true;
         }
 
-        if ((!wasGrounded && isGrounded) || isLadnded)
+        if ((isGrounded))
         {
             isFalling = false;
             wasGrounded = isGrounded;
@@ -365,7 +372,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground")
         {
-            isLadnded = true;
+            isGrounded = true;
         }
         else if (collision.gameObject.tag == "FallingSpot")
         {
@@ -381,7 +388,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground")
         {
-            isLadnded = false;
+            isGrounded = false;
         }
     }
 
