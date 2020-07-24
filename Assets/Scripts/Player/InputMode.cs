@@ -17,7 +17,12 @@ public static class InputMode
         Mobile, PC
     }
 
+    //상용 플랫폼에 기반해 인풋 변수 자동으로 설정
+#if (UNITY_ANDROID || UNITY_IOS)
+    private static InputEnum currentInput = InputEnum.Mobile;
+#elif (UNITY_STANDALONE)
     private static InputEnum currentInput = InputEnum.PC;
+#endif
 
     //모바일용 인풋 헨들러 (터치를 받음)
     private static void PlayerMobileInputHandler(PlayerController target)
@@ -36,6 +41,7 @@ public static class InputMode
         RaycastHit2D hit;
         for (int i = 0; i < Input.touchCount; i++)
         {
+            //버튼 터치를 했으면 위치를 추적해 어떤 버튼인지 찾는 과정
             Touch touch = Input.GetTouch(i);
             Vector2 pos = touch.position;
             Vector2 dir = Camera.main.ScreenToWorldPoint(pos);
@@ -105,21 +111,22 @@ public static class InputMode
 
         //오른쪽 왼쪽 버튼 상태에 따라 X축 속도 조정 (-1~1)
         float horizontalMove = 0;
+        float increamentSpeed = 60f; //증가 속도 값
         if (target.GetIsRightButtonPressed())
         {
-            horizontalMove += Time.deltaTime * 10f;
+            horizontalMove += Time.deltaTime * increamentSpeed;
             target.SetIsLeftButtonPressed(false);
         }
         if (target.GetIsLeftButtonPressed())
         {
-            horizontalMove -= Time.deltaTime * 10f;
+            horizontalMove -= Time.deltaTime * increamentSpeed;
             target.SetIsRightButtonPressed(false);
         }
         if (!target.GetIsLeftButtonPressed() && !target.GetIsRightButtonPressed())
         {
             horizontalMove = 0;
         }
-        horizontalMove = Mathf.Clamp(horizontalMove, -1, 1);
+        horizontalMove = Mathf.Clamp(horizontalMove, -1, 1); //최소 최대값 설정
         target.SetIsHorizontalMove(horizontalMove);
     }
     
