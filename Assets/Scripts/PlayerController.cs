@@ -337,7 +337,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isFrozen) return;
 
-        //horizontalMove = Input.GetAxisRaw("Horizontal");
+        horizontalMove = Input.GetAxisRaw("Horizontal");
 
         if(isRightButtonPressed)
         {
