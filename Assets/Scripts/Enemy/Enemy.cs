@@ -36,15 +36,15 @@ public class Enemy : MonoBehaviour
 
     protected virtual void Update()
     {
-        Death(); //모든 적은 죽음
+        Death();
     }
 
 
-    //모든 적이 죽으면 SetActive(false)로 설정
+    //적이 죽으면 SetActive(false)로 설정
     protected virtual void Death() 
     {
         if (isDead) return;
-        if(PlayerController.instance.GetEnemyBelow() == gameObject)
+        if(PlayerController.instance.GetEnemyBelow() == gameObject) //플레이어가 밟은 적이라면
         {
             isDead = true;
             Debug.Log("enemy died");

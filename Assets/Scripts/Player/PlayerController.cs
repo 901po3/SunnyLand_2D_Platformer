@@ -12,8 +12,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Transform groundCheck; //아래 체크 ->땅 감지용
-    [SerializeField] private Transform[] rightChecks; //오른쪽에 체크 ->적 감지용
-    [SerializeField] private Transform[] leftChecks; //왼쪽 체크 ->적 감지용
     [SerializeField] private LayerMask[] whatIsGround; //아래에 닿을수 있는 모든 레이어를 담는다. (땅, 적, 장애물, 추락지점)
     [SerializeField] private float walkSpeed; 
     [SerializeField] private float jumpForce;
@@ -108,42 +106,63 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         //Rigidbody를 사용하는 함수들은 FixedUpdate()에서 사용한다.
-        Jump();
-        Move();
+        if (!isFrozen)
+        {
+            Jump();
+            Move();
+        }
     }
 
-    //check ground for detecting ground, obstacle, and Enemy
-    private void GroundCheck()
+    //(땅, 적, 장애물) 물체가 아래 있는지 체크
+    //공격 규칙상 이 함수가 초기 공격 판정으로도 사용됨.
+    private void GroundCheck() 
     {
         for(int i = 0; i < whatIsGround.Length; i++)
         {
             Collider2D collider2D = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround[i]);
             if(collider2D != null)
             {
-                if ((collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy") && !isInvincible)
-                    || collider2D.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+                //장애물과 적은 밟는 방향과 속도까지 고려해서 판정한다.
+                Vector2 dir; 
+                if (collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy") && !isInvincible) //적일때 그리고 플레이어가 무적상태가 아닐때
                 {
-                    Vector2 pos = (collider2D.transform.position - transform.position).normalized;
-                    if(pos.y < 0 && rigidbody2D.velocity.y < 0f)
+                    dir = (collider2D.transform.position - transform.position).normalized;
+                    if (dir.y < 0 && rigidbody2D.velocity.y < 0f)
                     {
-                        if(collider2D.gameObject.layer == LayerMask.NameToLayer("Enemy"))
-                        {
-                            enemyBelow = collider2D.gameObject;
-                            AudioManager.instance.PlayAttackSFX();
-                            StartCoroutine(Bounce(200));
-                        }
-                        else if(collider2D.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
-                        {
-                            StartCoroutine(Bounce(200));
-                        }
-                        break;
+                        enemyBelow = collider2D.gameObject;
+                        AudioManager.instance.PlayAttackSFX();
+                        StartCoroutine(Bounce(200)); //적을 밟으면 반동을 준다.
                     }
                 }
-                else if (collider2D.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                else if (collider2D.gameObject.layer == LayerMask.NameToLayer("Obstacle")) //장애물일때
+                {
+                    dir = (collider2D.transform.position - transform.position).normalized;
+                    if (dir.y < 0 && rigidbody2D.velocity.y < 0f)
+                    {
+                        StartCoroutine(Bounce(200)); //장애물을 밟으면 반동을 준다.
+                    }
+                }
+                else if (collider2D.gameObject.layer == LayerMask.NameToLayer("Ground")) //땅일때
                 {
                     isGrounded = true;
-                    break;
+                    if(isFalling) //추락중이였으면 속도에따라 렌딩 연출
+                    {
+                        isFalling = false;
+                        if (rigidbody2D.velocity.y < -25)
+                        {
+                            CinemachineShake.instance.CameraShake(80.0f, 0.3f);
+                            StartCoroutine(PlayEffect(landingEffect, 0.4f));
+                            AudioManager.instance.PlayLandingSFX();
+                        }
+                        if (rigidbody2D.velocity.y <= -18)
+                        {
+                            CinemachineShake.instance.CameraShake(20.0f, 0.2f);
+                            StartCoroutine(PlayEffect(landingEffect, 0.3f));
+                            AudioManager.instance.PlayLandingSFX();
+                        }
+                    }
                 }
+                break;
             }
             else
             {
@@ -153,47 +172,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-    //Handles Jump and falling and landing effect
+    //점프와 추락 관련 함수
     private void Jump()
     {
-        if (isFrozen) return;
-        bool wasGrounded = isGrounded;
-        GroundCheck();
-
-        float fallingSpeed = 0.0f;
+        //속도로 추락 판정
         if(rigidbody2D.velocity.y < 0f)
         {
-            fallingSpeed = rigidbody2D.velocity.y;
             isJumping = false;
             isFalling = true;
         }
+        GroundCheck(); //위에서 속도로 isFalling이 true가 되어도 땅에 닿고있으면 false가 된다.
 
-        if ((isGrounded))
-        {
-            isFalling = false;
-            wasGrounded = isGrounded;
-
-            if (fallingSpeed < -30)
-            {
-                CinemachineShake.instance.CameraShake(100.0f, 0.3f);
-                StartCoroutine(PlayEffect(landingEffect, 0.4f));
-                AudioManager.instance.PlayLandingSFX();
-            }
-            else if (fallingSpeed < -23)
-            {
-                CinemachineShake.instance.CameraShake(80.0f, 0.3f);
-                StartCoroutine(PlayEffect(landingEffect, 0.4f));
-                AudioManager.instance.PlayLandingSFX();
-            }
-            else if (fallingSpeed <= -18)
-            {
-                CinemachineShake.instance.CameraShake(20.0f, 0.2f);
-                StartCoroutine(PlayEffect(landingEffect, 0.3f));
-                AudioManager.instance.PlayLandingSFX();
-            }                 
-        }
-
+        //여기부터 내일 할 일
         if (isBounced)
         {
             isGrounded = true;
@@ -237,8 +227,6 @@ public class PlayerController : MonoBehaviour
     //Move player applying velocity x, y
     private void Move()
     {
-        if (isFrozen) return;
-
         float speed = walkSpeed * Time.fixedDeltaTime;
         if (isGrounded)
         {
@@ -285,12 +273,12 @@ public class PlayerController : MonoBehaviour
         if (dir.x > 0)
         {
             rigidbody2D.velocity = Vector2.zero;
-            rigidbody2D.AddForce(new Vector2(-boucnePower.x * 10, boucnePower.y));
+            rigidbody2D.AddForce(new Vector2(-boucnePower.x, boucnePower.y));
         }
         else if (dir.x < 0)
         {
             rigidbody2D.velocity = Vector2.zero;
-            rigidbody2D.AddForce(new Vector2(boucnePower.x * 10, boucnePower.y));
+            rigidbody2D.AddForce(new Vector2(boucnePower.x, boucnePower.y));
         }
 
         Damaged();
@@ -463,5 +451,4 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(stopTime);
         effect.SetActive(false);
     }
-
 }

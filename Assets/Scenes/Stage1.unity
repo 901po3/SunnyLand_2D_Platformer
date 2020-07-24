@@ -28210,6 +28210,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
         type: 3}
+      propertyPath: landingEffect
+      value: 
+      objectReference: {fileID: 778659369}
+    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
+        type: 3}
+      propertyPath: enemyDeathEffect
+      value: 
+      objectReference: {fileID: 1998855017}
+    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
+        type: 3}
       propertyPath: lifeObj.Array.data[0]
       value: 
       objectReference: {fileID: 1041648782}
@@ -28220,24 +28230,14 @@ PrefabInstance:
       objectReference: {fileID: 1705026171}
     - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
         type: 3}
-      propertyPath: lifeObj.Array.data[3]
-      value: 
-      objectReference: {fileID: 60290196}
-    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
-        type: 3}
       propertyPath: lifeObj.Array.data[2]
       value: 
       objectReference: {fileID: 1470147633}
     - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
         type: 3}
-      propertyPath: enemyDeathEffect
+      propertyPath: lifeObj.Array.data[3]
       value: 
-      objectReference: {fileID: 1998855017}
-    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
-        type: 3}
-      propertyPath: landingEffect
-      value: 
-      objectReference: {fileID: 778659369}
+      objectReference: {fileID: 60290196}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b6fc442a1cf94742be6c51ff0638fc0, type: 3}
 --- !u!1001 &1447806247
