@@ -26,9 +26,6 @@ public class PlayerController : MonoBehaviour
 
     private const float checkRadius = 0.35f; //땅 체크 범위
     private GameObject enemyBelow; // 적이 아래에 있으면 담는다.
-    private GameObject enemyRight; // 적이 오른쪽에 있으면 담는다. ->오른쪽과 왼쪽으로 구분지어 Impulse force의 방향을 정한다.
-    private GameObject enemyLeft; // 적이 왼쪽에 있으면 담는다.
-    private GameObject attackingPlant; //플레이어를 공격하는 괴식물을 담는다.
     private Rigidbody2D rigidbody2D;
     private Animator anim;
 
@@ -54,7 +51,6 @@ public class PlayerController : MonoBehaviour
 
     //Setter
     public void SetEnemyBelow(GameObject _enemyBelow) { enemyBelow = _enemyBelow; }
-    public void SetAttackingPlant(GameObject _attackingPlant) { attackingPlant = _attackingPlant; }
     public void SetLife(int _life) { life = _life; }
     public void SetIsFronze(bool _isfrozen) { isFrozen = _isfrozen; }
     public void SetIsRightButtonPressed(bool _isRightButtonPressed) { isRightButtonPressed = _isRightButtonPressed; }
@@ -107,7 +103,6 @@ public class PlayerController : MonoBehaviour
         {
             InputMode.PlayerInputHandler(this);
         }
-        SideChecker();
     }
 
     private void FixedUpdate()
@@ -115,31 +110,6 @@ public class PlayerController : MonoBehaviour
         //Rigidbody를 사용하는 함수들은 FixedUpdate()에서 사용한다.
         Jump();
         Move();
-    }
-
-    //옆에 무엇이 있는지 체크한다 (땅, 적, 장애물, 추락지점)
-    private void SideChecker()
-    {
-        //(땅, 적, 장애물, 추락지점)의 레이어 정보는 whatIsGround가 갖고있다.
-        for (int i = 0; i < whatIsGround.Length; i++)
-        {
-            for(int j = 0; j < rightChecks.Length; j++) //rightChecks[] 와 leftChecks[]의 길이는 같다.
-            {
-                Collider2D rightCollider2D = Physics2D.OverlapCircle(rightChecks[j].position, checkRadius, whatIsGround[i]);
-                Collider2D leftCollider2D = Physics2D.OverlapCircle(leftChecks[j].position, checkRadius, whatIsGround[i]);
-
-                if(rightCollider2D != null)
-                {
-                    enemyRight = rightCollider2D.gameObject;
-                    enemyLeft = null;
-                }
-                else if(leftCollider2D)
-                {
-                    enemyRight = null;
-                    enemyLeft = leftCollider2D.gameObject;
-                }
-            }
-        }
     }
 
     //check ground for detecting ground, obstacle, and Enemy
@@ -308,53 +278,23 @@ public class PlayerController : MonoBehaviour
     }
 
     //This is called when player get damage
-    public void GetDamaged(Vector2 boucnePower)
+    public void GetDamaged(GameObject attackingObject, Vector2 boucnePower)
     {
-        Vector2 dir = Vector2.zero;
-        if (attackingPlant != null)
-        {
-            dir = (attackingPlant.transform.position - transform.position);
-        }
-        Debug.Log(dir);
+        Vector2 dir = (attackingObject.transform.position - transform.position);
 
-        if (isFacingRight)
+        if (dir.x > 0)
         {
-            if (enemyRight || dir.x > 0)
-            {
-                rigidbody2D.velocity = Vector2.zero;
-                rigidbody2D.AddForce(new Vector2(-boucnePower.x, boucnePower.y));
-            }
-            else if (enemyLeft || dir.x < 0)
-            {
-                rigidbody2D.velocity = Vector2.zero;
-                rigidbody2D.AddForce(new Vector2(boucnePower.x, boucnePower.y));
-            }
+            rigidbody2D.velocity = Vector2.zero;
+            rigidbody2D.AddForce(new Vector2(-boucnePower.x * 10, boucnePower.y));
         }
-        else
+        else if (dir.x < 0)
         {
-            if (enemyRight || dir.x > 0)
-            {
-                rigidbody2D.velocity = Vector2.zero;
-                rigidbody2D.AddForce(new Vector2(boucnePower.x, boucnePower.y));
-            }
-            else if (enemyLeft || dir.x < 0)
-            {
-                rigidbody2D.velocity = Vector2.zero;
-                rigidbody2D.AddForce(new Vector2(-boucnePower.x, boucnePower.y));
-            }
+            rigidbody2D.velocity = Vector2.zero;
+            rigidbody2D.AddForce(new Vector2(boucnePower.x * 10, boucnePower.y));
         }
-
-        //remove impulse force acted on the enemy
-        if (enemyRight != null)
-            enemyRight.GetComponent<Rigidbody2D>().velocity 
-                = new Vector2(0, enemyRight.GetComponent<Rigidbody2D>().velocity.y);
-        if (enemyLeft != null)
-            enemyLeft.GetComponent<Rigidbody2D>().velocity
-                = new Vector2(0, enemyLeft.GetComponent<Rigidbody2D>().velocity.y);
 
         Damaged();
-        Debug.Log(attackingPlant);
-        attackingPlant = null;
+        attackingObject = null;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -363,7 +303,7 @@ public class PlayerController : MonoBehaviour
         {
             if ((collision.gameObject.tag == "Enemy" && enemyBelow == null))
             {
-                GetDamaged(new Vector2(100, 500));
+                GetDamaged(collision.gameObject, new Vector2(100, 500));
             }
         }
     }

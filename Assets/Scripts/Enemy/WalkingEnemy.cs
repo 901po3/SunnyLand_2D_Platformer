@@ -36,6 +36,10 @@ public class WalkingEnemy : Enemy
     protected override void Move()
     {
         if (wayPoints.Length == 0) return;
+        if(rigidbody2D.velocity.x != 0 || rigidbody2D.velocity.y != 0) //플레이어와 충돌 후 생기는 임펄스 포스를 제거한다.
+        {
+            rigidbody2D.velocity = Vector2.zero;
+        }
 
         base.Move();
         //웨이포인트 이동을 위해 필요한 인덱스 넘버와 타겟 거리 설정

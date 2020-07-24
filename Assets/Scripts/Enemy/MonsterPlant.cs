@@ -59,7 +59,6 @@ public class MonsterPlant : MonoBehaviour
             {
                 canAttack = false;
                 Debug.DrawRay(transform.position, dir * 1.5f, Color.white);
-                PlayerController.instance.SetAttackingPlant(null);
             }
         }
     }
@@ -73,8 +72,7 @@ public class MonsterPlant : MonoBehaviour
         if(canAttack)
         {
             canAttack = false;
-            PlayerController.instance.SetAttackingPlant(gameObject);
-            PlayerController.instance.GetDamaged(new Vector2(80, 80));       
+            PlayerController.instance.GetDamaged(gameObject, new Vector2(80, 80));       
         }
         curAttackFrequency = 0.0f; //공격이 끝나고 현재 공격 주기를 초기화
     }

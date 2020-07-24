@@ -109,9 +109,18 @@ public class Tutorial : MonoBehaviour
     {
         if (!isCurTotorialCompleted)
         {
-            if (PlayerController.instance.GetEnemyBelow() != null)
+            if (timeMesurement != 0)
+            {
+                timeMesurement -= Time.deltaTime;
+                if (timeMesurement < 0)
+                {
+                    timeMesurement = 0;
+                }
+            }
+            else if (PlayerController.instance.GetEnemyBelow() != null && timeMesurement == 0)
             {
                 cnt++;
+                timeMesurement = 0.25f;
                 if (cnt >= 3)
                 {
                     LoadNextTutorialObj();

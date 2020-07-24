@@ -3368,10 +3368,10 @@ MonoBehaviour:
   m_Text: "\uC774 \uAD34\uC2DD\uBB3C\uC740 \uACF5\uACA9\uC744 \uBC1B\uC544\uB3C4
     \uC8FD\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\n\uAD34\uC2DD\uBB3C\uC774 \uBC14\uB77C\uBCFC\uB54C
     \uB108\uBB34 \uAC00\uAE4C\uC774 \uC811\uADFC\uD558\uC9C0 \uB9C8\uC138\uC694.
-    \uC704\uD5D8\uD569\uB2C8\uB2E4!\n\uD558\uC9C0\uB9CC \uBC1F\uC73C\uBA74 \uC0DD\uAE30\uB294
-    \uBC18\uB3D9\uC744 \uC774\uC6A9\uD558\uBA74 \uB9F5\uC744 \uD5E4\uCCD0 \uB098\uAC00\uB294\uB370
-    \uB3C4\uC6C0\uC774 \uB420\uAC70\uC5D0\uC694.\n\uC7A0\uC2DC \uD6C4 \uB2E4\uC74C
-    \uD29C\uD1A0\uB9AC\uC5BC\uC774 \uC2DC\uC791\uB429\uB2C8\uB2E4.\n"
+    \uC704\uD5D8\uD569\uB2C8\uB2E4!\n\uBC1F\uC73C\uBA74 \uC0DD\uAE30\uB294 \uBC18\uB3D9\uC744
+    \uC774\uC6A9\uD558\uBA74 \uB9F5\uC744 \uD5E4\uCCD0 \uB098\uAC00\uB294\uB370 \uB3C4\uC6C0\uC774
+    \uB420\uAC70\uC5D0\uC694.\n\uC7A0\uC2DC \uD6C4 \uB2E4\uC74C \uD29C\uD1A0\uB9AC\uC5BC\uC774
+    \uC2DC\uC791\uB429\uB2C8\uB2E4.\n"
 --- !u!222 &826035537
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3997,11 +3997,11 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: "\uC774 \uAD34\uC2DD\uBB3C\uC740 \uACF5\uACA9\uC744 \uBC1B\uC544\uB3C4
     \uC8FD\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\n\uAD34\uC2DD\uBB3C\uC774 \uBC14\uB77C\uBCFC\uB54C
-    \uB108\uBB34 \uAC00\uAE4C\uC774 \uC811\uAE09\uD558\uC9C0 \uB9C8\uC138\uC694.
-    \uC704\uD5D8\uD569\uB2C8\uB2E4!\n\uD558\uC9C0\uB9CC \uBC1F\uC73C\uBA74 \uC0DD\uAE30\uB294
-    \uBC18\uB3D9\uC744 \uC774\uC6A9\uD558\uBA74 \uB9F5\uC744 \uD5E4\uCCD0 \uB098\uAC00\uB294\uB370
-    \uB3C4\uC6C0\uC774 \uB420\uAC70\uC5D0\uC694.\n\uC7A0\uC2DC \uD6C4 \uB2E4\uC74C
-    \uD29C\uD1A0\uB9AC\uC5BC\uC774 \uC2DC\uC791\uB429\uB2C8\uB2E4.\n"
+    \uB108\uBB34 \uAC00\uAE4C\uC774 \uC811\uADFC\uD558\uC9C0 \uB9C8\uC138\uC694.
+    \uC704\uD5D8\uD569\uB2C8\uB2E4!\n\uBC1F\uC73C\uBA74 \uC0DD\uAE30\uB294 \uBC18\uB3D9\uC744
+    \uC774\uC6A9\uD558\uBA74 \uB9F5\uC744 \uD5E4\uCCD0 \uB098\uAC00\uB294\uB370 \uB3C4\uC6C0\uC774
+    \uB420\uAC70\uC5D0\uC694.\n\uC7A0\uC2DC \uD6C4 \uB2E4\uC74C \uD29C\uD1A0\uB9AC\uC5BC\uC774
+    \uC2DC\uC791\uB429\uB2C8\uB2E4.\n"
 --- !u!222 &1020024013
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6030,8 +6030,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -97, y: 320}
-  m_SizeDelta: {x: 1700, y: 400}
+  m_AnchoredPosition: {x: -162.00006, y: 320}
+  m_SizeDelta: {x: 1600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1543754514
 MonoBehaviour:
@@ -8044,8 +8044,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -96.99994, y: 320}
-  m_SizeDelta: {x: 1700, y: 400}
+  m_AnchoredPosition: {x: -162, y: 320}
+  m_SizeDelta: {x: 1600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2095989664
 MonoBehaviour:
