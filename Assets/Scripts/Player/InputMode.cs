@@ -32,78 +32,79 @@ public static class InputMode
         {
             target.SetIsLeftButtonPressed(false);
             target.SetIsRightButtonPressed(false);
-            return;
+            target.SetIsJumpButtonPressed(false);
         }
-
-
-        //터치 감지용 레이케스트
-        int layerMask = LayerMask.GetMask("JumpButton", "LeftButton", "RightButton");
-        RaycastHit2D hit;
-        for (int i = 0; i < Input.touchCount; i++)
+        else
         {
-            //버튼 터치를 했으면 위치를 추적해 어떤 버튼인지 찾는 과정
-            Touch touch = Input.GetTouch(i);
-            Vector2 pos = touch.position;
-            Vector2 dir = Camera.main.ScreenToWorldPoint(pos);
-            hit = Physics2D.Raycast(pos, Vector2.zero, 1f, layerMask);
-            Debug.Log(hit);
-
-            //버튼을 터치 했으면
-            if (hit)
+            //터치 감지용 레이케스트
+            int layerMask = LayerMask.GetMask("JumpButton", "LeftButton", "RightButton");
+            RaycastHit2D hit;
+            for (int i = 0; i < Input.touchCount; i++)
             {
-                int layer = hit.transform.gameObject.layer;
-                
-                if (layer == LayerMask.NameToLayer("JumpButton"))  //점프 버튼 이벤트
+                //버튼 터치를 했으면 위치를 추적해 어떤 버튼인지 찾는 과정
+                Touch touch = Input.GetTouch(i);
+                Vector2 pos = touch.position;
+                Vector2 dir = Camera.main.ScreenToWorldPoint(pos);
+                hit = Physics2D.Raycast(pos, Vector2.zero, 1f, layerMask);
+                Debug.Log(hit);
+
+                //버튼을 터치 했으면
+                if (hit)
                 {
-                    if (touch.phase == TouchPhase.Began && target.GetIsGrounded())
+                    int layer = hit.transform.gameObject.layer;
+
+                    if (layer == LayerMask.NameToLayer("JumpButton"))  //점프 버튼 이벤트
                     {
-                        target.SetIsJumpButtonPressed(true);
-                    }
-                    if (touch.phase == TouchPhase.Ended)
-                    {
-                        target.SetIsJumpButtonPressed(false);
-                    }
-                }
-                else if (layer == LayerMask.NameToLayer("LeftButton")) //왼쪽 버튼 이벤트
-                {
-                    if (touch.phase == TouchPhase.Began)
-                    {
-                        target.SetIsLeftButtonPressed(true);
-                        if (target.GetIsRightButtonPressed())
+                        if (touch.phase == TouchPhase.Began && target.GetIsGrounded())
                         {
-                            target.SetIsRightButtonPressed(false);
+                            target.SetIsJumpButtonPressed(true);
+                        }
+                        if (touch.phase == TouchPhase.Ended)
+                        {
+                            target.SetIsJumpButtonPressed(false);
                         }
                     }
-                    if (touch.phase == TouchPhase.Moved) 
+                    else if (layer == LayerMask.NameToLayer("LeftButton")) //왼쪽 버튼 이벤트
                     {
-                        //터치가 다른곳에서 시작했어도 때지않고 왼쪽 버튼으로 왔으면 터치로 인정
-                        target.SetIsRightButtonPressed(false);
-                        target.SetIsLeftButtonPressed(true);
-                    }
-                    if (touch.phase == TouchPhase.Ended)
-                    {
-                        target.SetIsLeftButtonPressed(false);
-                    }
-                }
-                else if (layer == LayerMask.NameToLayer("RightButton")) //오른쪽 버튼 이벤트
-                {
-                    if (touch.phase == TouchPhase.Began)
-                    {
-                        target.SetIsRightButtonPressed(true);
-                        if (target.GetIsLeftButtonPressed())
+                        if (touch.phase == TouchPhase.Began)
+                        {
+                            target.SetIsLeftButtonPressed(true);
+                            if (target.GetIsRightButtonPressed())
+                            {
+                                target.SetIsRightButtonPressed(false);
+                            }
+                        }
+                        if (touch.phase == TouchPhase.Moved)
+                        {
+                            //터치가 다른곳에서 시작했어도 때지않고 왼쪽 버튼으로 왔으면 터치로 인정
+                            target.SetIsRightButtonPressed(false);
+                            target.SetIsLeftButtonPressed(true);
+                        }
+                        if (touch.phase == TouchPhase.Ended)
                         {
                             target.SetIsLeftButtonPressed(false);
                         }
                     }
-                    if (touch.phase == TouchPhase.Moved)
+                    else if (layer == LayerMask.NameToLayer("RightButton")) //오른쪽 버튼 이벤트
                     {
-                        //터치가 다른곳에서 시작했어도 때지않고 오른쪽 버튼으로 왔으면 터치로 인정
-                        target.SetIsRightButtonPressed(true);
-                        target.SetIsLeftButtonPressed(false);
-                    }
-                    if (touch.phase == TouchPhase.Ended)
-                    {
-                        target.SetIsRightButtonPressed(false);
+                        if (touch.phase == TouchPhase.Began)
+                        {
+                            target.SetIsRightButtonPressed(true);
+                            if (target.GetIsLeftButtonPressed())
+                            {
+                                target.SetIsLeftButtonPressed(false);
+                            }
+                        }
+                        if (touch.phase == TouchPhase.Moved)
+                        {
+                            //터치가 다른곳에서 시작했어도 때지않고 오른쪽 버튼으로 왔으면 터치로 인정
+                            target.SetIsRightButtonPressed(true);
+                            target.SetIsLeftButtonPressed(false);
+                        }
+                        if (touch.phase == TouchPhase.Ended)
+                        {
+                            target.SetIsRightButtonPressed(false);
+                        }
                     }
                 }
             }
