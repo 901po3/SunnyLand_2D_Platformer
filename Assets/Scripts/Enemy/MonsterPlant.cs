@@ -80,7 +80,8 @@ public class MonsterPlant : MonoBehaviour
     //이미지 플립을 위한 유틸리티 함수
     protected void Flip()
     {
-        if(!isAttacking)
+        //공격 목표가 없을때만 회전
+        if(!isAttacking && !canAttack)
         {
             isFacingRight = !isFacingRight;
 
