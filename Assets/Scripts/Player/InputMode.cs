@@ -52,7 +52,6 @@ public static class InputMode
                 if (hit)
                 {
                     int layer = hit.transform.gameObject.layer;
-
                     if (layer == LayerMask.NameToLayer("JumpButton"))  //점프 버튼 이벤트
                     {
                         if (touch.phase == TouchPhase.Began && target.GetIsGrounded())
@@ -134,7 +133,7 @@ public static class InputMode
     //PC용 인풋 핸들러 (키보드와 마우스를 받음)
     private static void PlayerPcInputHandler(PlayerController target)
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && target.GetIsGrounded())
         {
             target.SetIsJumpButtonPressed(true);
         }

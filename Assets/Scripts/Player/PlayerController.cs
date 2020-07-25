@@ -187,8 +187,9 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
         }
-        if ((isJumpButtonPressed && isGrounded)) //점프를 시작할때
+        if (isJumpButtonPressed && isGrounded && !wasJumpButtonPressed) //점프를 시작할때
         {
+            wasJumpButtonPressed = true;
             isBounced = false;
             isJumping = true;
             anim.SetBool("isJumping", isJumping);
@@ -212,6 +213,7 @@ public class PlayerController : MonoBehaviour
         if (!isJumpButtonPressed) //점프롤 자의로 종료
         {
             isJumping = false;
+            wasJumpButtonPressed = false;
         }      
 
         //에니메이션
@@ -347,7 +349,6 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(0.3f);
         transform.position = respawnPos.position;
-        rigidbody2D.velocity = Vector2.zero;
         ToIdle();
         if (!isFacingRight)
             Flip();
@@ -404,7 +405,6 @@ public class PlayerController : MonoBehaviour
         //   적과의 충돌을 끈다.
         yield return new WaitForSeconds(0.4f);    
         Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Enemy"), true);
-        rigidbody2D.velocity = Vector2.zero;
         isFrozen = false;
         ToIdle();
 
@@ -447,6 +447,7 @@ public class PlayerController : MonoBehaviour
     //플레이어 상태 초기화
     private void ToIdle()
     {
+        rigidbody2D.velocity = Vector2.zero;
         isFalling = false;
         isJumping = false;
         isWalking = false;
