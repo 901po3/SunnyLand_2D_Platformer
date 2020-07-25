@@ -3,7 +3,7 @@
  * Date: 2020.7.18
  * Last Modified : 2020.7.23
  * Author: Hyukin Kwon 
- * Description: Handles dialog system
+ * Description: Queue를 사용해 대사를 관리한다.
 */
 
 using System.Collections;
@@ -21,18 +21,19 @@ public class Dialog : MonoBehaviour
     {
         public bool isFriendTalking;
         public string dialogText;
-        public DialogStruct(bool b, string s)
+
+        //말하는 대상과 내용
+        public DialogStruct(bool _isFriendTalking, string _dialogText)
         {
-            isFriendTalking = b;
-            dialogText = s;
+            isFriendTalking = _isFriendTalking;
+            dialogText = _dialogText;
         }
     }
 
-    private int idx = 0;
-    private string str;
+    private int idx = 0; //문자 잠초하는 인덱스
+    private string str; //문장
     private bool isLoadingStr = false;
-    private float curWordDelay = 0.0f; //delay between words
-    private int curDialogNum;
+    private float curWordDelay = 0.0f; //문자 나오는 주기
     private bool isFriendTalking = false;
     private bool isSkipButtonPressed = false;
 
@@ -40,7 +41,7 @@ public class Dialog : MonoBehaviour
 
     private void Start()
     {
-        SetDialog();
+        SetDialog(); //대사들을 불러온다
         LoadNextText(false);
         dialogText.text = "";
     }
@@ -49,7 +50,7 @@ public class Dialog : MonoBehaviour
     {
         if (isSkipButtonPressed) return;
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0)) //클릭하면 대사를 넘김
         {
             if (!SceneLoader.instance.GetIsSettingMenuOn())
             {
@@ -60,13 +61,15 @@ public class Dialog : MonoBehaviour
 
         LoadCurrentStr();
     }
+    
+    //다음 대사를 불러오는 함수
     private void LoadNextText(bool playSound)
     {
         if (isLoadingStr)
         {
-            if(str != "")
+            if(str != "") //초기화 
             {
-                dialogText.text = str;
+                dialogText.text = str; 
                 idx = 0;
                 curWordDelay = 0f;
                 isLoadingStr = false;
@@ -74,15 +77,15 @@ public class Dialog : MonoBehaviour
             return;
         }
 
-        if (dialog.Count <= 0)
+        if (dialog.Count <= 0) //큐에 남은 대사가 없으면 다음 씬으로 넘어간다.
         {
             GoToNextScene();
             return;
         }
-        Debug.Log("Mouse Clicked :" + curDialogNum);
         if(playSound)
             AudioManager.instance.PlayTouchSFX();
 
+        //큐에서 문장과 말하는이 정보를 불러온다.
         DialogStruct dialogStruct = dialog.Dequeue();
         isFriendTalking = dialogStruct.isFriendTalking;
         dialogText.text = "";
@@ -90,16 +93,17 @@ public class Dialog : MonoBehaviour
         isLoadingStr = true;
     }
 
+    //현재 참조하는 문장에서 한글자씩 불러온다.
     private void LoadCurrentStr()
     {
         if(isLoadingStr)
         {
-            if(idx >= str.Length)
+            if(idx >= str.Length) //문장이 끝남
             {
                 idx = 0;
                 isLoadingStr = false;
             }
-            else
+            else //주기마다 한글자씩 불러옴
             {
                 if(curWordDelay < 0.1f)
                 {
@@ -107,7 +111,7 @@ public class Dialog : MonoBehaviour
                     if(curWordDelay >= 0.1f)
                     {
                         AudioManager.instance.PlayDialogSFX();
-                        dialogText.text += str[idx];
+                        dialogText.text += str[idx]; 
                         curWordDelay = 0f;
                         idx++;
                     }
@@ -116,12 +120,14 @@ public class Dialog : MonoBehaviour
         }
     }
 
+    //자동 넘김용 (현재 사용X)
     IEnumerator AutoLoadNextStr()
     {
         yield return new WaitForSeconds(1.5f);
         LoadNextText(false);
     }
 
+    //말하는이에 따라 아이콘을 변경한다.
     private void ChangeIcon()
     {
         if(isFriendTalking)
@@ -138,6 +144,7 @@ public class Dialog : MonoBehaviour
         }
     }
 
+    //대사를 큐에 넣는다
     private void SetDialog()
     {
         if (!SceneLoader.instance.GetIsGameFinsihed())

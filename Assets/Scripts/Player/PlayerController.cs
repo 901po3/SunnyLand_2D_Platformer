@@ -1,7 +1,7 @@
 ﻿/*
  * Class: PlayerController
  * Date: 2020.7.14
- * Last Modified : 2020.7.23
+ * Last Modified : 2020.7.25
  * Author: Hyukin Kwon 
  * Description: 플레이어 이동, 에니메이션, 상태변화를 다룸
 */

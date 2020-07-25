@@ -3,7 +3,7 @@
  * Date: 2020.7.20
  * Last Modified : 2020.7.22
  * Author: Hyukin Kwon 
- * Description: Setting Menu
+ * Description: 버튼이아닌 실질적인 설정창과 타이틀화면으로 나가기 창을 관리한다.
 */
 
 using System.Collections;
@@ -12,18 +12,19 @@ using UnityEngine.UI;
 
 public class SettingMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject SettingMenuBgObj;
-    [SerializeField] private GameObject homeMenuBgObj;
+    [SerializeField] private GameObject SettingMenuBgObj; //설정창 오브젝트
+    [SerializeField] private GameObject homeMenuBgObj; //타이틀화면으로 나가기창 오브젝트
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider sfxSlider;
-    [SerializeField] GameObject InputMenu;
+
 
     private void Awake()
     {
         UpdateSoundSliders();
     }
 
-    public void UpdateSoundSliders()
+    #region 설정창 관련
+    public void UpdateSoundSliders() //볼륨값에 맞게 슬라이이값 설정
     {
         if (AudioManager.instance)
         {
@@ -32,7 +33,7 @@ public class SettingMenu : MonoBehaviour
         }
     }
 
-    public void ApplyButtonPressed()
+    public void ApplyButtonPressed() //볼륨 변화를 적용시키고 나가는 버튼
     {
         Debug.Log("Apply Button Pressed");
         SettingMenuBgObj.SetActive(false);
@@ -41,16 +42,16 @@ public class SettingMenu : MonoBehaviour
         StartCoroutine(ApplyButtonPressedInDelay());
     }
 
-    IEnumerator ApplyButtonPressedInDelay()
+    IEnumerator ApplyButtonPressedInDelay() //자연스라운 연출을 위한 코루틴
     {
         yield return new WaitForSeconds(0.2f);
         AudioManager.instance.UpdateOriginalVolume();
-        AudioManager.instance.SaveVolumeToData();
+        AudioManager.instance.SaveVolumeToData(); //0.2초뒤에 볼륨 적용을 한다.
         SceneLoader.instance.SetIsSettingMenuOn(false);
         Debug.Log("Back to Normal state");
     }
 
-    public void CancelButtonPressed()
+    public void CancelButtonPressed() //볼륨 변화를 취소하고 나가는 버튼
     {
         Debug.Log("Cancel Button Pressed");
         SettingMenuBgObj.SetActive(false);
@@ -59,11 +60,12 @@ public class SettingMenu : MonoBehaviour
         StartCoroutine(CancelButtonPressedInDelay());
     }
 
-    IEnumerator CancelButtonPressedInDelay()
+    IEnumerator CancelButtonPressedInDelay()  //자연스라운 연출을 위한 코루틴
     {
+        //취소했기때문에 원래 볼륨으로 되돌린다.
         yield return new WaitForSeconds(0.2f);
         AudioManager.instance.UndoVolume();
-        bgmSlider.value = AudioManager.instance.GetOriginalBgmVolume();
+        bgmSlider.value = AudioManager.instance.GetOriginalBgmVolume(); 
         sfxSlider.value = AudioManager.instance.GetOriginalSfxVolume();
         SceneLoader.instance.SetIsSettingMenuOn(false);
         Debug.Log("Back to Normal state");
@@ -88,8 +90,11 @@ public class SettingMenu : MonoBehaviour
         }
     }
 
+    #endregion
 
-    //home menu buttons
+    #region 타이틀화면으로 나가기 창 관련
+
+    //나가기 버튼이 눌렸을때
     public void YesButtonPressed()
     {
         Debug.Log("Yes Button Pressed");
@@ -103,9 +108,10 @@ public class SettingMenu : MonoBehaviour
     {
         yield return new WaitForSeconds(0.2f);
         SceneLoader.instance.SetIsSettingMenuOn(false);
-        SceneLoader.instance.LoadNextScene("TitleMenuScene");
+        SceneLoader.instance.LoadNextScene("TitleMenuScene"); 
     }
 
+    //취소 버튼이 눌렸을때 다시 게임을 진행
     public void NoButtonPressed()
     {
         Debug.Log("Yes Button Pressed");
@@ -121,4 +127,5 @@ public class SettingMenu : MonoBehaviour
         SceneLoader.instance.SetIsSettingMenuOn(false);
         Debug.Log("Back to Normal state");
     }
+    #endregion
 }

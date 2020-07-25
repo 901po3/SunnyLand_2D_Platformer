@@ -3,7 +3,7 @@
  * Date: 2020.7.18
  * Last Modified : 2020.7.18
  * Author: Hyukin Kwon 
- * Description: SplashScreen
+ * Description: 스플래쉬 스크린
 */
 
 using System.Collections;
@@ -17,6 +17,7 @@ public class SplashScreen : MonoBehaviour
         StartCoroutine(MoveToTitleScreen());
     }
 
+    //5초뒤 타이틀 화면으로 이동
     IEnumerator MoveToTitleScreen()
     {
         yield return new WaitForSeconds(5f);
