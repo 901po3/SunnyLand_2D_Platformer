@@ -148,7 +148,7 @@ MonoBehaviour:
   - serializedVersion: 2
     m_Bits: 4096
   walkSpeed: 275
-  jumpForce: 10
+  jumpForce: 9.5
   jumpTime: 0.35
   landingEffect: {fileID: 0}
   enemyDeathEffect: {fileID: 0}

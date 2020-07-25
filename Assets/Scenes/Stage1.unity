@@ -28238,6 +28238,11 @@ PrefabInstance:
       propertyPath: lifeObj.Array.data[3]
       value: 
       objectReference: {fileID: 60290196}
+    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
+        type: 3}
+      propertyPath: jumpForce
+      value: 9.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b6fc442a1cf94742be6c51ff0638fc0, type: 3}
 --- !u!1001 &1447806247

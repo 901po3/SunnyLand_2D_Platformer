@@ -934,11 +934,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 9116468791723421329, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 9116468791723421333, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -996,11 +991,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
         type: 3}
-      propertyPath: whatIsGround.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
-        type: 3}
       propertyPath: landingEffect
       value: 
       objectReference: {fileID: 973764125}
@@ -1031,39 +1021,9 @@ PrefabInstance:
       objectReference: {fileID: 1297216976}
     - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
         type: 3}
-      propertyPath: whatIsGround.Array.data[3].m_Bits
-      value: 8192
-      objectReference: {fileID: 0}
-    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
-        type: 3}
       propertyPath: respawnPos
       value: 
       objectReference: {fileID: 1133189503}
-    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
-        type: 3}
-      propertyPath: joystick
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
-        type: 3}
-      propertyPath: jumpButton
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
-        type: 3}
-      propertyPath: RightButtonObj
-      value: 
-      objectReference: {fileID: 1762544788}
-    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
-        type: 3}
-      propertyPath: JumpButtonObj
-      value: 
-      objectReference: {fileID: 1762544790}
-    - target: {fileID: 9116468791723421336, guid: 2b6fc442a1cf94742be6c51ff0638fc0,
-        type: 3}
-      propertyPath: LeftButtonObj
-      value: 
-      objectReference: {fileID: 1762544789}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b6fc442a1cf94742be6c51ff0638fc0, type: 3}
 --- !u!4 &472617661 stripped
@@ -2239,24 +2199,6 @@ PrefabInstance:
 --- !u!1 &1762544787 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1345269552950510927, guid: 4360a54eca770644ebb9a8ef0d68588f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1762544786}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1762544788 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4063020386085679441, guid: 4360a54eca770644ebb9a8ef0d68588f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1762544786}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1762544789 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 539866128433392513, guid: 4360a54eca770644ebb9a8ef0d68588f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1762544786}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1762544790 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1649306159919350520, guid: 4360a54eca770644ebb9a8ef0d68588f,
     type: 3}
   m_PrefabInstance: {fileID: 1762544786}
   m_PrefabAsset: {fileID: 0}

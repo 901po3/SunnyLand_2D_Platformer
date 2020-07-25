@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour
                     {
                         enemyBelow = collider2D.gameObject;
                         AudioManager.instance.PlayAttackSFX();
-                        StartCoroutine(Bounce(200)); //적을 밟으면 반동을 준다.
+                        StartCoroutine(Bounce(450)); //적을 밟으면 반동을 준다.
                     }
                 }
                 else if (collider2D.gameObject.layer == LayerMask.NameToLayer("Obstacle")) //장애물일때
@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
                     dir = (collider2D.transform.position - transform.position).normalized;
                     if (dir.y < 0 && rigidbody2D.velocity.y < 0f)
                     {
-                        StartCoroutine(Bounce(200)); //장애물을 밟으면 반동을 준다.
+                        StartCoroutine(Bounce(450)); //장애물을 밟으면 반동을 준다.
                     }
                 }
                 else if (collider2D.gameObject.layer == LayerMask.NameToLayer("Ground")) //땅일때
@@ -183,24 +183,22 @@ public class PlayerController : MonoBehaviour
         }
         GroundCheck(); //위에서 속도로 isFalling이 true가 되어도 땅에 닿고있으면 false가 된다.
 
-        //여기부터 내일 할 일
-        if (isBounced)
+        if (isBounced) //적이나 장애물을 밟았을때 잠시 점프를 가능하게 해준다. <-- 바닥에서보다 더 높게 뛸수 있게 해줌.
         {
             isGrounded = true;
-            wasJumpButtonPressed = false;
         }
-        if ((isJumpButtonPressed && isGrounded && !wasJumpButtonPressed) || isBounced)
+        if ((isJumpButtonPressed && isGrounded)) //점프를 시작할때
         {
-            AudioManager.instance.PlayJumpSFX();
-            wasJumpButtonPressed = true;
             isBounced = false;
             isJumping = true;
             anim.SetBool("isJumping", isJumping);
-            jumpTimeCounter = jumpTime;
+            jumpTimeCounter = jumpTime; //더 높게 뛸때 최대 높이를 시간으로 제어해준다.
             rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x , jumpForce);
+            AudioManager.instance.PlayJumpSFX();
         }
-        if (wasJumpButtonPressed && isJumping) // press longer to jump higher
+        if (isJumping) // 점프 버튼을 계속 눌러 더 높게 뛴다.
         {
+            //최대 높이 시간 제어
             if(jumpTimeCounter > 0)
             {
                 rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpForce);
@@ -208,12 +206,11 @@ public class PlayerController : MonoBehaviour
             } 
             else
             {
-                isJumping = false;
+                isJumping = false; //최대 높이에 도달해 강제로 점프 종료
             }
         }
-        if (!isJumpButtonPressed && wasJumpButtonPressed)
+        if (!isJumpButtonPressed) //점프롤 자의로 종료
         {
-            wasJumpButtonPressed = false;
             isJumping = false;
         }      
         if(rigidbody2D.velocity.y < 2f && !isJumping)
@@ -228,21 +225,21 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         float speed = walkSpeed * Time.fixedDeltaTime;
-        if (isGrounded)
-        {
-            rigidbody2D.velocity = new Vector2(horizontalMove * speed, rigidbody2D.velocity.y);
-            //Debug.Log(rigidbody2D.velocity);
-        }
-        else if(!isGrounded || rigidbody2D.velocity.y != 0) // add momentum on horizontal movement if player is not on the ground
+        float momentumSpeed = 30f;
+
+        if (!isGrounded || rigidbody2D.velocity.y != 0 || isBounced) // add momentum on horizontal movement if player is not on the ground
         {
             Vector2 velocity = new Vector2(rigidbody2D.velocity.x, 0);
             if (Mathf.Abs(rigidbody2D.velocity.x) <= speed || (rigidbody2D.velocity.x >= Mathf.Abs(speed) && horizontalMove < 0) ||
                 (rigidbody2D.velocity.x <= -Mathf.Abs(speed) && horizontalMove > 0))
             {
-               velocity.x += horizontalMove * 30 * Time.fixedDeltaTime;
+                velocity.x += horizontalMove * momentumSpeed * Time.fixedDeltaTime;
             }
             rigidbody2D.velocity = new Vector2(velocity.x, rigidbody2D.velocity.y);
-            //Debug.Log(rigidbody2D.velocity);
+        }
+        else if (isGrounded)
+        {
+            rigidbody2D.velocity = new Vector2(horizontalMove * speed, rigidbody2D.velocity.y);
         }
 
         if (horizontalMove != 0 && isGrounded)
@@ -379,6 +376,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //적이나 장애물을 밟을때 반동을 주는 용도로 쓰이는 함수
     IEnumerator Bounce(float vPower)
     {
         isBounced = true;
@@ -386,7 +384,7 @@ public class PlayerController : MonoBehaviour
         rigidbody2D.AddForce(Vector2.up * vPower);
         StartCoroutine(PlayEffect(enemyDeathEffect, 0.3f));
 
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(0.2f);
         isBounced = false;
     }
 
