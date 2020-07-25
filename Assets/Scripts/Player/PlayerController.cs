@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
 
     //(땅, 적, 장애물) 물체가 아래 있는지 체크
     //공격 규칙상 이 함수가 초기 공격 판정으로도 사용됨.
-    private void GroundCheck() 
+    private void CheckBelow() 
     {
         for(int i = 0; i < whatIsGround.Length; i++)
         {
@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //점프와 추락 관련 함수
+    //점프와 추락 관련 함수 - Y축 이동
     private void Jump()
     {
         //속도로 추락 판정
@@ -181,7 +181,7 @@ public class PlayerController : MonoBehaviour
             isJumping = false;
             isFalling = true;
         }
-        GroundCheck(); //위에서 속도로 isFalling이 true가 되어도 땅에 닿고있으면 false가 된다.
+        CheckBelow(); //위에서 속도로 isFalling이 true가 되어도 땅에 닿고있으면 false가 된다.
 
         if (isBounced) //적이나 장애물을 밟았을때 잠시 점프를 가능하게 해준다. <-- 바닥에서보다 더 높게 뛸수 있게 해줌.
         {
@@ -213,6 +213,8 @@ public class PlayerController : MonoBehaviour
         {
             isJumping = false;
         }      
+
+        //에니메이션
         if(rigidbody2D.velocity.y < 2f && !isJumping)
         {
             anim.SetBool("isJumping", isJumping);
@@ -221,15 +223,16 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("velocityY", rigidbody2D.velocity.y);
     }
 
-    //Move player applying velocity x, y
+    //X축 이동을 담당하는 함수
     private void Move()
     {
         float speed = walkSpeed * Time.fixedDeltaTime;
         float momentumSpeed = 30f;
 
-        if (!isGrounded || rigidbody2D.velocity.y != 0 || isBounced) // add momentum on horizontal movement if player is not on the ground
+        if (!isGrounded || rigidbody2D.velocity.y != 0 || isBounced) // 공중에 있으면 모맨텀을 적용한다.
         {
-            Vector2 velocity = new Vector2(rigidbody2D.velocity.x, 0);
+            //속도와 방향을 고려해 모맨텀 속도 적용
+            Vector2 velocity = new Vector2(rigidbody2D.velocity.x, 0);               
             if (Mathf.Abs(rigidbody2D.velocity.x) <= speed || (rigidbody2D.velocity.x >= Mathf.Abs(speed) && horizontalMove < 0) ||
                 (rigidbody2D.velocity.x <= -Mathf.Abs(speed) && horizontalMove > 0))
             {
@@ -237,21 +240,16 @@ public class PlayerController : MonoBehaviour
             }
             rigidbody2D.velocity = new Vector2(velocity.x, rigidbody2D.velocity.y);
         }
-        else if (isGrounded)
+        else if (isGrounded) //땅에 있다면 모맨텀 없이 바로 속도를 적용한다.
         {
             rigidbody2D.velocity = new Vector2(horizontalMove * speed, rigidbody2D.velocity.y);
         }
 
-        if (horizontalMove != 0 && isGrounded)
+        //에니메이션과 플립
+        if(isGrounded)
         {
-            isWalking = true;
+            isWalking = (horizontalMove != 0) ? true : false;
         }
-        else if (horizontalMove == 0 && isGrounded)
-        {
-            isWalking = false;
-        }
-        anim.SetBool("isWalking", isWalking);
-
         if (horizontalMove > 0f && !isFacingRight)
         {
             Flip();
@@ -259,14 +257,15 @@ public class PlayerController : MonoBehaviour
         else if (horizontalMove < 0f && isFacingRight)
         {
             Flip();
-        }    
+        }
+        anim.SetBool("isWalking", isWalking);
     }
 
-    //This is called when player get damage
+    //플레이어가 공격 받을떄 호출되는 함수
     public void GetDamaged(GameObject attackingObject, Vector2 boucnePower)
     {
-        Vector2 dir = (attackingObject.transform.position - transform.position);
-
+        //공격을 받는 방향에 따라 피해 반동 방향이 달라짐
+        Vector2 dir = (attackingObject.transform.position - transform.position);      
         if (dir.x > 0)
         {
             rigidbody2D.velocity = Vector2.zero;
@@ -277,16 +276,15 @@ public class PlayerController : MonoBehaviour
             rigidbody2D.velocity = Vector2.zero;
             rigidbody2D.AddForce(new Vector2(boucnePower.x, boucnePower.y));
         }
-
-        Damaged();
+        ChangeLife(); //생명력 변경
         attackingObject = null;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(!isInvincible && !checkCollisionOnce)
+        if(!isInvincible && !checkCollisionOnce) //적과의 충돌을 지속적으로 검사
         {
-            if ((collision.gameObject.tag == "Enemy" && enemyBelow == null))
+            if ((collision.gameObject.tag == "Enemy" && enemyBelow == null)) //적에게 공격받으면
             {
                 GetDamaged(collision.gameObject, new Vector2(100, 500));
             }
@@ -295,6 +293,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        //추가적인 지면 체크
         if (collision.gameObject.tag == "Ground")
         {
             isGrounded = true;
@@ -319,7 +318,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(life < 3)
+        //아이템 (당근, 마법 열매)를 먹었는지 체크
+        if(life < 3) 
         {
             if (collision.gameObject.tag == "Carrot")
             {
@@ -333,15 +333,17 @@ public class PlayerController : MonoBehaviour
         {
             isFrozen = true;
             AudioManager.instance.PlayItemSFX();
-            SceneLoader.instance.SetIsGameFinsihed(true);
-            SceneLoader.instance.LoadNextScene("stage0");
+            SceneLoader.instance.SetIsGameFinsihed(true); //게임이 끝남
+            SceneLoader.instance.LoadNextScene("stage0"); //마을로 이동
         }
     }
 
+    //추락해서 죽었을때 리스폰 위치로 이동시킨다.
+    //부드러운 연출을 위해 코루틴 사용
     IEnumerator Respawn()
     {
-        isFrozen = true;
-        Damaged();
+        isFrozen = true; //플레이어를 못 움직이게 한다.
+        ChangeLife();
 
         yield return new WaitForSeconds(0.3f);
         transform.position = respawnPos.position;
@@ -353,25 +355,26 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         horizontalMove = 0f;
         isRespawning = false;
-        isFrozen = false;
+        isFrozen = false; //리스폰이 끝났을때 다시 움직이게 해준다.
 
     }
 
-    //This will be called inside of GetDamaged() function
-    private void Damaged()
+    //체력의 변동이 필요할때 호출되는 함수
+    private void ChangeLife()
     {
         if (life > 0)
         {
             if (SceneLoader.instance.GetCurScene() != SceneLoader.Scene.Tutorial)
+            {
                 life--;
+            }
             anim.SetTrigger("isHurt");
-            StartCoroutine(SetInvincible());
+            StartCoroutine(SetInvincible()); //공격 받고 체력이 달았을때 잠시 무적 상태로 돌입
             ChangeLifeHud();
             AudioManager.instance.PlayDamagedSFX();
-
             if (life <= 0)
             {
-                GameOver.instance.TurnOnGameOver();
+                GameOver.instance.TurnOnGameOver(); 
             }
         }
     }
@@ -388,28 +391,36 @@ public class PlayerController : MonoBehaviour
         isBounced = false;
     }
 
+    //무적 상태 코루틴
     IEnumerator SetInvincible()
     {
+        //1. 투명하게 만들고 컨트롤이 불가능해진다
         isInvincible = true;
         checkCollisionOnce = true;
         isFrozen = true;
         GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 0.5f);
 
+        //2. 다시 컨트롤이 가능해지며 적과의 충돌로 발생한 Impulse Force를 초기화한다.
+        //   적과의 충돌을 끈다.
         yield return new WaitForSeconds(0.4f);    
         Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Enemy"), true);
         rigidbody2D.velocity = Vector2.zero;
         isFrozen = false;
         ToIdle();
 
+        //3. 원래 색으로 돌아오며 적과의 충돌을 킨다.
         yield return new WaitForSeconds(0.5f);     
         GetComponent<SpriteRenderer>().material.color = new Color(1f, 1f, 1f, 1f);
         Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Enemy"), false);
 
+        //4. 무적 모드가 끝난다.
         yield return new WaitForSeconds(0.2f);
         isInvincible = false;
-        checkCollisionOnce = false;
+        checkCollisionOnce = false; //적과의 충돌을 다시 가능캐 한다.
+        //이때 이미 콜라이더가 겹치고 있을수 있기에 적과의 충돌 체크는 OnCollisionStay2D()를 사용함.
     }
 
+    //이미지 회전
     private void Flip()
     {
         isFacingRight = !isFacingRight;
@@ -419,6 +430,7 @@ public class PlayerController : MonoBehaviour
         transform.localScale = theScale;
     }
 
+    //체력에 맞는 HUD를 사용
     private void ChangeLifeHud()
     {
         for (int i = 0; i < lifeObj.Length; i++)
@@ -432,6 +444,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //플레이어 상태 초기화
     private void ToIdle()
     {
         isFalling = false;
@@ -442,6 +455,7 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isWalking", false);
     }
 
+    //이펙트 재생 함수
     IEnumerator PlayEffect(GameObject effect, float stopTime)
     {
         effect.transform.position = groundCheck.position;
