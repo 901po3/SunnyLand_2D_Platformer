@@ -3,7 +3,7 @@
  * Date: 2020.7.15
  * Last Modified : 2020.7.15
  * Author: Hyukin Kwon 
- * Description: Top parent class of all Enemy.
+ * Description: 적의 행동을 다루는 클래스들의 부모 클래스
 */
 
 using UnityEngine;
@@ -15,18 +15,18 @@ public class Enemy : MonoBehaviour
 
     protected bool isDead = false;
     protected bool isMoving = false;
-    protected bool isReusable = false;
+    protected bool isReusable = false; //적이 죽고나서 다시 사용할수 있는지 여부를 정하는 변수 - 런타임에서 생성 파괴를 피하기 위해 필요
     protected Animator anim = null;
     protected Rigidbody2D rigidbody2D = null;
 
-    //setter getter
-    public void SetSpeed(float spd) { speed = spd; }
-    public void SetIsReusable(bool reusable) { isReusable = reusable; }
+    //Setter
+    public void SetSpeed(float _speed) { speed = _speed; }
+    public void SetIsReusable(bool _isReusable) { isReusable = _isReusable; }
 
+    //Getter
+    public bool GetIsFacingRight() { return isFacingRight; }
     public bool GetIsMoving() { return isMoving; }
     public bool GetIsReusable() { return isReusable; }
-
-    public bool GetIsFacingRight() { return isFacingRight; }
 
     protected virtual void Start()
     {
@@ -39,10 +39,12 @@ public class Enemy : MonoBehaviour
         Death();
     }
 
+
+    //적이 죽으면 SetActive(false)로 설정
     protected virtual void Death() 
     {
         if (isDead) return;
-        if(PlayerController.instance.GetEnemyBelow() == gameObject)
+        if(PlayerController.instance.GetEnemyBelow() == gameObject) //플레이어가 밟은 적이라면
         {
             isDead = true;
             Debug.Log("enemy died");
@@ -54,6 +56,7 @@ public class Enemy : MonoBehaviour
 
     }
 
+    //이미지 플립을 위한 유틸리티 함수
     protected void Flip()
     {
         isFacingRight = !isFacingRight;

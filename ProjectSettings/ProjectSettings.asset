@@ -166,8 +166,8 @@ PlayerSettings:
     Standalone: com.Company.ProductName
   buildNumber: {}
   AndroidBundleVersionCode: 9
-  AndroidMinSdkVersion: 29
-  AndroidTargetSdkVersion: 29
+  AndroidMinSdkVersion: 28
+  AndroidTargetSdkVersion: 28
   AndroidPreferredInstallLocation: 1
   aotOptions: 
   stripEngineCode: 1
