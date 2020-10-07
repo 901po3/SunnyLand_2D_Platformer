@@ -36,7 +36,7 @@ public class MonsterPlant : MonoBehaviour
     private void Attack()
     {
         //공격 주기 체크
-        //처음에 curAttackFrequency이 이미 attackFrequency와 같게 설정해서 첫 공격 후 부터 주기 체크를 실행한다
+        //처음에 curAttackFrequency이 이미 attackFrequency와 같게 설정해서 첫 공격 이후 부터 주기 체크를 실행한다
         if (curAttackFrequency < attackFrequency)
         {
             curAttackFrequency += Time.deltaTime;
